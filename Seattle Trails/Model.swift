@@ -36,6 +36,41 @@ class Trail
 		c.longitude /= Double(points.count)
 		return c
 	}
+	
+	var easyTrail:Bool
+	{
+		var access = 0;
+		if let surfaceType = surfaceType
+		{
+			switch(surfaceType.lowercaseString)
+			{
+			case "boardwalk": fallthrough;
+			case "bridge": fallthrough;
+			case "concrete": fallthrough;
+			case "gravel": fallthrough;
+			case "asphalt": break;
+			default: return false;
+			}
+		}
+		else
+		{
+			return false
+		}
+		
+		if let gradeType = gradeType
+		{
+			if gradeType.lowercaseString != "flat"
+			{
+				return false
+			}
+		}
+		else
+		{
+			return false
+		}
+		
+		return true
+	}
 }
 
 
@@ -59,10 +94,31 @@ class socrataService
 		}
 		return Array(levels)
 	}
-	class func filterByCanopy(trails:[Trail], desiredCanopy:String) -> [Trail]
+	class func getSurfaceTypes(trails:[Trail]) -> [String]
 	{
-		return trails.filter() { $0.canopy == desiredCanopy }
+		var levels = Set<String>()
+		for trail in trails
+		{
+			if let surfaceType = trail.surfaceType
+			{
+				levels.insert(surfaceType)
+			}
+		}
+		return Array(levels)
 	}
+	class func getGradeTypes(trails:[Trail]) -> [String]
+	{
+		var levels = Set<String>()
+		for trail in trails
+		{
+			if let gradeType = trail.gradeType
+			{
+				levels.insert(gradeType)
+			}
+		}
+		return Array(levels)
+	}
+	
 	
 //	class func getNearestTrail(nearestTo:CLLocationCoordinate2D, returnClosure:((Trail?)->()))
 //	{

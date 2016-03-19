@@ -28,7 +28,24 @@ class ViewController: UIViewController, MKMapViewDelegate
             { (trails) in
                 if let trails = trails
                 {
-                    for trail in trails {
+					//do some utility checks
+					print("GRADIENT TYPES:")
+					for gradeType in socrataService.getGradeTypes(trails)
+					{
+						print(gradeType)
+					}
+					print("SURFACE TYPES:")
+					for gradeType in socrataService.getSurfaceTypes(trails)
+					{
+						print(gradeType)
+					}
+					print("CANOPY TYPES:")
+					for gradeType in socrataService.getCanopyLevels(trails)
+					{
+						print(gradeType)
+					}
+					
+					for trail in trails {
                         self.plotLine(trail)
                     }
                 }
