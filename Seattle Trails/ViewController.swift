@@ -24,7 +24,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         super.viewDidLoad()
         mapView.delegate = self
-        
+		mapView.showsBuildings = false
+//		mapView.showsPointsOfInterest = false
+		mapView.showsTraffic = false
+		
         locationButtonBackground.layer.cornerRadius = locationButtonBackground.frame.width / 2
         let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
         let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
