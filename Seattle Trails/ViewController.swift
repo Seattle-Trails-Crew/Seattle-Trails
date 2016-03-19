@@ -14,7 +14,6 @@ class ViewController: UIViewController, MKMapViewDelegate
 
     @IBOutlet weak var mapView: MKMapView!
     var parkNames = [String]()
-    var polyLineRenderer: MKPolylineRenderer?
     
     override func viewDidLoad()
     {
@@ -66,6 +65,14 @@ class ViewController: UIViewController, MKMapViewDelegate
         // Plot All Trail Lines
         plotPoint(trail.points[0], text: trail.name)
         let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.points.count % 2 == 0 {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
         mapView.addOverlay(line)
     }
     
@@ -84,10 +91,16 @@ class ViewController: UIViewController, MKMapViewDelegate
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
-        polyLineRenderer = MKPolylineRenderer(overlay: overlay)
-        polyLineRenderer!.strokeColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
-        polyLineRenderer!.lineWidth = 2
-        return polyLineRenderer!
+        let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
+        if let color = overlay.title {
+            if color == "blue" {
+                polyLineRenderer.strokeColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
+            } else if color == "green" {
+                polyLineRenderer.strokeColor = UIColor(red: 0, green: 1, blue: 0, alpha: 1)
+            }
+        }
+        polyLineRenderer.lineWidth = 2
+        return polyLineRenderer
     }
 }
 
