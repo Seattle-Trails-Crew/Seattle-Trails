@@ -95,23 +95,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func plotAllLines()
     {
-        //do some utility checks
-        print("GRADIENT TYPES:")
-        for gradeType in socrataService.getGradeTypes(trails)
-        {
-            print(gradeType)
-        }
-        print("SURFACE TYPES:")
-        for gradeType in socrataService.getSurfaceTypes(trails)
-        {
-            print(gradeType)
-        }
-        print("CANOPY TYPES:")
-        for gradeType in socrataService.getCanopyLevels(trails)
-        {
-            print(gradeType)
-        }
-        
         for trail in trails {
             plotPoint(trail.points[0], text: trail.name)
 //            self.plotLine(trail)
