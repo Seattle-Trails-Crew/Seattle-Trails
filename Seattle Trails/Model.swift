@@ -13,10 +13,10 @@ class Trail
 {
 	var points = [CGPoint]();
 	var name:String = ""
-	var canopy:String = ""
-	var condition:String = ""
-	var gradeType:String = ""
-	var surfaceType:String = ""
+	var canopy:String?
+	var condition:String?
+	var gradeType:String?
+	var surfaceType:String?
 	var length:Float = 0
 	
 	//utility functions
@@ -43,6 +43,8 @@ var localCacheInner:[Trail]?
 
 class socrataService
 {
+//	class func filterBy
+	
 	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail?)->()))
 	{
 		getAllTrails()
@@ -155,6 +157,9 @@ class socrataService
 			}
 		}
 	}
+	
+	
+	
 	private class func serializeInner(json:[[String : AnyObject]]) -> [Trail]
 	{
 		var trails = [Trail]()
@@ -162,10 +167,10 @@ class socrataService
 		{
 			//TODO: parse this JSON dictionary
 			//into a trail
-			let canopy = dict["canopy"] as? String ?? "Unknown"
-			let condition = dict["condition"] as? String ?? "Unknown"
-			let gradeType = dict["grade_type"] as? String ?? "Unknown"
-			let surfaceType = dict["surface_ty"] as? String ?? "Unknown"
+			let canopy = dict["canopy"] as? String
+			let condition = dict["condition"] as? String
+			let gradeType = dict["grade_type"] as? String
+			let surfaceType = dict["surface_ty"] as? String
 			if let name = dict["pma_name"] as? String, let length = dict["gis_length"] as? String, let geom = dict["the_geom"] as? [String:AnyObject]
 			{
 				let trail = Trail()
