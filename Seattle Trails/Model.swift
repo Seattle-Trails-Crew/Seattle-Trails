@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 class Trail
 {
@@ -34,6 +35,8 @@ class Trail
 }
 
 
+let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
+
 class socrataService
 {
 	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail)->()))
@@ -54,6 +57,11 @@ class socrataService
 	class func getAllTrails(returnClosure:(([Trail])->()))
 	{
 		//TODO: do network calls
+		doRequest()
+		{
+			NSLog("DONE")
+		}
+		
 		
 		//for now, make dummy data
 		var dummy = Trail()
@@ -66,5 +74,62 @@ class socrataService
 		dummy.points.append(CGPoint(x:-122.303, y:47.67))
 		
 		returnClosure([dummy])
+	}
+	
+	private class func serialize(data:NSData) -> [Trail]?
+	{
+		do
+		{
+			if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
+			{
+				for dict in json
+				{
+					//TODO: parse this JSON dictionary
+					//into a trail
+				}
+				
+				//TODO: return the trails
+				return nil
+			}
+		}
+		catch let error
+		{
+		}
+		return nil
+	}
+	
+	private class func doRequest(completion:()->())
+	{
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$$app_token=" + appToken
+		if let url = NSURL(string: urlString)
+		{
+			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+			let request = NSMutableURLRequest(URL: url)
+			request.HTTPMethod = "GET"
+			
+			session.dataTaskWithRequest(request, completionHandler:
+			{ (data, response, error) in
+				if let error = error
+				{
+					NSOperationQueue.mainQueue().addOperationWithBlock()
+					{
+						NSLog("ERROR: " + error.description)
+					}
+				}
+				else if let data = data
+				{
+					//TODO: note there still might be a problem (ie check to see if there's a "error" argument!)
+					
+					if let serialized = serialize(data)
+					{
+						NSOperationQueue.mainQueue().addOperationWithBlock()
+						{
+							//TODO: return the data
+							//this will involve changing that completion
+						}
+					}
+				}
+			}).resume()
+		}
 	}
 }
