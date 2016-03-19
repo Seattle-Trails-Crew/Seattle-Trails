@@ -21,40 +21,55 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="oKD-qu-38m">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Rw-jgB">
-                                <rect key="frame" x="20" y="550" width="59" height="30"/>
-                                <state key="normal" title="Location"/>
+                            <imageView userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wK8-e8-h5l">
+                                <rect key="frame" x="510" y="517" width="70" height="70"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="hzq-mG-6w6"/>
+                                    <constraint firstAttribute="width" constant="70" id="n0b-JQ-vFE"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Rw-jgB">
+                                <rect key="frame" x="522" y="532" width="47" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="47" id="9VS-TL-jk9"/>
+                                    <constraint firstAttribute="height" constant="48" id="CZQ-2y-zWZ"/>
+                                </constraints>
+                                <state key="normal" image="Image"/>
                                 <connections>
                                     <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P2W-aa-bfQ"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" red="0.22661444481382975" green="0.22661444481382975" blue="0.22661444481382975" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
-                                <rect key="frame" x="281" y="280" width="40" height="40"/>
+                                <rect key="frame" x="281" y="280" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="6Rl-OQ-cvg"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="8xU-ZM-uiu"/>
+                            <constraint firstItem="wK8-e8-h5l" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="F68-2m-Rdw"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="GZj-ss-vBK"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="wK8-e8-h5l" secondAttribute="bottom" constant="13" id="IXl-SL-fdm"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="P64-oF-AIo"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="P8u-Hc-b8e"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="QTi-IO-oXc"/>
-                            <constraint firstItem="smM-Rw-jgB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="SZg-zP-2jN"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="smM-Rw-jgB" secondAttribute="bottom" constant="20" id="h3X-Bg-kNJ"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="m2x-8g-Mpe"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="peg-wM-4Xc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="qg5-IR-mAs"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="smM-Rw-jgB" secondAttribute="trailing" constant="11" id="v9i-xx-oRp"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="wiQ-k4-GEO"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
+                        <outlet property="locationButtonBackground" destination="wK8-e8-h5l" id="P9b-yb-awb"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
                     </connections>
                 </viewController>
@@ -63,4 +78,7 @@
             <point key="canvasLocation" x="-69" y="449"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Image" width="85" height="85"/>
+    </resources>
 </document>

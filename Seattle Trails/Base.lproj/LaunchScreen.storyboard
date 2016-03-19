@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8150" systemVersion="15A204g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8122"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -15,8 +17,39 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <animations/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_0169.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="OfE-5R-7nv">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="acp-hL-Yoy">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Seattle Park Trails" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="miT-mm-Ck1">
+                                <rect key="frame" x="20" y="34" width="107" height="168"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="107" id="9RU-EP-geu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OfE-5R-7nv" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="topMargin" id="0Lb-qg-EcG"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="miT-mm-Ck1" secondAttribute="bottom" constant="398" id="16u-hF-uoJ"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="OfE-5R-7nv" secondAttribute="bottom" id="19x-Ru-TF0"/>
+                            <constraint firstItem="miT-mm-Ck1" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="3k3-bk-Tsx"/>
+                            <constraint firstItem="OfE-5R-7nv" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-20" id="MMs-o5-kFx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="acp-hL-Yoy" secondAttribute="trailing" constant="-20" id="QH8-hY-4DX"/>
+                            <constraint firstItem="miT-mm-Ck1" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="14" id="QcY-mr-dg5"/>
+                            <constraint firstItem="acp-hL-Yoy" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-20" id="S2y-FW-hmd"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="acp-hL-Yoy" secondAttribute="bottom" id="btx-av-cUX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="OfE-5R-7nv" secondAttribute="trailing" constant="-20" id="lPw-J5-m1f"/>
+                            <constraint firstItem="acp-hL-Yoy" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="topMargin" id="uNR-b7-ed5"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -24,4 +57,7 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="IMG_0169.jpg" width="3022" height="3022"/>
+    </resources>
 </document>
