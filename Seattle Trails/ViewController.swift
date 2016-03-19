@@ -103,7 +103,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             {
                 parks[trail.name] = [Trail]()
             }
-            parks[trail.name] = [Trail]()
+            parks[trail.name]?.append(trail)
 //            plotPoint(trail.points[0], text: trail.name)
 //            self.plotLine(trail)
         }
@@ -147,24 +147,29 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let title = view.annotation!.title {
-			var topRight = CLLocationCoordinate2D(latitude: 999999, longitude: 999999)
-			var bottomLeft = CLLocationCoordinate2D(latitude: -999999, longitude: -999999)
+			var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
+			var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
             for trail in trails {
                 if trail.name == title {
                     if (!trail.isDrawn) {
                         plotLine(trail)
                     }
 					
-					let center = trail.center
-					topRight.latitude = min(topRight.latitude, center.latitude)
-					topRight.longitude = min(topRight.longitude, center.longitude)
-					bottomLeft.latitude = max(bottomLeft.latitude, center.latitude)
-					bottomLeft.longitude = max(bottomLeft.longitude, center.longitude)
+					for point in trail.points
+					{
+						topRight.latitude = min(topRight.latitude, point.latitude)
+						topRight.longitude = min(topRight.longitude, point.longitude)
+						bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
+						bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
+					}
                 }
             }
 			
 			//zoom in on location
-			let region = MKCoordinateRegionForMapRect(MKMapRect(origin: MKMapPointForCoordinate(topRight), size: MKMapSizeMake(bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)))
+//			let region = MKCoordinateRegionForMapRect(MKMapRect(origin: MKMapPointForCoordinate(topRight), size: MKMapSizeMake(bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)))
+			let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
+//			let region = MKCoordinateRegionMakeWithDistance(center, bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)
+			let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
 			mapView.setRegion(region, animated: true)
         }
     }
