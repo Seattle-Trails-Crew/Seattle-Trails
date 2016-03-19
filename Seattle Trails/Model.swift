@@ -40,10 +40,10 @@ class Trail
 
 
 let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
-let timeoutPeriod:Double = 3600
+//let timeoutPeriod:Double = 3600
 
 //info cache
-var localCacheInner:[Trail]?
+//var localCacheInner:[Trail]?
 
 class socrataService
 {
@@ -64,117 +64,20 @@ class socrataService
 		return trails.filter() { $0.canopy == desiredCanopy }
 	}
 	
-	class func getNearestTrail(nearestTo:CLLocationCoordinate2D, returnClosure:((Trail?)->()))
-	{
-		getAllTrails()
-		{ (trails) in
-			if let trails = trails
-			{
-				if trails.count == 0
-				{
-					returnClosure(nil)
-				}
-				else
-				{
-					var closest = trails[0]
-					for trail in trails
-					{
-						let center = trail.center
-						let xDif = center.latitude - nearestTo.latitude
-						let yDif = center.longitude - nearestTo.longitude
-						let distance = xDif*xDif + yDif*yDif
-						
-						let oldCenter = closest.center
-						let oldXDif = oldCenter.latitude - nearestTo.latitude
-						let oldYDif = oldCenter.longitude - nearestTo.longitude
-						let oldDistance = oldXDif*oldXDif + oldYDif*oldYDif
-						
-						if distance < oldDistance
-						{
-							closest = trail
-						}
-					}
-					returnClosure(closest)
-				}
-			}
-			else
-			{
-				returnClosure(nil)
-			}
-		}
-	}
-
-//	class func getTrailsInArea(area:CGRect, returnClosure:(([Trail]?)->()))
+//	class func getNearestTrail(nearestTo:CLLocationCoordinate2D, returnClosure:((Trail?)->()))
 //	{
-//		getAllTrails()
-//		{ (trails) in
-//			if let trails = trails
-//			{
-//				var validTrails = [Trail]()
-//				for trail in trails
-//				{
-//					for point in trail.points
-//					{
-//						if area.contains(point)
-//						{
-//							validTrails.append(trail)
-//							break
-//						}
-//					}
-//				}
-//				returnClosure(validTrails)
-//			}
-//			else
-//			{
-//				returnClosure(nil)
-//			}
-//		}
+//		
 //	}
+
+	class func getTrailsInArea(upperLeft:CLLocationCoordinate2D, lowerRight:CLLocationCoordinate2D, returnClosure:(([Trail]?)->()))
+	{
+		doRequest("$where=within_box(the_geom, \(upperLeft.latitude), \(upperLeft.longitude), \(lowerRight.latitude), \(lowerRight.longitude))", completion: returnClosure)
+	}
 	
 	class func getAllTrails(returnClosure:(([Trail]?)->()))
 	{
-		var tryToReplace = false
-		if let date = NSUserDefaults.standardUserDefaults().objectForKey("storedDate") as? NSDate
-		{
-			let currentDate = NSDate()
-			let difference = currentDate.timeIntervalSinceDate(date)
-			if difference > timeoutPeriod
-			{
-				tryToReplace = true
-			}
-		}
-		
-		
-		if (localCache != nil && !tryToReplace)
-		{
-			//return the local cache
-			returnClosure(localCache);
-		}
-		else
-		{
-			//do network calls
-			doRequest()
-			{ (trails, json) in
-				if let trails = trails, let json = json
-				{
-					//cache it
-					localCacheInner = trails
-					returnClosure(trails)
-					
-					//store it in user defaults too
-					NSUserDefaults.standardUserDefaults().setObject(json, forKey: "storedJSON")
-					NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: "storedDate")
-					
-					//save the JSON
-					returnClosure(trails)
-				}
-				else
-				{
-					//it failed to load, so return the cache whether or not it's nil
-					returnClosure(localCache)
-				}
-			}
-		}
+		//do network calls
+		doRequest(nil, completion: returnClosure)
 	}
 	
 	
@@ -242,25 +145,25 @@ class socrataService
 		
 		return trails
 	}
-	private class func serialize(data:NSData) -> ([Trail]?, [[String : AnyObject]]?)
+	private class func serialize(data:NSData) -> [Trail]?//([Trail]?, [[String : AnyObject]]?)
 	{
 		do
 		{
 			if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
 			{
-				return (serializeInner(json), json)
+				return serializeInner(json) //(serializeInner(json), json)
 			}
 		}
 		catch _
 		{
 		}
 		NSLog("ERROR: failed to load trails!");
-		return (nil, nil)
+		return nil //(nil, nil)
 	}
 	
-	private class func doRequest(completion:([Trail]?, [[String : AnyObject]]?)->())
+	private class func doRequest(arguments:String?, completion:([Trail]?/*, [[String : AnyObject]]?*/)->())
 	{
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=" + appToken
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"
 		if let url = NSURL(string: urlString)
 		{
 			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
@@ -283,19 +186,20 @@ class socrataService
 					let result = serialize(data)
 					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
-						completion(result.0, result.1)
+//						completion(result.0, result.1)
+						completion(result)
 					}
 				}
 			}).resume()
 		}
 	}
 	
-	private class var localCache:[Trail]?
-	{
-		if localCacheInner == nil, let json = NSUserDefaults.standardUserDefaults().objectForKey("storedJSON") as? [[String : AnyObject]]
-		{
-			localCacheInner = socrataService.serializeInner(json)
-		}
-		return localCacheInner
-	}
+//	private class var localCache:[Trail]?
+//	{
+//		if localCacheInner == nil, let json = NSUserDefaults.standardUserDefaults().objectForKey("storedJSON") as? [[String : AnyObject]]
+//		{
+//			localCacheInner = socrataService.serializeInner(json)
+//		}
+//		return localCacheInner
+//	}
 }
