@@ -61,46 +61,46 @@ class socrataService
 		return trails.filter() { $0.canopy == desiredCanopy }
 	}
 	
-//	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail?)->()))
-//	{
-//		getAllTrails()
-//		{ (trails) in
-//			if let trails = trails
-//			{
-//				if trails.count == 0
-//				{
-//					returnClosure(nil)
-//				}
-//				else
-//				{
-//					var closest = trails[0]
-//					for trail in trails
-//					{
-//						let center = trail.center
-//						let xDif = center.x - nearestTo.x
-//						let yDif = center.y - nearestTo.y
-//						let distance = xDif*xDif + yDif*yDif
-//						
-//						let oldCenter = closest.center
-//						let oldXDif = oldCenter.x - nearestTo.x
-//						let oldYDif = oldCenter.y - nearestTo.y
-//						let oldDistance = oldXDif*oldXDif + oldYDif*oldYDif
-//						
-//						if distance < oldDistance
-//						{
-//							closest = trail
-//						}
-//					}
-//					returnClosure(closest)
-//				}
-//			}
-//			else
-//			{
-//				returnClosure(nil)
-//			}
-//		}
-//	}
-//	
+	class func getNearestTrail(nearestTo:CLLocationCoordinate2D, returnClosure:((Trail?)->()))
+	{
+		getAllTrails()
+		{ (trails) in
+			if let trails = trails
+			{
+				if trails.count == 0
+				{
+					returnClosure(nil)
+				}
+				else
+				{
+					var closest = trails[0]
+					for trail in trails
+					{
+						let center = trail.center
+						let xDif = center.latitude - nearestTo.latitude
+						let yDif = center.longitude - nearestTo.longitude
+						let distance = xDif*xDif + yDif*yDif
+						
+						let oldCenter = closest.center
+						let oldXDif = oldCenter.latitude - nearestTo.latitude
+						let oldYDif = oldCenter.longitude - nearestTo.longitude
+						let oldDistance = oldXDif*oldXDif + oldYDif*oldYDif
+						
+						if distance < oldDistance
+						{
+							closest = trail
+						}
+					}
+					returnClosure(closest)
+				}
+			}
+			else
+			{
+				returnClosure(nil)
+			}
+		}
+	}
+
 //	class func getTrailsInArea(area:CGRect, returnClosure:(([Trail]?)->()))
 //	{
 //		getAllTrails()
