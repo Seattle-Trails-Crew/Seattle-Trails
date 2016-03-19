@@ -14,6 +14,7 @@ class ViewController: UIViewController, MKMapViewDelegate
 
     @IBOutlet weak var mapView: MKMapView!
     var parkNames = [String]()
+    var polyLineRenderer: MKPolylineRenderer?
     
     override func viewDidLoad()
     {
@@ -58,8 +59,8 @@ class ViewController: UIViewController, MKMapViewDelegate
         annotation.coordinate = point
         annotation.title = text
         mapView.addAnnotation(annotation)
-        
     }
+    
     func plotLine(trail: Trail)
     {
         // Plot All Trail Lines
@@ -68,13 +69,25 @@ class ViewController: UIViewController, MKMapViewDelegate
         mapView.addOverlay(line)
     }
     
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let rect = mapView.visibleMapRect
+        let eastPoint = MKMapPointMake(MKMapRectGetMinX(rect), MKMapRectGetMinY(rect))
+        let westPoint = MKMapPointMake(MKMapRectGetMaxX(rect), MKMapRectGetMaxY(rect))
+        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
+        print("Distance: \(distance)")
+//        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
+        let center = mapView.center
+        
+        // Do query, $where=within_box(..., center.lat, center.long, distance)
+    }
+    
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
-        let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
-        polyLineRenderer.strokeColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
-        polyLineRenderer.lineWidth = 3
-        return polyLineRenderer
+        polyLineRenderer = MKPolylineRenderer(overlay: overlay)
+        polyLineRenderer!.strokeColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
+        polyLineRenderer!.lineWidth = 2
+        return polyLineRenderer!
     }
 }
 
