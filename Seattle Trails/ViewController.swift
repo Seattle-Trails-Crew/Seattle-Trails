@@ -9,13 +9,15 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate
 {
 
     @IBOutlet weak var mapView: MKMapView!
     var parkNames = [String]()
-    var polyLineRenderer: MKPolylineRenderer?
+    var locationManager: CLLocationManager?
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var imageDamper: UIImageView!
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -28,22 +30,34 @@ class ViewController: UIViewController, MKMapViewDelegate
             { (trails) in
                 if let trails = trails
                 {
-                    for trail in trails {
-                        self.plotLine(trail)
-                    }
+                    self.plotAllLines(trails)
+                    self.imageDamper.userInteractionEnabled = false
+                    self.imageDamper.hidden = true
+                    self.activityIndicator.stopAnimating()
                 }
                 else
                 {
                     print("Something Bad Happened")
                 }
         }
-
-//        plotLine()
+        
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager?.requestWhenInUseAuthorization()
+        locationManager?.startUpdatingLocation()
+        mapView.showsUserLocation = true
     }
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
-        
+        if locationManager != nil {
+            if let location = locationManager!.location {
+                let center = location.coordinate
+                let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
+                mapView.setRegion(region, animated: true)
+            }
+        }
     }
     
     func plotPoint(point: CLLocationCoordinate2D, text: String)
@@ -66,28 +80,66 @@ class ViewController: UIViewController, MKMapViewDelegate
         // Plot All Trail Lines
         plotPoint(trail.points[0], text: trail.name)
         let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.easyTrail {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
         mapView.addOverlay(line)
+    }
+    
+    func plotAllLines(trails: [Trail])
+    {
+        for trail in trails {
+            self.plotLine(trail)
+        }
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let rect = mapView.visibleMapRect
-        let eastPoint = MKMapPointMake(MKMapRectGetMinX(rect), MKMapRectGetMinY(rect))
-        let westPoint = MKMapPointMake(MKMapRectGetMaxX(rect), MKMapRectGetMaxY(rect))
-        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
-        print("Distance: \(distance)")
+        let upLeft = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
+        let downRight = CLLocationCoordinate2D(latitude: MKMapRectGetMaxX(rect), longitude: MKMapRectGetMinY(rect))
+//        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
+//        print("Distance: \(distance)")
 //        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
-        let center = mapView.center
-        
+        // let center = mapView.center
         // Do query, $where=within_box(..., center.lat, center.long, distance)
+        
+        // Removes all Annotations
+//        let annotationsToRemove = mapView.annotations.filter { $0 !== mapView.userLocation }
+//        mapView.removeAnnotations( annotationsToRemove )
+//        
+//        print("Hit Here")
+//        socrataService.getTrailsInArea(upLeft, lowerRight: downRight)
+//            { (trails) in
+//                if let trails = trails
+//                {
+//                    self.plotAllLines(trails)
+//                }
+//                else
+//                {
+//                    print("Something Bad Happened")
+//                }
+//        }
+
     }
     
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
-        polyLineRenderer = MKPolylineRenderer(overlay: overlay)
-        polyLineRenderer!.strokeColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
-        polyLineRenderer!.lineWidth = 2
-        return polyLineRenderer!
+        let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
+        if let color = overlay.title {
+            if color == "blue" {
+                polyLineRenderer.strokeColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
+            } else if color == "green" {
+                polyLineRenderer.strokeColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
+            }
+        }
+        polyLineRenderer.lineWidth = 2
+        return polyLineRenderer
     }
 }
 
