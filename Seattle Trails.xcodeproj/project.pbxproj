@@ -1,0 +1,507 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */; };
+		8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */; };
+		8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */; };
+		8CEB2CB21C9D0AF3000358FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */; };
+		8CEB2CB51C9D0AF3000358FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */; };
+		8CEB2CC01C9D0AF4000358FC /* Seattle_TrailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CBF1C9D0AF4000358FC /* Seattle_TrailsTests.swift */; };
+		8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8CEB2CBC1C9D0AF4000358FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8CEB2C9F1C9D0AF3000358FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8CEB2CA61C9D0AF3000358FC;
+			remoteInfo = "Seattle Trails";
+		};
+		8CEB2CC71C9D0AF4000358FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8CEB2C9F1C9D0AF3000358FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8CEB2CA61C9D0AF3000358FC;
+			remoteInfo = "Seattle Trails";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seattle Trails.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8CEB2CAF1C9D0AF3000358FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8CEB2CB41C9D0AF3000358FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8CEB2CB61C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8CEB2CBB1C9D0AF4000358FC /* Seattle TrailsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Seattle TrailsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CEB2CBF1C9D0AF4000358FC /* Seattle_TrailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seattle_TrailsTests.swift; sourceTree = "<group>"; };
+		8CEB2CC11C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8CEB2CC61C9D0AF4000358FC /* Seattle TrailsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Seattle TrailsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seattle_TrailsUITests.swift; sourceTree = "<group>"; };
+		8CEB2CCC1C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8CEB2CA41C9D0AF3000358FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEB2CB81C9D0AF4000358FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEB2CC31C9D0AF4000358FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8CEB2C9E1C9D0AF3000358FC = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CA91C9D0AF3000358FC /* Seattle Trails */,
+				8CEB2CBE1C9D0AF4000358FC /* Seattle TrailsTests */,
+				8CEB2CC91C9D0AF4000358FC /* Seattle TrailsUITests */,
+				8CEB2CA81C9D0AF3000358FC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8CEB2CA81C9D0AF3000358FC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */,
+				8CEB2CBB1C9D0AF4000358FC /* Seattle TrailsTests.xctest */,
+				8CEB2CC61C9D0AF4000358FC /* Seattle TrailsUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8CEB2CA91C9D0AF3000358FC /* Seattle Trails */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
+				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
+				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
+				8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */,
+				8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */,
+				8CEB2CB61C9D0AF4000358FC /* Info.plist */,
+			);
+			path = "Seattle Trails";
+			sourceTree = "<group>";
+		};
+		8CEB2CBE1C9D0AF4000358FC /* Seattle TrailsTests */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CBF1C9D0AF4000358FC /* Seattle_TrailsTests.swift */,
+				8CEB2CC11C9D0AF4000358FC /* Info.plist */,
+			);
+			path = "Seattle TrailsTests";
+			sourceTree = "<group>";
+		};
+		8CEB2CC91C9D0AF4000358FC /* Seattle TrailsUITests */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */,
+				8CEB2CCC1C9D0AF4000358FC /* Info.plist */,
+			);
+			path = "Seattle TrailsUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8CEB2CA61C9D0AF3000358FC /* Seattle Trails */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8CEB2CCF1C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle Trails" */;
+			buildPhases = (
+				8CEB2CA31C9D0AF3000358FC /* Sources */,
+				8CEB2CA41C9D0AF3000358FC /* Frameworks */,
+				8CEB2CA51C9D0AF3000358FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Seattle Trails";
+			productName = "Seattle Trails";
+			productReference = 8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8CEB2CBA1C9D0AF4000358FC /* Seattle TrailsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8CEB2CD21C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle TrailsTests" */;
+			buildPhases = (
+				8CEB2CB71C9D0AF4000358FC /* Sources */,
+				8CEB2CB81C9D0AF4000358FC /* Frameworks */,
+				8CEB2CB91C9D0AF4000358FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8CEB2CBD1C9D0AF4000358FC /* PBXTargetDependency */,
+			);
+			name = "Seattle TrailsTests";
+			productName = "Seattle TrailsTests";
+			productReference = 8CEB2CBB1C9D0AF4000358FC /* Seattle TrailsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8CEB2CC51C9D0AF4000358FC /* Seattle TrailsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8CEB2CD51C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle TrailsUITests" */;
+			buildPhases = (
+				8CEB2CC21C9D0AF4000358FC /* Sources */,
+				8CEB2CC31C9D0AF4000358FC /* Frameworks */,
+				8CEB2CC41C9D0AF4000358FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8CEB2CC81C9D0AF4000358FC /* PBXTargetDependency */,
+			);
+			name = "Seattle TrailsUITests";
+			productName = "Seattle TrailsUITests";
+			productReference = 8CEB2CC61C9D0AF4000358FC /* Seattle TrailsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8CEB2C9F1C9D0AF3000358FC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = seatrails;
+				TargetAttributes = {
+					8CEB2CA61C9D0AF3000358FC = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					8CEB2CBA1C9D0AF4000358FC = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = 8CEB2CA61C9D0AF3000358FC;
+					};
+					8CEB2CC51C9D0AF4000358FC = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = 8CEB2CA61C9D0AF3000358FC;
+					};
+				};
+			};
+			buildConfigurationList = 8CEB2CA21C9D0AF3000358FC /* Build configuration list for PBXProject "Seattle Trails" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8CEB2C9E1C9D0AF3000358FC;
+			productRefGroup = 8CEB2CA81C9D0AF3000358FC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8CEB2CA61C9D0AF3000358FC /* Seattle Trails */,
+				8CEB2CBA1C9D0AF4000358FC /* Seattle TrailsTests */,
+				8CEB2CC51C9D0AF4000358FC /* Seattle TrailsUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8CEB2CA51C9D0AF3000358FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CEB2CB51C9D0AF3000358FC /* LaunchScreen.storyboard in Resources */,
+				8CEB2CB21C9D0AF3000358FC /* Assets.xcassets in Resources */,
+				8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEB2CB91C9D0AF4000358FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEB2CC41C9D0AF4000358FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8CEB2CA31C9D0AF3000358FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */,
+				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEB2CB71C9D0AF4000358FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CEB2CC01C9D0AF4000358FC /* Seattle_TrailsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEB2CC21C9D0AF4000358FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8CEB2CBD1C9D0AF4000358FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8CEB2CA61C9D0AF3000358FC /* Seattle Trails */;
+			targetProxy = 8CEB2CBC1C9D0AF4000358FC /* PBXContainerItemProxy */;
+		};
+		8CEB2CC81C9D0AF4000358FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8CEB2CA61C9D0AF3000358FC /* Seattle Trails */;
+			targetProxy = 8CEB2CC71C9D0AF4000358FC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8CEB2CAF1C9D0AF3000358FC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8CEB2CB41C9D0AF3000358FC /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8CEB2CCD1C9D0AF4000358FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8CEB2CCE1C9D0AF4000358FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8CEB2CD01C9D0AF4000358FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Seattle Trails/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-Trails";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8CEB2CD11C9D0AF4000358FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Seattle Trails/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-Trails";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8CEB2CD31C9D0AF4000358FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Seattle TrailsTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-TrailsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Seattle Trails.app/Seattle Trails";
+			};
+			name = Debug;
+		};
+		8CEB2CD41C9D0AF4000358FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "Seattle TrailsTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-TrailsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Seattle Trails.app/Seattle Trails";
+			};
+			name = Release;
+		};
+		8CEB2CD61C9D0AF4000358FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Seattle TrailsUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-TrailsUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "Seattle Trails";
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		8CEB2CD71C9D0AF4000358FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Seattle TrailsUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-TrailsUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "Seattle Trails";
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8CEB2CA21C9D0AF3000358FC /* Build configuration list for PBXProject "Seattle Trails" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CEB2CCD1C9D0AF4000358FC /* Debug */,
+				8CEB2CCE1C9D0AF4000358FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8CEB2CCF1C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle Trails" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CEB2CD01C9D0AF4000358FC /* Debug */,
+				8CEB2CD11C9D0AF4000358FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		8CEB2CD21C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle TrailsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CEB2CD31C9D0AF4000358FC /* Debug */,
+				8CEB2CD41C9D0AF4000358FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		8CEB2CD51C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle TrailsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CEB2CD61C9D0AF4000358FC /* Debug */,
+				8CEB2CD71C9D0AF4000358FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8CEB2C9F1C9D0AF3000358FC /* Project object */;
+}
