@@ -34,7 +34,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 if let trails = trails
                 {
                     self.trails = trails
-                    self.plotAllLines()
+                    self.plotAllPoint()
                     self.imageDamper.userInteractionEnabled = false
                     self.imageDamper.hidden = true
                     self.activityIndicator.stopAnimating()
@@ -188,7 +188,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
-        let polyLineRenderer = MKPolylineRennoderer(overlay: overlay)
+        let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
         if let color = overlay.title {
             if color == "blue" {
                 polyLineRenderer.strokeColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
