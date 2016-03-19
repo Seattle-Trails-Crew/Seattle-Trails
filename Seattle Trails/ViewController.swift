@@ -147,13 +147,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let title = view.annotation!.title {
+			var topRight = CLLocationCoordinate2D(latitude: 999999, longitude: 999999)
+			var bottomLeft = CLLocationCoordinate2D(latitude: -999999, longitude: -999999)
             for trail in trails {
                 if trail.name == title {
                     if (!trail.isDrawn) {
                         plotLine(trail)
                     }
+					
+					let center = trail.center
+					topRight.latitude = min(topRight.latitude, center.latitude)
+					topRight.longitude = min(topRight.longitude, center.longitude)
+					bottomLeft.latitude = max(bottomLeft.latitude, center.latitude)
+					bottomLeft.longitude = max(bottomLeft.longitude, center.longitude)
                 }
             }
+			
+			//zoom in on location
+			let region = MKCoordinateRegionForMapRect(MKMapRect(origin: MKMapPointForCoordinate(topRight), size: MKMapSizeMake(bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)))
+			mapView.setRegion(region, animated: true)
         }
     }
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
