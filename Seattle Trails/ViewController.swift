@@ -9,18 +9,36 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController
+class ViewController: UIViewController, MKMapViewDelegate
 {
 
     @IBOutlet weak var mapView: MKMapView!
+    var parkNames = [String]()
+    var polyLineRenderer: MKPolylineRenderer?
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        mapView.delegate = self
+        
         let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
         let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
         mapView.setRegion(region, animated: true)
-        plotLine()
+        socrataService.getAllTrails()
+            { (trails) in
+                if let trails = trails
+                {
+                    for trail in trails {
+                        self.plotLine(trail)
+                    }
+                }
+                else
+                {
+                    print("Something Bad Happened")
+                }
+        }
+
+//        plotLine()
     }
     
     @IBAction func navButtonPressed(sender: UIButton)
@@ -28,33 +46,48 @@ class ViewController: UIViewController
         
     }
     
-    func plotPoint()
+    func plotPoint(point: CLLocationCoordinate2D, text: String)
     {
+        // Only Plot One Point Per Trail
+        if parkNames.indexOf(text) >= 0 {
+            return
+        }
+        parkNames.append(text)
+        
+        // Annotation
         let annotation = MKPointAnnotation()
-        
-        let coordinate = CLLocationCoordinate2D(latitude: 47.58144035069734, longitude: -122.38291159311778)
-        
-        annotation.coordinate = coordinate
-        
+        annotation.coordinate = point
+        annotation.title = text
         mapView.addAnnotation(annotation)
-        
     }
-    func plotLine()
+    
+    func plotLine(trail: Trail)
     {
-        // Not Showing Yet
-
-        let coordinateA = CLLocationCoordinate2D(latitude: 47.58144035069734, longitude: -122.38291159311778)
-        let coordinateB = CLLocationCoordinate2D(latitude: 60.08144035069734, longitude: -100.98291159311778)
-        let coordinateC = CLLocationCoordinate2D(latitude: 60.08144035069734, longitude: -100.98291159311778)
-        let coordinateD = CLLocationCoordinate2D(latitude: 60.08144035069734, longitude: -100.98291159311778)
-        
-        var coordinates: [CLLocationCoordinate2D] = [CLLocationCoordinate2D]()
-        coordinates.append(coordinateA)
-        coordinates.append(coordinateB)
-        coordinates.append(coordinateC)
-        coordinates.append(coordinateD)
-        let line = MKPolyline(coordinates: &coordinates, count: 4)
+        // Plot All Trail Lines
+        plotPoint(trail.points[0], text: trail.name)
+        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
         mapView.addOverlay(line)
+    }
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let rect = mapView.visibleMapRect
+        let eastPoint = MKMapPointMake(MKMapRectGetMinX(rect), MKMapRectGetMinY(rect))
+        let westPoint = MKMapPointMake(MKMapRectGetMaxX(rect), MKMapRectGetMaxY(rect))
+        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
+        print("Distance: \(distance)")
+//        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
+        let center = mapView.center
+        
+        // Do query, $where=within_box(..., center.lat, center.long, distance)
+    }
+    
+    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
+    {
+        // Setting For Line Style
+        polyLineRenderer = MKPolylineRenderer(overlay: overlay)
+        polyLineRenderer!.strokeColor = UIColor(red: 0, green: 0, blue: 1, alpha: 1)
+        polyLineRenderer!.lineWidth = 2
+        return polyLineRenderer!
     }
 }
 
