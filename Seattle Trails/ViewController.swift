@@ -32,7 +32,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             { (trails) in
                 if let trails = trails
                 {
-                    self.plotAllLines(trails)
+                    self.trails = trails
+                    self.plotAllLines()
                     self.imageDamper.userInteractionEnabled = false
                     self.imageDamper.hidden = true
                     self.activityIndicator.stopAnimating()
@@ -80,7 +81,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func plotLine(trail: Trail)
     {
         // Plot All Trail Lines
-        plotPoint(trail.points[0], text: trail.name)
+
         let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
         
         // Example How To Alter Colors
@@ -93,13 +94,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.addOverlay(line)
     }
     
-    func plotAllLines(trails: [Trail])
+    func plotAllLines()
     {
         for trail in trails {
-            self.plotLine(trail)
+            plotPoint(trail.points[0], text: trail.name)
+//            self.plotLine(trail)
         }
     }
-    
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
+    {
+        print("hi")
+        
+    }
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let rect = mapView.visibleMapRect
         let upLeft = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
