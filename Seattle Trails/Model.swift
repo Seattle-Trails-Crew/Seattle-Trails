@@ -228,16 +228,16 @@ class socrataService
 		
 		
 		//connect continuous trails
-		for trail in trails
-		{
-			for trail2 in trails
-			{
-				if trail2.pmaid == trail.pmaid && trail2.trailNum == trail.trailNum - 1
-				{
-					trail.points.insert(trail2.points.last!, atIndex: 0)
-				}
-			}
-		}
+//		for trail in trails
+//		{
+//			for trail2 in trails
+//			{
+//				if trail2.pmaid == trail.pmaid && trail2.trailNum == trail.trailNum - 1
+//				{
+//					trail.points.insert(trail2.points.last!, atIndex: 0)
+//				}
+//			}
+//		}
 		
 		
 		return trails
@@ -260,7 +260,7 @@ class socrataService
 	
 	private class func doRequest(completion:([Trail]?, [[String : AnyObject]]?)->())
 	{
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$$app_token=" + appToken
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=" + appToken
 		if let url = NSURL(string: urlString)
 		{
 			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
