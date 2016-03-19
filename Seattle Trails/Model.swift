@@ -201,7 +201,7 @@ class socrataService
 				{
 					for point in points
 					{
-						let location = CLLocationCoordinate2D(latitude: point[0], longitude: point[1])
+						let location = CLLocationCoordinate2D(latitude: point[1], longitude: point[0])
 						trail.points.append(location)
 					}
 					trails.append(trail)
