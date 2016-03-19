@@ -7,19 +7,29 @@
 //
 
 import UIKit
+import MapKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController
+{
 
-    override func viewDidLoad() {
+    @IBOutlet weak var mapView: MKMapView!
+    
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        plotPoint()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func plotPoint()
+    {
+        let annotation = MKPointAnnotation()
+        
+        let coordinate = CLLocationCoordinate2D(latitude: 47.58144035069734, longitude: -122.38291159311778)
+        
+        annotation.coordinate = coordinate
+        
+        mapView.addAnnotation(annotation)
+        
     }
-
-
 }
 
