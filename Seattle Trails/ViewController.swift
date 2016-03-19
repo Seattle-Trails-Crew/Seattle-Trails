@@ -13,6 +13,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 {
 
     @IBOutlet weak var mapView: MKMapView!
+    var trails = [Trail]()
     @IBOutlet weak var locationButtonBackground: UIImageView!
     var parkNames = [String]()
     var locationManager: CLLocationManager?
