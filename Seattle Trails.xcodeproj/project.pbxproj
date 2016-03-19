@@ -15,7 +15,7 @@
 		8CEB2CC01C9D0AF4000358FC /* Seattle_TrailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CBF1C9D0AF4000358FC /* Seattle_TrailsTests.swift */; };
 		8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */; };
 		8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CD81C9D1A39000358FC /* .gitignore */; };
-		8CEB2CDB1C9E0322000358FC /* IMG_0169.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CDA1C9E0322000358FC /* IMG_0169.jpg */; };
+		8CEB2CDF1C9E0FC0000358FC /* IMG_0169.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */; };
 		E44A6FD71C9D1B210015852C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A6FD61C9D1B210015852C /* Model.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,7 +51,7 @@
 		8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seattle_TrailsUITests.swift; sourceTree = "<group>"; };
 		8CEB2CCC1C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8CEB2CD81C9D1A39000358FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		8CEB2CDA1C9E0322000358FC /* IMG_0169.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_0169.jpg; path = ../../../../Downloads/IMG_0169.jpg; sourceTree = "<group>"; };
+		8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0169.jpg; sourceTree = "<group>"; };
 		E44A6FD61C9D1B210015852C /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,9 +109,9 @@
 				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
 				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
 				8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */,
+				8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */,
 				8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */,
 				8CEB2CB61C9D0AF4000358FC /* Info.plist */,
-				8CEB2CDA1C9E0322000358FC /* IMG_0169.jpg */,
 			);
 			path = "Seattle Trails";
 			sourceTree = "<group>";
@@ -240,7 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */,
-				8CEB2CDB1C9E0322000358FC /* IMG_0169.jpg in Resources */,
+				8CEB2CDF1C9E0FC0000358FC /* IMG_0169.jpg in Resources */,
 				8CEB2CB51C9D0AF3000358FC /* LaunchScreen.storyboard in Resources */,
 				8CEB2CB21C9D0AF3000358FC /* Assets.xcassets in Resources */,
 				8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */,
