@@ -21,11 +21,20 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="oKD-qu-38m">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Rw-jgB">
+                                <rect key="frame" x="20" y="550" width="59" height="30"/>
+                                <state key="normal" title="Location"/>
+                                <connections>
+                                    <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P2W-aa-bfQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="smM-Rw-jgB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="2lV-f9-eEK"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="3id-Lb-FzM"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Dm0-lR-WSa"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="smM-Rw-jgB" secondAttribute="bottom" constant="20" id="IP9-Er-7Rg"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="N4l-uB-2wh"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="Nra-N1-zf0"/>
                         </constraints>
@@ -36,6 +45,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="105" y="396"/>
         </scene>
     </scenes>
 </document>
