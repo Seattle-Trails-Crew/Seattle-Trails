@@ -15,6 +15,7 @@
 		8CEB2CC01C9D0AF4000358FC /* Seattle_TrailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CBF1C9D0AF4000358FC /* Seattle_TrailsTests.swift */; };
 		8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */; };
 		8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CD81C9D1A39000358FC /* .gitignore */; };
+		E44A6FD71C9D1B210015852C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A6FD61C9D1B210015852C /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seattle_TrailsUITests.swift; sourceTree = "<group>"; };
 		8CEB2CCC1C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8CEB2CD81C9D1A39000358FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E44A6FD61C9D1B210015852C /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 		8CEB2CA91C9D0AF3000358FC /* Seattle Trails */ = {
 			isa = PBXGroup;
 			children = (
+				E44A6FD61C9D1B210015852C /* Model.swift */,
 				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
 				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
 				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
@@ -260,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E44A6FD71C9D1B210015852C /* Model.swift in Sources */,
 				8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
 			);
@@ -488,6 +492,7 @@
 				8CEB2CD11C9D0AF4000358FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8CEB2CD21C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle TrailsTests" */ = {
 			isa = XCConfigurationList;
@@ -496,6 +501,7 @@
 				8CEB2CD41C9D0AF4000358FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8CEB2CD51C9D0AF4000358FC /* Build configuration list for PBXNativeTarget "Seattle TrailsUITests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +510,7 @@
 				8CEB2CD71C9D0AF4000358FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
