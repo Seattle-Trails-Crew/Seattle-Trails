@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 import MapKit
 
+//MARK: trail model
 class Trail
 {
 	var points = [CLLocationCoordinate2D]();
@@ -26,6 +27,9 @@ class Trail
 	//utility functions
 	var center:CLLocationCoordinate2D
 	{
+		//this calculates the center of the trail, by volume of points
+		//so it's kind of an approximation
+		
 		var c = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 		for point in points
 		{
@@ -39,7 +43,9 @@ class Trail
 	
 	var easyTrail:Bool
 	{
-		var access = 0;
+		//this roughly rates the trail for accessability
+		//IE muddy trails, or trails with high inclines, or whatever, return false
+		
 		if let surfaceType = surfaceType
 		{
 			switch(surfaceType.lowercaseString)
@@ -75,13 +81,9 @@ class Trail
 
 
 let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
-//let timeoutPeriod:Double = 3600
-
-//info cache
-//var localCacheInner:[Trail]?
-
 class socrataService
 {
+	//MARK: debug info checking
 	class func getCanopyLevels(trails:[Trail]) -> [String]
 	{
 		var levels = Set<String>()
@@ -120,11 +122,7 @@ class socrataService
 	}
 	
 	
-//	class func getNearestTrail(nearestTo:CLLocationCoordinate2D, returnClosure:((Trail?)->()))
-//	{
-//		
-//	}
-
+	//MARK: public network queries
 	class func getTrailsInArea(upperLeft:CLLocationCoordinate2D, lowerRight:CLLocationCoordinate2D, returnClosure:(([Trail]?)->()))
 	{
 		doRequest("$where=within_box(the_geom, \(upperLeft.latitude), \(upperLeft.longitude), \(lowerRight.latitude), \(lowerRight.longitude))", completion: returnClosure)
@@ -137,7 +135,7 @@ class socrataService
 	}
 	
 	
-	
+	//MARK: JSON serialization
 	private class func serializeInner(json:[[String : AnyObject]]) -> [Trail]
 	{
 		var trails = [Trail]()
@@ -186,22 +184,9 @@ class socrataService
 		}
 		
 		
-		//connect continuous trails
-//		for trail in trails
-//		{
-//			for trail2 in trails
-//			{
-//				if trail2.pmaid == trail.pmaid && trail2.trailNum == trail.trailNum - 1
-//				{
-//					trail.points.insert(trail2.points.last!, atIndex: 0)
-//				}
-//			}
-//		}
-		
-		
 		return trails
 	}
-	private class func serialize(data:NSData) -> [Trail]?//([Trail]?, [[String : AnyObject]]?)
+	private class func serialize(data:NSData) -> [Trail]?
 	{
 		do
 		{
@@ -217,11 +202,16 @@ class socrataService
 		return nil //(nil, nil)
 	}
 	
+	
+	//MARK: inner network requests
 	private class func doRequest(arguments:String?, completion:([Trail]?/*, [[String : AnyObject]]?*/)->())
 	{
+		//prepare the URL string
 		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"
+		
 		if let url = NSURL(string: urlString)
 		{
+			//prepare the session
 			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
 			let request = NSMutableURLRequest(URL: url)
 			request.HTTPMethod = "GET"
@@ -230,6 +220,7 @@ class socrataService
 			{ (data, response, error) in
 				if let error = error
 				{
+					//you didn't get the data, so output an error
 					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
 						NSLog("ERROR: " + error.description)
@@ -237,25 +228,14 @@ class socrataService
 				}
 				else if let data = data
 				{
-					//TODO: note there still might be a problem (ie check to see if there's a "error" argument!)
-					
+					//you got the data, serialize and return it
 					let result = serialize(data)
 					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
-//						completion(result.0, result.1)
 						completion(result)
 					}
 				}
 			}).resume()
 		}
 	}
-	
-//	private class var localCache:[Trail]?
-//	{
-//		if localCacheInner == nil, let json = NSUserDefaults.standardUserDefaults().objectForKey("storedJSON") as? [[String : AnyObject]]
-//		{
-//			localCacheInner = socrataService.serializeInner(json)
-//		}
-//		return localCacheInner
-//	}
 }
