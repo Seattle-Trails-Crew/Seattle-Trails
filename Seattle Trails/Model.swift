@@ -13,12 +13,15 @@ import MapKit
 class Trail
 {
 	var points = [CLLocationCoordinate2D]();
+	var startPoint = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 	var name:String = ""
 	var canopy:String?
 	var condition:String?
 	var gradeType:String?
 	var surfaceType:String?
 	var length:Float = 0
+	var trailNum:Int = 0
+	var pmaid:Int = 0
 	
 	//utility functions
 	var center:CLLocationCoordinate2D
@@ -181,13 +184,12 @@ class socrataService
 		var trails = [Trail]()
 		for dict in json
 		{
-			//TODO: parse this JSON dictionary
-			//into a trail
+			//parse this JSON dictionary into a trail
 			let canopy = dict["canopy"] as? String
 			let condition = dict["condition"] as? String
 			let gradeType = dict["grade_type"] as? String
 			let surfaceType = dict["surface_ty"] as? String
-			if let name = dict["pma_name"] as? String, let length = dict["gis_length"] as? String, let geom = dict["the_geom"] as? [String:AnyObject]
+			if let pmaid = dict["pmaid"] as? String, let trailNum = dict["trail_num"] as? String, let name = dict["pma_name"] as? String, let length = dict["gis_length"] as? String, let geom = dict["the_geom"] as? [String:AnyObject]
 			{
 				let trail = Trail()
 				trail.canopy = canopy
@@ -196,6 +198,9 @@ class socrataService
 				trail.surfaceType = surfaceType
 				trail.name = name
 				trail.length = (length as NSString).floatValue
+				trail.trailNum = (trailNum as NSString).integerValue
+				trail.pmaid = (pmaid as NSString).integerValue
+				
 				
 				if let points = geom["coordinates"] as? [[Double]]
 				{
@@ -204,6 +209,9 @@ class socrataService
 						let location = CLLocationCoordinate2D(latitude: point[1], longitude: point[0])
 						trail.points.append(location)
 					}
+					
+					trail.startPoint = trail.points[0]
+					
 					trails.append(trail)
 				}
 				else
@@ -218,6 +226,20 @@ class socrataService
 			}
 		}
 		
+		
+		//connect continuous trails
+		for trail in trails
+		{
+			for trail2 in trails
+			{
+				if trail2.pmaid == trail.pmaid && trail2.trailNum == trail.trailNum - 1
+				{
+					trail.points.insert(trail2.points.last!, atIndex: 0)
+				}
+			}
+		}
+		
+		
 		return trails
 	}
 	private class func serialize(data:NSData) -> ([Trail]?, [[String : AnyObject]]?)
@@ -229,7 +251,7 @@ class socrataService
 				return (serializeInner(json), json)
 			}
 		}
-		catch let error
+		catch _
 		{
 		}
 		NSLog("ERROR: failed to load trails!");
