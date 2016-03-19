@@ -62,7 +62,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
-    func plotPoint(point: CLLocationCoordinate2D, text: String)
+    func plotPoint(point: CLLocationCoordinate2D, text: String, color: UIColor)
     {
         // Only Plot One Point Per Trail
         if parkNames.indexOf(text) >= 0 {
@@ -89,21 +89,70 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         } else {
             line.title = "blue"
         }
-        
+        trail.isDrawn = true
         mapView.addOverlay(line)
     }
     
-    func plotAllLines()
+    func plotAllPoint()
     {
+        var parks = [String : [Trail]]()
         for trail in trails {
-            plotPoint(trail.points[0], text: trail.name)
+            if parks[trail.name] == nil
+            {
+                parks[trail.name] = [Trail]()
+            }
+            parks[trail.name] = [Trail]()
+//            plotPoint(trail.points[0], text: trail.name)
 //            self.plotLine(trail)
+        }
+        
+        for park in parks.keys
+        {
+            var numGood = 0
+            var numBad = 0
+            var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            for trail in parks[park]!
+            {
+                if trail.easyTrail
+                {
+                    numGood += 1
+                }
+                else
+                {
+                    numBad += 1
+                }
+                
+                let center = trail.center
+                totalCenter.latitude += center.latitude
+                totalCenter.longitude += center.longitude
+            }
+            totalCenter.latitude /= Double(numGood + numBad)
+            totalCenter.longitude /= Double(numGood + numBad)
+            
+            let color: UIColor
+            if (numGood > numBad)
+            {
+                color = .greenColor()
+            }
+            else
+            {
+                color = .blueColor()
+            }
+            
+            plotPoint(totalCenter, text: park, color: color)
         }
     }
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
-        print("hi")
-        
+        if let title = view.annotation!.title {
+            for trail in trails {
+                if trail.name == title {
+                    if (!trail.isDrawn) {
+                        plotLine(trail)
+                    }
+                }
+            }
+        }
     }
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let rect = mapView.visibleMapRect
@@ -137,7 +186,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
-        let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
+        let polyLineRenderer = MKPolylineRennoderer(overlay: overlay)
         if let color = overlay.title {
             if color == "blue" {
                 polyLineRenderer.strokeColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)

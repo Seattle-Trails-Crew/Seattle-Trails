@@ -23,6 +23,7 @@ class Trail
 	var length:Float = 0
 	var trailNum:Int = 0
 	var pmaid:Int = 0
+    var isDrawn:Bool = false
 	
 	//utility functions
 	var center:CLLocationCoordinate2D
