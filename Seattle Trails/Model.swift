@@ -192,19 +192,19 @@ class socrataService
 		{
 			if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
 			{
-				return serializeInner(json) //(serializeInner(json), json)
+				return serializeInner(json)
 			}
 		}
 		catch _
 		{
 		}
 		NSLog("ERROR: failed to load trails!");
-		return nil //(nil, nil)
+		return nil
 	}
 	
 	
 	//MARK: inner network requests
-	private class func doRequest(arguments:String?, completion:([Trail]?/*, [[String : AnyObject]]?*/)->())
+	private class func doRequest(arguments:String?, completion:([Trail]?)->())
 	{
 		//prepare the URL string
 		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"
