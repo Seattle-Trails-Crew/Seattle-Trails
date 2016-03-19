@@ -16,8 +16,14 @@ class ViewController: UIViewController {
 		
 		
 		socrataService.getAllTrails()
-			{ (tasks) in
-				NSLog("HOI")
+			{ (trails) in
+				if let trails = trails
+				{
+					for trail in trails
+					{
+						NSLog("Trail named " + trail.name)
+					}
+				}
 		}
     }
 

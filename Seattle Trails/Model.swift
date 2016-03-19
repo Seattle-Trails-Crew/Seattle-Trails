@@ -39,41 +39,25 @@ let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
 
 class socrataService
 {
-	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail)->()))
+	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail?)->()))
 	{
 		//TODO: whatever
-		getAllTrails(
-			{ (all:[Trail]) -> () in
-				returnClosure(all[0])
-		})
+//		getAllTrails(
+//			{ (all:[Trail]) -> () in
+//				returnClosure(all[0])
+//		})
 	}
 	
-	class func getTrailsInArea(area:CGRect, returnClosure:(([Trail])->()))
+	class func getTrailsInArea(area:CGRect, returnClosure:(([Trail]?)->()))
 	{
 		//TODO: whatever
-		getAllTrails(returnClosure)
+//		getAllTrails(returnClosure)
 	}
 	
-	class func getAllTrails(returnClosure:(([Trail])->()))
+	class func getAllTrails(returnClosure:(([Trail]?)->()))
 	{
-		//TODO: do network calls
-		doRequest()
-		{
-			NSLog("DONE")
-		}
-		
-		
-		//for now, make dummy data
-		var dummy = Trail()
-		dummy.name = "TRAIL"
-		dummy.canopy = "High"
-		dummy.condition = "Good"
-		dummy.gradeType = "Flat"
-		dummy.surfaceType = "Gravel"
-		dummy.length = 1337
-		dummy.points.append(CGPoint(x:-122.303, y:47.67))
-		
-		returnClosure([dummy])
+		//do network calls
+		doRequest(returnClosure)
 	}
 	
 	private class func serialize(data:NSData) -> [Trail]?
@@ -82,23 +66,52 @@ class socrataService
 		{
 			if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
 			{
+				var trails = [Trail]()
 				for dict in json
 				{
 					//TODO: parse this JSON dictionary
 					//into a trail
+					if let canopy = dict["canopy"] as? String, let condition = dict["condition"] as? String, let gradeType = dict["grade_type"] as? String, let surfaceType = dict["surface_ty"] as? String, let name = dict["pma_name"] as? String, let length = dict["gis_length"] as? String, let geom = dict["the_geom"] as? [String:AnyObject]
+					{
+						let trail = Trail()
+						trail.canopy = canopy
+						trail.condition = condition
+						trail.gradeType = gradeType
+						trail.surfaceType = surfaceType
+						trail.name = name
+						trail.length = (length as NSString).floatValue
+						
+						if let points = geom["coordinates"] as? [[Int]]
+						{
+							for point in points
+							{
+								trail.points.append(CGPoint(x: point[0], y: point[1]))
+							}
+							trails.append(trail)
+						}
+						else
+						{
+							NSLog("ERROR: failed to load points on trail " + name + "!");
+						}
+						
+					}
+					else
+					{
+						NSLog("ERROR: failed to load trail!");
+					}
 				}
 				
-				//TODO: return the trails
-				return nil
+				return trails
 			}
 		}
 		catch let error
 		{
 		}
+		NSLog("ERROR: failed to load trails!");
 		return nil
 	}
 	
-	private class func doRequest(completion:()->())
+	private class func doRequest(completion:([Trail]?)->())
 	{
 		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$$app_token=" + appToken
 		if let url = NSURL(string: urlString)
@@ -124,8 +137,7 @@ class socrataService
 					{
 						NSOperationQueue.mainQueue().addOperationWithBlock()
 						{
-							//TODO: return the data
-							//this will involve changing that completion
+							completion(serialized)
 						}
 					}
 				}
