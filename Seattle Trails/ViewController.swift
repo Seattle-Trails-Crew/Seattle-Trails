@@ -134,18 +134,31 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             totalCenter.latitude /= Double(numGood + numBad)
             totalCenter.longitude /= Double(numGood + numBad)
             
-            let difficulty
+            let difficulty: String
             if (numGood > numBad)
             {
-                difficulty = "Easy"
+                difficulty = "Accessible"
             }
             else
             {
-                difficulty = "Normal"
+                difficulty = ""
             }
             
             plotPoint(totalCenter, text: park, difficulty: difficulty)
         }
+    }
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
+    {
+        let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        if let subtitle = annotation.subtitle {
+            if subtitle == "Accessible" {
+                view.pinTintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
+            } else {
+                view.pinTintColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
+            }
+        }
+        view.canShowCallout = true
+        return view
     }
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
