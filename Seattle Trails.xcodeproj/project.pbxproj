@@ -14,6 +14,7 @@
 		8CEB2CB51C9D0AF3000358FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */; };
 		8CEB2CC01C9D0AF4000358FC /* Seattle_TrailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CBF1C9D0AF4000358FC /* Seattle_TrailsTests.swift */; };
 		8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */; };
+		8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CD81C9D1A39000358FC /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		8CEB2CC61C9D0AF4000358FC /* Seattle TrailsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Seattle TrailsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seattle_TrailsUITests.swift; sourceTree = "<group>"; };
 		8CEB2CCC1C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8CEB2CD81C9D1A39000358FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		8CEB2C9E1C9D0AF3000358FC = {
 			isa = PBXGroup;
 			children = (
+				8CEB2CD81C9D1A39000358FC /* .gitignore */,
 				8CEB2CA91C9D0AF3000358FC /* Seattle Trails */,
 				8CEB2CBE1C9D0AF4000358FC /* Seattle TrailsTests */,
 				8CEB2CC91C9D0AF4000358FC /* Seattle TrailsUITests */,
@@ -229,6 +232,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */,
 				8CEB2CB51C9D0AF3000358FC /* LaunchScreen.storyboard in Resources */,
 				8CEB2CB21C9D0AF3000358FC /* Assets.xcassets in Resources */,
 				8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */,
