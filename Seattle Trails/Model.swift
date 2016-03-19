@@ -8,10 +8,11 @@
 
 import UIKit
 import Foundation
+import MapKit
 
 class Trail
 {
-	var points = [CGPoint]();
+	var points = [CLLocationCoordinate2D]();
 	var name:String = ""
 	var canopy:String?
 	var condition:String?
@@ -20,16 +21,16 @@ class Trail
 	var length:Float = 0
 	
 	//utility functions
-	var center:CGPoint
+	var center:CLLocationCoordinate2D
 	{
-		var c = CGPoint(x: 0, y: 0)
+		var c = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 		for point in points
 		{
-			c.x += point.x
-			c.y += point.y
+			c.latitude += point.latitude
+			c.longitude += point.longitude
 		}
-		c.x /= CGFloat(points.count)
-		c.y /= CGFloat(points.count)
+		c.latitude /= Double(points.count)
+		c.longitude /= Double(points.count)
 		return c
 	}
 }
@@ -43,74 +44,89 @@ var localCacheInner:[Trail]?
 
 class socrataService
 {
-//	class func filterBy
-	
-	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail?)->()))
+	class func getCanopyLevels(trails:[Trail]) -> [String]
 	{
-		getAllTrails()
-		{ (trails) in
-			if let trails = trails
+		var levels = Set<String>()
+		for trail in trails
+		{
+			if let canopy = trail.canopy
 			{
-				if trails.count == 0
-				{
-					returnClosure(nil)
-				}
-				else
-				{
-					var closest = trails[0]
-					for trail in trails
-					{
-						let center = trail.center
-						let xDif = center.x - nearestTo.x
-						let yDif = center.y - nearestTo.y
-						let distance = xDif*xDif + yDif*yDif
-						
-						let oldCenter = closest.center
-						let oldXDif = oldCenter.x - nearestTo.x
-						let oldYDif = oldCenter.y - nearestTo.y
-						let oldDistance = oldXDif*oldXDif + oldYDif*oldYDif
-						
-						if distance < oldDistance
-						{
-							closest = trail
-						}
-					}
-					returnClosure(closest)
-				}
-			}
-			else
-			{
-				returnClosure(nil)
+				levels.insert(canopy)
 			}
 		}
+		return Array(levels)
+	}
+	class func filterByCanopy(trails:[Trail], desiredCanopy:String) -> [Trail]
+	{
+		return trails.filter() { $0.canopy == desiredCanopy }
 	}
 	
-	class func getTrailsInArea(area:CGRect, returnClosure:(([Trail]?)->()))
-	{
-		getAllTrails()
-		{ (trails) in
-			if let trails = trails
-			{
-				var validTrails = [Trail]()
-				for trail in trails
-				{
-					for point in trail.points
-					{
-						if area.contains(point)
-						{
-							validTrails.append(trail)
-							break
-						}
-					}
-				}
-				returnClosure(validTrails)
-			}
-			else
-			{
-				returnClosure(nil)
-			}
-		}
-	}
+//	class func getNearestTrail(nearestTo:CGPoint, returnClosure:((Trail?)->()))
+//	{
+//		getAllTrails()
+//		{ (trails) in
+//			if let trails = trails
+//			{
+//				if trails.count == 0
+//				{
+//					returnClosure(nil)
+//				}
+//				else
+//				{
+//					var closest = trails[0]
+//					for trail in trails
+//					{
+//						let center = trail.center
+//						let xDif = center.x - nearestTo.x
+//						let yDif = center.y - nearestTo.y
+//						let distance = xDif*xDif + yDif*yDif
+//						
+//						let oldCenter = closest.center
+//						let oldXDif = oldCenter.x - nearestTo.x
+//						let oldYDif = oldCenter.y - nearestTo.y
+//						let oldDistance = oldXDif*oldXDif + oldYDif*oldYDif
+//						
+//						if distance < oldDistance
+//						{
+//							closest = trail
+//						}
+//					}
+//					returnClosure(closest)
+//				}
+//			}
+//			else
+//			{
+//				returnClosure(nil)
+//			}
+//		}
+//	}
+//	
+//	class func getTrailsInArea(area:CGRect, returnClosure:(([Trail]?)->()))
+//	{
+//		getAllTrails()
+//		{ (trails) in
+//			if let trails = trails
+//			{
+//				var validTrails = [Trail]()
+//				for trail in trails
+//				{
+//					for point in trail.points
+//					{
+//						if area.contains(point)
+//						{
+//							validTrails.append(trail)
+//							break
+//						}
+//					}
+//				}
+//				returnClosure(validTrails)
+//			}
+//			else
+//			{
+//				returnClosure(nil)
+//			}
+//		}
+//	}
 	
 	class func getAllTrails(returnClosure:(([Trail]?)->()))
 	{
@@ -181,11 +197,12 @@ class socrataService
 				trail.name = name
 				trail.length = (length as NSString).floatValue
 				
-				if let points = geom["coordinates"] as? [[Int]]
+				if let points = geom["coordinates"] as? [[Double]]
 				{
 					for point in points
 					{
-						trail.points.append(CGPoint(x: point[0], y: point[1]))
+						let location = CLLocationCoordinate2D(latitude: point[0], longitude: point[1])
+						trail.points.append(location)
 					}
 					trails.append(trail)
 				}
