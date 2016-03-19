@@ -34,7 +34,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 if let trails = trails
                 {
                     self.trails = trails
-                    self.plotAllPoint()
+                    self.plotAllPoints()
                     self.imageDamper.userInteractionEnabled = false
                     self.imageDamper.hidden = true
                     self.activityIndicator.stopAnimating()
@@ -64,7 +64,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
-    func plotPoint(point: CLLocationCoordinate2D, text: String, color: UIColor)
+    func plotPoint(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
         // Only Plot One Point Per Trail
         if parkNames.indexOf(text) >= 0 {
@@ -75,7 +75,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Annotation
         let annotation = MKPointAnnotation()
         annotation.coordinate = point
+//        print("\(point.latitude) - \(point.longitude)")
         annotation.title = text
+        annotation.subtitle = difficulty
         mapView.addAnnotation(annotation)
     }
     
@@ -95,7 +97,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.addOverlay(line)
     }
     
-    func plotAllPoint()
+    func plotAllPoints()
     {
         var parks = [String : [Trail]]()
         for trail in trails {
@@ -125,23 +127,24 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
                 
                 let center = trail.center
+                print(center)
                 totalCenter.latitude += center.latitude
                 totalCenter.longitude += center.longitude
             }
             totalCenter.latitude /= Double(numGood + numBad)
             totalCenter.longitude /= Double(numGood + numBad)
             
-            let color: UIColor
+            let difficulty
             if (numGood > numBad)
             {
-                color = .greenColor()
+                difficulty = "Easy"
             }
             else
             {
-                color = .blueColor()
+                difficulty = "Normal"
             }
             
-            plotPoint(totalCenter, text: park, color: color)
+            plotPoint(totalCenter, text: park, difficulty: difficulty)
         }
     }
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
