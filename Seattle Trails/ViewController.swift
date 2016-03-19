@@ -78,7 +78,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Annotation
         let annotation = MKPointAnnotation()
         annotation.coordinate = point
-//        print("\(point.latitude) - \(point.longitude)")
         annotation.title = text
         annotation.subtitle = difficulty
         mapView.addAnnotation(annotation)
@@ -130,7 +129,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
                 
                 let center = trail.center
-                print(center)
                 totalCenter.latitude += center.latitude
                 totalCenter.longitude += center.longitude
             }
@@ -152,6 +150,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
+        if let _ = annotation as? MKUserLocation {
+            return nil
+        }
+        
+        
         let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
         if let subtitle = annotation.subtitle {
             if subtitle == "Accessible" {
@@ -159,12 +162,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             } else {
                 view.pinTintColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
             }
+        } else {
+            return nil
         }
         view.canShowCallout = true
         return view
     }
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
+        if let _ = view.annotation as? MKUserLocation {
+            return
+        }
+        
         if let title = view.annotation!.title {
 			var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
 			var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
