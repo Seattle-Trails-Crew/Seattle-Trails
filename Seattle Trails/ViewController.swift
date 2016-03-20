@@ -56,6 +56,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
     
+    @IBAction func infoButtonPressed(sender: UIButton) {
+        let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. Green Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        infoAlert.addAction(okButton)
+        self.presentViewController(infoAlert, animated: true, completion: nil)
+    }
     @IBAction func navButtonPressed(sender: UIButton)
     {
         if locationManager != nil {
