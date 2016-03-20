@@ -57,7 +57,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     @IBAction func infoButtonPressed(sender: UIButton) {
-        let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. Green Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
+        let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. \nGreen Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
         infoAlert.addAction(okButton)
         self.presentViewController(infoAlert, animated: true, completion: nil)
