@@ -225,6 +225,7 @@ class socrataService
 					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
 						NSLog("ERROR: " + error.description)
+						completion(nil)
 					}
 				}
 				else if let data = data
