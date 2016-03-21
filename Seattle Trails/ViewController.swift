@@ -17,37 +17,33 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var locationButtonBackground: UIImageView!
     var parkNames = [String]()
     var locationManager: CLLocationManager?
+	var loaded = false
+	var loading = false
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     override func viewDidLoad()
     {
         super.viewDidLoad()
+		
+		//configure map view
         mapView.delegate = self
 		mapView.showsBuildings = false
 //		mapView.showsPointsOfInterest = false
 		mapView.showsTraffic = false
+		mapView.zoomEnabled = false
+		mapView.scrollEnabled = false
+		mapView.userInteractionEnabled = false
 		
+		//set map view position
         locationButtonBackground.layer.cornerRadius = locationButtonBackground.frame.width / 2
         let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
         let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
         mapView.setRegion(region, animated: true)
-        socrataService.getAllTrails()
-            { (trails) in
-                if let trails = trails
-                {
-                    self.trails = trails
-                    self.plotAllPoints()
-                    self.imageDamper.userInteractionEnabled = false
-                    self.imageDamper.hidden = true
-                    self.activityIndicator.stopAnimating()
-                }
-                else
-                {
-                    print("Something Bad Happened")
-                }
-        }
-        
+		
+		self.loadFromOnline()
+		
+		//set up location manager
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -55,7 +51,54 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         locationManager?.startUpdatingLocation()
         mapView.showsUserLocation = true
     }
-    
+	
+	private func loadFromOnline()
+	{
+		self.activityIndicator.startAnimating()
+		
+		self.loading = true
+		socrataService.getAllTrails()
+			{ (trails) in
+				self.loading = false
+				
+				if let trails = trails
+				{
+					self.trails = trails
+					self.plotAllPoints()
+					self.imageDamper.userInteractionEnabled = false
+					self.imageDamper.hidden = true
+					self.activityIndicator.stopAnimating()
+					
+					self.mapView.zoomEnabled = true
+					self.mapView.scrollEnabled = true
+					self.mapView.userInteractionEnabled = true
+					self.loaded = true
+				}
+				else
+				{
+					//get rid of the loading
+					self.activityIndicator.stopAnimating()
+					
+					//display an error
+					let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata.", preferredStyle: .Alert)
+					let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+					failAlert.addAction(okButton)
+					self.presentViewController(failAlert, animated: true, completion: nil)
+					
+					//set it up to try to load again, when the app returns to focus
+					NSNotificationCenter.defaultCenter().addObserver(self, selector: "tryToLoad", name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+				}
+		}
+	}
+	
+	func tryToLoad()
+	{
+		if !self.loaded && !self.loading
+		{
+			self.loadFromOnline()
+		}
+	}
+	
     @IBAction func infoButtonPressed(sender: UIButton) {
         let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. \nGreen Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
