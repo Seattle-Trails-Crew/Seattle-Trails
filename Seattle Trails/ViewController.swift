@@ -57,7 +57,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		self.activityIndicator.startAnimating()
 		
 		self.loading = true
-		socrataService.getAllTrails()
+		SocrataService.getAllTrails()
 			{ (trails) in
 				self.loading = false
 				
