@@ -83,7 +83,8 @@ class Trail
 
 let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
 class socrataService
-{
+{//TODO: Capitalize
+    
 	//MARK: debug info checking
 	class func getCanopyLevels(trails:[Trail]) -> [String]
 	{
@@ -168,9 +169,16 @@ class socrataService
 						trail.points.append(location)
 					}
 					
-					trail.startPoint = trail.points[0]
+                    if trail.points.count > 0
+                    {
+                        trail.startPoint = trail.points[0]
 					
-					trails.append(trail)
+                        trails.append(trail)
+                    }
+                    else
+                    {
+                        NSLog("ERROR: trail " + name + " has no points!");
+                    }
 				}
 				else
 				{

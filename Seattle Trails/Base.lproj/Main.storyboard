@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -21,34 +22,37 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="oKD-qu-38m">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </mapView>
-                            <imageView userInteractionEnabled="NO" alpha="0.75" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wK8-e8-h5l">
-                                <rect key="frame" x="530" y="530" width="50" height="50"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wDg-wb-BGF" userLabel="SatteliteButton">
+                                <rect key="frame" x="20" y="510" width="70" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="ErA-ME-7NV"/>
-                                    <constraint firstAttribute="width" constant="50" id="hoJ-xA-vGR"/>
+                                    <constraint firstAttribute="height" constant="70" id="4aS-GY-TJq"/>
+                                    <constraint firstAttribute="width" constant="70" id="okP-AW-otM"/>
                                 </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Rw-jgB">
-                                <rect key="frame" x="531" y="538" width="40" height="40"/>
+                                <state key="normal" image="SatteliteView"/>
+                                <connections>
+                                    <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4XH-ml-p0E"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Rw-jgB" userLabel="UserLocButton">
+                                <rect key="frame" x="510" y="510" width="70" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="468-Pj-vlV"/>
-                                    <constraint firstAttribute="width" constant="40" id="eBI-Cv-VO5"/>
+                                    <constraint firstAttribute="height" constant="70" id="QAJ-58-u4i"/>
+                                    <constraint firstAttribute="width" constant="70" id="quj-tU-rGQ"/>
                                 </constraints>
-                                <state key="normal" image="Image"/>
+                                <state key="normal" image="UserLocation"/>
                                 <connections>
                                     <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P2W-aa-bfQ"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
+                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
                                 <rect key="frame" x="281" y="282" width="37" height="37"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0wD-m4-3oa">
-                                <rect key="frame" x="532" y="28" width="46" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0wD-m4-3oa" userLabel="InfoButton">
+                                <rect key="frame" x="532" y="28" width="22" height="22"/>
                                 <connections>
                                     <action selector="infoButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oVu-ZT-0be"/>
                                 </connections>
@@ -56,29 +60,21 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wK8-e8-h5l" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="0zL-EW-FUQ"/>
-                            <constraint firstItem="G4b-d4-bZO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="6Rl-OQ-cvg"/>
-                            <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="8xU-ZM-uiu"/>
-                            <constraint firstItem="wK8-e8-h5l" firstAttribute="centerX" secondItem="0wD-m4-3oa" secondAttribute="centerX" id="BWF-fe-G1l"/>
-                            <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="GZj-ss-vBK"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="P64-oF-AIo"/>
-                            <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="P8u-Hc-b8e"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="QTi-IO-oXc"/>
-                            <constraint firstItem="smM-Rw-jgB" firstAttribute="centerY" secondItem="wK8-e8-h5l" secondAttribute="centerY" constant="3" id="Xhn-At-7IR"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="wK8-e8-h5l" secondAttribute="bottom" constant="20" id="aup-0p-MpW"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="0wD-m4-3oa" secondAttribute="trailing" constant="2" id="dNk-Ub-hgn"/>
-                            <constraint firstItem="smM-Rw-jgB" firstAttribute="centerX" secondItem="wK8-e8-h5l" secondAttribute="centerX" constant="-4" id="hH4-5K-2qK"/>
-                            <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="m2x-8g-Mpe"/>
-                            <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="peg-wM-4Xc"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="qg5-IR-mAs"/>
-                            <constraint firstItem="0wD-m4-3oa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="rps-mH-FQY"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="wiQ-k4-GEO"/>
+                            <constraint firstItem="smM-Rw-jgB" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="93y-0P-GaQ"/>
+                            <constraint firstItem="smM-Rw-jgB" firstAttribute="trailing" secondItem="oKD-qu-38m" secondAttribute="trailingMargin" constant="-20" id="FZl-ND-CP2"/>
+                            <constraint firstItem="wDg-wb-BGF" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="FuM-nd-Ope"/>
+                            <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="Lg4-9o-uAQ"/>
+                            <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TRb-UK-7u2"/>
+                            <constraint firstItem="oKD-qu-38m" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TiC-uM-hmm"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="dJF-bG-qCE"/>
+                            <constraint firstItem="oKD-qu-38m" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="i3T-5W-01b"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="kH6-xH-kC9"/>
+                            <constraint firstItem="wDg-wb-BGF" firstAttribute="leading" secondItem="oKD-qu-38m" secondAttribute="leading" constant="20" id="xHl-DZ-QMG"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
-                        <outlet property="locationButtonBackground" destination="wK8-e8-h5l" id="P9b-yb-awb"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
                     </connections>
                 </viewController>
@@ -88,6 +84,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Image" width="60" height="60"/>
+        <image name="SatteliteView" width="400" height="400"/>
+        <image name="UserLocation" width="400" height="400"/>
     </resources>
 </document>
