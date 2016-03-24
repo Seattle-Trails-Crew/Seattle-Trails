@@ -44,11 +44,11 @@
                                     <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P2W-aa-bfQ"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
+                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
                                 <rect key="frame" x="281" y="282" width="37" height="37"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0wD-m4-3oa" userLabel="InfoButton">
@@ -60,15 +60,21 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="G4b-d4-bZO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0FD-qo-DJm"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="93y-0P-GaQ"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="trailing" secondItem="oKD-qu-38m" secondAttribute="trailingMargin" constant="-20" id="FZl-ND-CP2"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="FuM-nd-Ope"/>
+                            <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="J7h-61-pgf"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="Lg4-9o-uAQ"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TRb-UK-7u2"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TiC-uM-hmm"/>
+                            <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="UPp-pd-522"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="dJF-bG-qCE"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="i3T-5W-01b"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="kH6-xH-kC9"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="nax-ZQ-GWA"/>
+                            <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQf-7e-mHH"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="leading" secondItem="oKD-qu-38m" secondAttribute="leading" constant="20" id="xHl-DZ-QMG"/>
                         </constraints>
                     </view>
