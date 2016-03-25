@@ -82,6 +82,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8CA4D3051CA5EE8800A748FB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
+				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		8CA4D3061CA5EE8B00A748FB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E490637A1CA2670A00C1A3CA /* Trail.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		8CC0FD3D1CA5E8D40075C94C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */,
+				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		8CC0FD3E1CA5E8F90075C94C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
+				8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */,
+				8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */,
+				8CEB2CB61C9D0AF4000358FC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		8CEB2C9E1C9D0AF3000358FC = {
 			isa = PBXGroup;
 			children = (
@@ -106,15 +143,10 @@
 		8CEB2CA91C9D0AF3000358FC /* Seattle Trails */ = {
 			isa = PBXGroup;
 			children = (
-				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
-				E490637A1CA2670A00C1A3CA /* Trail.swift */,
-				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
-				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
-				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
-				8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */,
-				8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */,
-				8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */,
-				8CEB2CB61C9D0AF4000358FC /* Info.plist */,
+				8CA4D3061CA5EE8B00A748FB /* Model */,
+				8CA4D3051CA5EE8800A748FB /* Controller */,
+				8CC0FD3E1CA5E8F90075C94C /* Supporting Files */,
+				8CC0FD3D1CA5E8D40075C94C /* View */,
 			);
 			path = "Seattle Trails";
 			sourceTree = "<group>";
