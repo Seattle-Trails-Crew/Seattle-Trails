@@ -1,8 +1,8 @@
 //
-//  Model.swift
+//  SocrataService.swift
 //  Seattle Trails
 //
-//  Created by Theodore Abshire on 3/18/16.
+//  Created by Theodore Abshire on 3/22/16.
 //  Copyright © 2016 seatrails. All rights reserved.
 //
 
@@ -10,79 +10,9 @@ import UIKit
 import Foundation
 import MapKit
 
-//MARK: trail model
-class Trail
-{
-	var points = [CLLocationCoordinate2D]();
-	var startPoint = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-	var name:String = ""
-	var canopy:String?
-	var condition:String?
-	var gradeType:String?
-	var surfaceType:String?
-	var length:Float = 0
-	var trailNum:Int = 0
-	var pmaid:Int = 0
-    var isDrawn:Bool = false
-	
-	//utility functions
-	var center:CLLocationCoordinate2D
-	{
-		//this calculates the center of the trail, by volume of points
-		//so it's kind of an approximation
-		
-		var c = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-		for point in points
-		{
-			c.latitude += point.latitude
-			c.longitude += point.longitude
-		}
-		c.latitude /= Double(points.count)
-		c.longitude /= Double(points.count)
-		return c
-	}
-	
-	var easyTrail:Bool
-	{
-		//this roughly rates the trail for accessability
-		//IE muddy trails, or trails with high inclines, or whatever, return false
-		
-		if let surfaceType = surfaceType
-		{
-			switch(surfaceType.lowercaseString)
-			{
-			case "boardwalk": fallthrough;
-			case "bridge": fallthrough;
-			case "concrete": fallthrough;
-			case "gravel": fallthrough;
-			case "asphalt": break;
-			default: return false;
-			}
-		}
-		else
-		{
-			return false
-		}
-		
-		if let gradeType = gradeType
-		{
-			if gradeType.lowercaseString != "flat"
-			{
-				return false
-			}
-		}
-		else
-		{
-			return false
-		}
-		
-		return true
-	}
-}
-
 
 let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
-class socrataService
+class SocrataService
 {
 	//MARK: debug info checking
 	class func getCanopyLevels(trails:[Trail]) -> [String]
@@ -208,7 +138,7 @@ class socrataService
 	private class func doRequest(arguments:String?, completion:([Trail]?)->())
 	{
 		//prepare the URL string
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")&$where=trail_clas!=0"
 		
 		if let url = NSURL(string: urlString)
 		{
@@ -218,25 +148,33 @@ class socrataService
 			request.HTTPMethod = "GET"
 			
 			session.dataTaskWithRequest(request, completionHandler:
-			{ (data, response, error) in
-				if let error = error
-				{
-					//you didn't get the data, so output an error
-					NSOperationQueue.mainQueue().addOperationWithBlock()
+				{ (data, response, error) in
+					if let error = error
 					{
-						NSLog("ERROR: " + error.description)
-						completion(nil)
+						//you didn't get the data, so output an error
+						NSOperationQueue.mainQueue().addOperationWithBlock()
+							{
+								NSLog("ERROR: " + error.description)
+								completion(nil)
+						}
 					}
-				}
-				else if let data = data
-				{
-					//you got the data, serialize and return it
-					let result = serialize(data)
-					NSOperationQueue.mainQueue().addOperationWithBlock()
+					else if let data = data
 					{
-						completion(result)
+						//you got the data, serialize and return it
+						let result = serialize(data)
+						NSOperationQueue.mainQueue().addOperationWithBlock()
+							{
+								completion(result)
+						}
 					}
-				}
+					else
+					{
+						NSOperationQueue.mainQueue().addOperationWithBlock()
+							{
+								print("UNKNOWN ERROR")
+								completion(nil)
+						}
+					}
 			}).resume()
 		}
 	}

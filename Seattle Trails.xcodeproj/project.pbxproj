@@ -16,7 +16,8 @@
 		8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */; };
 		8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CD81C9D1A39000358FC /* .gitignore */; };
 		8CEB2CDF1C9E0FC0000358FC /* IMG_0169.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */; };
-		E44A6FD71C9D1B210015852C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A6FD61C9D1B210015852C /* Model.swift */; };
+		E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E490637A1CA2670A00C1A3CA /* Trail.swift */; };
+		E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E490637C1CA2673A00C1A3CA /* SocrataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +53,8 @@
 		8CEB2CCC1C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8CEB2CD81C9D1A39000358FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0169.jpg; sourceTree = "<group>"; };
-		E44A6FD61C9D1B210015852C /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		E490637A1CA2670A00C1A3CA /* Trail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trail.swift; sourceTree = "<group>"; };
+		E490637C1CA2673A00C1A3CA /* SocrataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocrataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +106,8 @@
 		8CEB2CA91C9D0AF3000358FC /* Seattle Trails */ = {
 			isa = PBXGroup;
 			children = (
-				E44A6FD61C9D1B210015852C /* Model.swift */,
+				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
+				E490637A1CA2670A00C1A3CA /* Trail.swift */,
 				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
 				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
 				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
@@ -268,8 +271,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E44A6FD71C9D1B210015852C /* Model.swift in Sources */,
 				8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */,
+				E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */,
+				E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
