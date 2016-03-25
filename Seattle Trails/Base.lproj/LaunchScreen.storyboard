@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -18,16 +17,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="yHc-c7-YZV">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="261-af-IJS" userLabel="UserLocButton">
+                                <rect key="frame" x="510" y="510" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="iUN-fW-OS5"/>
+                                    <constraint firstAttribute="height" constant="70" id="yLu-jt-30Y"/>
+                                </constraints>
+                                <state key="normal" image="UserLocation"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LE-p5-6mz" userLabel="SatteliteButton">
+                                <rect key="frame" x="20" y="510" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="71i-qk-NdH"/>
+                                    <constraint firstAttribute="height" constant="70" id="Hh0-hS-odn"/>
+                                </constraints>
+                                <state key="normal" image="SatteliteView"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="yHc-c7-YZV" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="topMargin" id="NTd-T1-hej"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yHc-c7-YZV" secondAttribute="trailing" constant="-20" id="Q7a-GX-nnt"/>
-                            <constraint firstItem="yHc-c7-YZV" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-20" id="Qxb-gh-rbl"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="yHc-c7-YZV" secondAttribute="bottom" id="ymO-ZV-af4"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="261-af-IJS" secondAttribute="bottom" constant="20" id="PjW-0I-R89"/>
+                            <constraint firstItem="261-af-IJS" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" constant="-20" id="Up0-Wb-EWk"/>
+                            <constraint firstItem="5LE-p5-6mz" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="20" id="gTz-pn-ga7"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="5LE-p5-6mz" secondAttribute="bottom" constant="20" id="uMs-cq-whk"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -36,4 +48,8 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="SatteliteView" width="400" height="400"/>
+        <image name="UserLocation" width="400" height="400"/>
+    </resources>
 </document>

@@ -82,6 +82,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8CA4D3051CA5EE8800A748FB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
+				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		8CA4D3061CA5EE8B00A748FB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E490637A1CA2670A00C1A3CA /* Trail.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		8CC0FD3D1CA5E8D40075C94C /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,11 +143,10 @@
 		8CEB2CA91C9D0AF3000358FC /* Seattle Trails */ = {
 			isa = PBXGroup;
 			children = (
+				8CA4D3061CA5EE8B00A748FB /* Model */,
+				8CA4D3051CA5EE8800A748FB /* Controller */,
 				8CC0FD3E1CA5E8F90075C94C /* Supporting Files */,
 				8CC0FD3D1CA5E8D40075C94C /* View */,
-				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
-				E490637A1CA2670A00C1A3CA /* Trail.swift */,
-				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
 			);
 			path = "Seattle Trails";
 			sourceTree = "<group>";
