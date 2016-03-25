@@ -82,6 +82,7 @@ class Trail
 
 
 let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
+
 class socrataService
 {//TODO: Capitalize
     
