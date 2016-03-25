@@ -205,7 +205,7 @@
 				TargetAttributes = {
 					8CEB2CA61C9D0AF3000358FC = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 52B6PC64Q6;
+						DevelopmentTeam = 8F48NKUJX6;
 					};
 					8CEB2CBA1C9D0AF4000358FC = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -423,6 +423,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-Trails";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -437,6 +438,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.seatrails.Seattle-Trails";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

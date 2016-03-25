@@ -14,7 +14,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     @IBOutlet weak var mapView: MKMapView!
     var trails = [Trail]()
-    @IBOutlet weak var locationButtonBackground: UIImageView!
+    // @IBOutlet weak var locationButtonBackground: UIImageView!
     var parkNames = [String]()
     var locationManager: CLLocationManager?
 	var loaded = false
@@ -36,7 +36,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		mapView.userInteractionEnabled = false
 		
 		//set map view position
-        locationButtonBackground.layer.cornerRadius = locationButtonBackground.frame.width / 2
+        //locationButtonBackground.layer.cornerRadius = locationButtonBackground.frame.width / 2
         let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
         let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
         mapView.setRegion(region, animated: true)
@@ -86,7 +86,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 					self.presentViewController(failAlert, animated: true, completion: nil)
 					
 					//set it up to try to load again, when the app returns to focus
-					NSNotificationCenter.defaultCenter().addObserver(self, selector: "tryToLoad", name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+					NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+                    
+                    //TODO: also detect if they turn airplane mode off while in-app
 				}
 		}
 	}
@@ -100,11 +102,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	}
 	
     @IBAction func infoButtonPressed(sender: UIButton) {
+        // Tell user what the different color pins mean
         let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. \nGreen Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
         infoAlert.addAction(okButton)
+        
         self.presentViewController(infoAlert, animated: true, completion: nil)
     }
+    
     @IBAction func navButtonPressed(sender: UIButton)
     {
         if locationManager != nil {
@@ -116,12 +121,21 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    @IBAction func satteliteViewButtonPressed(sender: UIButton) {
+        if self.mapView.mapType == MKMapType.Satellite {
+            self.mapView.mapType = MKMapType.Standard
+        } else if mapView.mapType == MKMapType.Standard {
+            self.mapView.mapType = MKMapType.Satellite
+        }
+    }
+    
     func plotPoint(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
         // Only Plot One Point Per Trail
         if parkNames.indexOf(text) >= 0 {
             return
         }
+        
         parkNames.append(text)
         
         // Annotation
@@ -135,7 +149,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func plotLine(trail: Trail)
     {
         // Plot All Trail Lines
-
         let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
         
         // Example How To Alter Colors

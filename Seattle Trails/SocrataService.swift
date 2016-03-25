@@ -98,9 +98,16 @@ class SocrataService
 						trail.points.append(location)
 					}
 					
-					trail.startPoint = trail.points[0]
+                    if trail.points.count > 0
+                    {
+                        trail.startPoint = trail.points[0]
 					
-					trails.append(trail)
+                        trails.append(trail)
+                    }
+                    else
+                    {
+                        NSLog("ERROR: trail " + name + " has no points!");
+                    }
 				}
 				else
 				{
