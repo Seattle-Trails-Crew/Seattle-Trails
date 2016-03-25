@@ -30,7 +30,7 @@
                                 </constraints>
                                 <state key="normal" image="SatteliteView"/>
                                 <connections>
-                                    <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4XH-ml-p0E"/>
+                                    <action selector="satteliteViewButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tMc-fc-Pma"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Rw-jgB" userLabel="UserLocButton">

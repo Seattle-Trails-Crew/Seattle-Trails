@@ -121,6 +121,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    @IBAction func satteliteViewButtonPressed(sender: UIButton) {
+        if self.mapView.mapType == MKMapType.Satellite {
+            self.mapView.mapType = MKMapType.Standard
+        } else if mapView.mapType == MKMapType.Standard {
+            self.mapView.mapType = MKMapType.Satellite
+        }
+    }
+    
     func plotPoint(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
         // Only Plot One Point Per Trail
