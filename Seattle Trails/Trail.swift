@@ -25,7 +25,7 @@ class Trail
 	
 	//utility functions
 	var center:CLLocationCoordinate2D
-		{
+    {
 			//this calculates the center of the trail, by volume of points
 			//so it's kind of an approximation
 			
@@ -41,7 +41,7 @@ class Trail
 	}
 	
 	var easyTrail:Bool
-		{
+    {
 			//this roughly rates the trail for accessability
 			//IE muddy trails, or trails with high inclines, or whatever, return false
 			

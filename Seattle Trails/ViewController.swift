@@ -13,7 +13,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 {
 
     @IBOutlet weak var mapView: MKMapView!
-    var trails = [Trail]()
+    var trails = [String:[Trail]]()
     // @IBOutlet weak var locationButtonBackground: UIImageView!
     var parkNames = [String]()
     var locationManager: CLLocationManager?
@@ -27,7 +27,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        self.loadFromOnline()
+        self.fetchAndRenderTrails()
 		self.configureMapViewSettings()
         self.showUserLocation()
         self.setMapViewPosition()
@@ -63,7 +63,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: Data Fetching Methods
-    private func loadFromOnline()
+    private func fetchAndRenderTrails()
     {
         self.isLoading(true)
         
@@ -85,7 +85,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
-    func isLoading(loading: Bool) {
+    func isLoading(loading: Bool)
+    {
         if loading {
             self.activityIndicator.startAnimating()
         } else {
@@ -113,7 +114,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         if !self.loaded && !self.loading
         {
-            self.loadFromOnline()
+            self.fetchAndRenderTrails()
         }
     }
 
@@ -145,60 +146,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
     
-    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: String)
-    {
-        // Only Plot One Point Per Trail
-        if parkNames.indexOf(text) >= 0 {
-            return
-        }
-        
-        parkNames.append(text)
-        
-        // Annotation
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = point
-        annotation.title = text
-        annotation.subtitle = difficulty
-        mapView.addAnnotation(annotation)
-    }
-    
-    func plotLine(trail: Trail)
-    {
-        // Plot All Trail Lines
-        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-        
-        // Example How To Alter Colors
-        if trail.easyTrail {
-            line.title = "green"
-        } else {
-            line.title = "blue"
-        }
-        trail.isDrawn = true
-        mapView.addOverlay(line)
-    }
-    
     func plotAllPoints()
     {
-        // Set up storage for each park's trails
-        var parksTrails = [String : [Trail]]()
-        
-        // Set up 
-        for trail in self.trails {
-            if parksTrails[trail.name] == nil
-            {
-                parksTrails[trail.name] = [Trail]()
-            }
-            
-            parksTrails[trail.name]?.append(trail)
-        }
-        
-        for park in parksTrails.keys
+        for park in self.trails.keys
         {
             var numGood = 0
             var numBad = 0
             var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
             
-            for trail in parksTrails[park]!
+            for trail in self.trails[park]!
             {
                 if trail.easyTrail
                 {
@@ -230,6 +186,41 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: String)
+    {
+        // Only Plot One Point Per Trail
+        if parkNames.indexOf(text) >= 0 {
+            return
+        }
+        
+        parkNames.append(text)
+        
+        // Annotation
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = point
+        annotation.title = text
+        annotation.subtitle = difficulty
+        mapView.addAnnotation(annotation)
+    }
+    
+    func plotTrailLine(trail: Trail)
+    {
+        // Plot All Trail Lines
+        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.easyTrail {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
+        trail.isDrawn = true
+        mapView.addOverlay(line)
+    }
+
+    
+    // MARK: Map Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
         if let _ = annotation as? MKUserLocation {
@@ -250,6 +241,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         view.canShowCallout = true
         return view
     }
+    
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let _ = view.annotation as? MKUserLocation {
@@ -259,19 +251,22 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         if let title = view.annotation!.title {
 			var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
 			var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
-            for trail in trails {
-                if trail.name == title {
-                    if (!trail.isDrawn) {
-                        plotLine(trail)
+            
+            for trailKey in self.trails.keys {
+                if trailKey == title && self.trails[trailKey] != nil {
+                    for trail in self.trails[trailKey]! {
+                        if (!trail.isDrawn) {
+                            plotTrailLine(trail)
+                        }
+                        
+                        for point in trail.points
+                        {
+                            topRight.latitude = min(topRight.latitude, point.latitude)
+                            topRight.longitude = min(topRight.longitude, point.longitude)
+                            bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
+                            bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
+                        }
                     }
-					
-					for point in trail.points
-					{
-						topRight.latitude = min(topRight.latitude, point.latitude)
-						topRight.longitude = min(topRight.longitude, point.longitude)
-						bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
-						bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
-					}
                 }
             }
 			
@@ -283,6 +278,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 			mapView.setRegion(region, animated: true)
         }
     }
+    
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let rect = mapView.visibleMapRect
         _ = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
