@@ -33,87 +33,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.setMapViewPosition()
     }
     
-    // MARK: Map View Methods
-    func setMapViewPosition()
-    {
-        //set map view position
-        let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
-        let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
-        mapView.setRegion(region, animated: true)
-    }
-    
-    func configureMapViewSettings()
-    {
-        //configure map view
-        mapView.delegate = self
-        mapView.showsBuildings = false
-        mapView.showsTraffic = false
-        mapView.zoomEnabled = false
-        mapView.scrollEnabled = false
-        mapView.userInteractionEnabled = false
-    }
-    
-    func showUserLocation()
-    {
-        //set up location manager
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager?.requestWhenInUseAuthorization()
-        locationManager?.startUpdatingLocation()
-        mapView.showsUserLocation = true
-    }
-	
-    // MARK: Data Fetching Methods
-	private func loadFromOnline()
-	{
-		self.activityIndicator.startAnimating()
-		
-		self.loading = true
-		SocrataService.getAllTrails()
-			{ (trails) in
-				self.loading = false
-				
-				if let trails = trails
-				{
-					self.trails = trails
-					self.plotAllPoints()
-					self.imageDamper.userInteractionEnabled = false
-					self.imageDamper.hidden = true
-					self.activityIndicator.stopAnimating()
-					
-					self.mapView.zoomEnabled = true
-					self.mapView.scrollEnabled = true
-					self.mapView.userInteractionEnabled = true
-					self.loaded = true
-				}
-				else
-				{
-					//get rid of the loading
-					self.activityIndicator.stopAnimating()
-					
-					//display an error
-					let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata.", preferredStyle: .Alert)
-					let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-					failAlert.addAction(okButton)
-					self.presentViewController(failAlert, animated: true, completion: nil)
-					
-					//set it up to try to load again, when the app returns to focus
-					NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
-                    
-                    //TODO: also detect if they turn airplane mode off while in-app
-				}
-		}
-	}
-	
-	func tryToLoad()
-	{
-		if !self.loaded && !self.loading
-		{
-			self.loadFromOnline()
-		}
-	}
-	
+    // MARK: User Interaction
     @IBAction func infoButtonPressed(sender: UIButton) {
         // Tell user what the different color pins mean
         let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. \nGreen Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
@@ -142,7 +62,90 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
-    func plotPoint(point: CLLocationCoordinate2D, text: String, difficulty: String)
+    // MARK: Data Fetching Methods
+    private func loadFromOnline()
+    {
+        self.isLoading(true)
+        
+        SocrataService.getAllTrails()
+            { [unowned self] (trails) in
+                //get rid of the loading
+                self.isLoading(false)
+                
+                guard let trails = trails else
+                {
+                    self.loadDataFailed()
+                    //TODO: also detect if they turn airplane mode off while in-app
+                    return
+                }
+                
+                self.trails = trails
+                self.plotAllPoints()
+                self.loaded = true
+        }
+    }
+    
+    func isLoading(loading: Bool) {
+        if loading {
+            self.activityIndicator.startAnimating()
+        } else {
+            self.activityIndicator.stopAnimating()
+        }
+        
+        self.imageDamper.userInteractionEnabled = loading
+        self.imageDamper.hidden = !loading
+        
+        self.loading = loading
+    }
+    
+    func loadDataFailed() {
+        //display an error
+        let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try agian later.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        failAlert.addAction(okButton)
+        self.presentViewController(failAlert, animated: true, completion: nil)
+        
+        //set it up to try to load again, when the app returns to focus
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+    }
+    
+    func tryToLoad()
+    {
+        if !self.loaded && !self.loading
+        {
+            self.loadFromOnline()
+        }
+    }
+
+    // MARK: Map View Methods
+    func setMapViewPosition()
+    {
+        //set map view position
+        let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
+        let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func configureMapViewSettings()
+    {
+        //configure map view
+        mapView.delegate = self
+        mapView.showsBuildings = false
+        mapView.showsTraffic = false
+    }
+    
+    func showUserLocation()
+    {
+        //set up location manager
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager?.requestWhenInUseAuthorization()
+        locationManager?.startUpdatingLocation()
+        mapView.showsUserLocation = true
+    }
+    
+    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
         // Only Plot One Point Per Trail
         if parkNames.indexOf(text) >= 0 {
@@ -176,23 +179,26 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func plotAllPoints()
     {
-        var parks = [String : [Trail]]()
-        for trail in trails {
-            if parks[trail.name] == nil
+        // Set up storage for each park's trails
+        var parksTrails = [String : [Trail]]()
+        
+        // Set up 
+        for trail in self.trails {
+            if parksTrails[trail.name] == nil
             {
-                parks[trail.name] = [Trail]()
+                parksTrails[trail.name] = [Trail]()
             }
-            parks[trail.name]?.append(trail)
-//            plotPoint(trail.points[0], text: trail.name)
-//            self.plotLine(trail)
+            
+            parksTrails[trail.name]?.append(trail)
         }
         
-        for park in parks.keys
+        for park in parksTrails.keys
         {
             var numGood = 0
             var numBad = 0
             var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-            for trail in parks[park]!
+            
+            for trail in parksTrails[park]!
             {
                 if trail.easyTrail
                 {
@@ -220,9 +226,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 difficulty = ""
             }
             
-            plotPoint(totalCenter, text: park, difficulty: difficulty)
+            annotatePark(totalCenter, text: park, difficulty: difficulty)
         }
     }
+    
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
         if let _ = annotation as? MKUserLocation {
