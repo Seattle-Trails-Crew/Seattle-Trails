@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -44,10 +44,6 @@
                                     <action selector="navButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P2W-aa-bfQ"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
                                 <rect key="frame" x="281" y="282" width="37" height="37"/>
                             </activityIndicatorView>
@@ -57,10 +53,27 @@
                                     <action selector="infoButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oVu-ZT-0be"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QME-sA-Nc3">
+                                <rect key="frame" x="20" y="28" width="442" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBI-wc-wv7">
+                                <rect key="frame" x="474" y="28" width="48" height="30"/>
+                                <state key="normal" title="Search"/>
+                                <connections>
+                                    <action selector="searchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="np4-sP-Ydg"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0FD-qo-DJm"/>
+                            <constraint firstItem="LBI-wc-wv7" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="65Y-Yw-qCR"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="centerX" secondItem="0wD-m4-3oa" secondAttribute="centerX" id="8R4-Ms-5iL"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="93y-0P-GaQ"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="trailing" secondItem="oKD-qu-38m" secondAttribute="trailingMargin" constant="-20" id="FZl-ND-CP2"/>
@@ -70,18 +83,23 @@
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TRb-UK-7u2"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="UPp-pd-522"/>
                             <constraint firstItem="0wD-m4-3oa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="Zf2-UW-sO3"/>
+                            <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="QME-sA-Nc3" secondAttribute="bottom" constant="-58" id="cem-bK-TAs"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="dJF-bG-qCE"/>
+                            <constraint firstItem="LBI-wc-wv7" firstAttribute="leading" secondItem="QME-sA-Nc3" secondAttribute="trailing" constant="12" id="gLq-fp-HkQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="kH6-xH-kC9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="nax-ZQ-GWA"/>
+                            <constraint firstItem="0wD-m4-3oa" firstAttribute="leading" secondItem="LBI-wc-wv7" secondAttribute="trailing" constant="12" id="pG9-vN-DWf"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQf-7e-mHH"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="leading" secondItem="oKD-qu-38m" secondAttribute="leading" constant="20" id="xHl-DZ-QMG"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="QME-sA-Nc3" secondAttribute="leading" id="zCP-AU-xp3"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
+                        <outlet property="searchTextField" destination="QME-sA-Nc3" id="gCN-vG-Tny"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

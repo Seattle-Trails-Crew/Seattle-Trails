@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate
 {
 
     @IBOutlet weak var mapView: MKMapView!
@@ -22,6 +22,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
+    @IBOutlet weak var searchTextField: UITextField!
+    
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -50,6 +53,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         locationManager?.requestWhenInUseAuthorization()
         locationManager?.startUpdatingLocation()
         mapView.showsUserLocation = true
+        
+        searchTextField.delegate = self
     }
 	
 	private func loadFromOnline()
@@ -129,6 +134,34 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    @IBAction func searchButtonPressed(sender: UIButton)
+    {
+        view.endEditing(true)
+        if let search = searchTextField.text {
+            searchTrails(parkName: search)
+        }
+    }
+    func textFieldShouldReturn(textField: UITextField) -> Bool
+    {
+        view.endEditing(true)
+        if let search = searchTextField.text {
+            searchTrails(parkName: search)
+        }
+        return false
+    }
+    func searchTrails(parkName name: String)
+    {
+        for trail in trails {
+            if (name.caseInsensitiveCompare(trail.name) == .OrderedSame) {
+                defer {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.centerMapOnTrail(parkName: trail.name)
+                    })
+                }
+                return
+            }
+        }
+    }
     func plotPoint(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
         // Only Plot One Point Per Trail
@@ -230,6 +263,36 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         view.canShowCallout = true
         return view
     }
+    func centerMapOnTrail(parkName name: String)
+    {
+        var validPark = false  // Check that park name exists in list of parks
+        var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
+        var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
+        for trail in trails {
+            if trail.name == name {
+                validPark = true
+                if (!trail.isDrawn) {
+                    plotLine(trail)
+                }
+                
+                for point in trail.points
+                {
+                    topRight.latitude = min(topRight.latitude, point.latitude)
+                    topRight.longitude = min(topRight.longitude, point.longitude)
+                    bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
+                    bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
+                }
+            }
+        }
+        if !validPark {
+            return
+        }
+        let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
+        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
+        mapView.setRegion(region, animated: true)
+        
+        
+    }
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let _ = view.annotation as? MKUserLocation {
@@ -237,30 +300,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         if let title = view.annotation!.title {
-			var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
-			var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
-            for trail in trails {
-                if trail.name == title {
-                    if (!trail.isDrawn) {
-                        plotLine(trail)
-                    }
-					
-					for point in trail.points
-					{
-						topRight.latitude = min(topRight.latitude, point.latitude)
-						topRight.longitude = min(topRight.longitude, point.longitude)
-						bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
-						bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
-					}
-                }
-            }
-			
-			//zoom in on location
-//			let region = MKCoordinateRegionForMapRect(MKMapRect(origin: MKMapPointForCoordinate(topRight), size: MKMapSizeMake(bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)))
-			let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
-//			let region = MKCoordinateRegionMakeWithDistance(center, bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)
-			let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
-			mapView.setRegion(region, animated: true)
+            centerMapOnTrail(parkName: title!)
+
         }
     }
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
