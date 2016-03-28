@@ -22,28 +22,43 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
+    
+    // MARK: View Lifecyle Methods
     override func viewDidLoad()
     {
         super.viewDidLoad()
-		
-		//configure map view
-        mapView.delegate = self
-		mapView.showsBuildings = false
-//		mapView.showsPointsOfInterest = false
-		mapView.showsTraffic = false
-		mapView.zoomEnabled = false
-		mapView.scrollEnabled = false
-		mapView.userInteractionEnabled = false
-		
-		//set map view position
-        //locationButtonBackground.layer.cornerRadius = locationButtonBackground.frame.width / 2
+		self.configureMapViewSettings()
+        self.loadFromOnline()
+        self.showUserLocation()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        setMapViewPosition()
+    }
+    
+    // MARK: Map View Methods
+    func setMapViewPosition()
+    {
+        //set map view position
         let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
         let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
         mapView.setRegion(region, animated: true)
-		
-		self.loadFromOnline()
-		
-		//set up location manager
+    }
+    
+    func configureMapViewSettings()
+    {
+        //configure map view
+        mapView.delegate = self
+        mapView.showsBuildings = false
+        mapView.showsTraffic = false
+        mapView.zoomEnabled = false
+        mapView.scrollEnabled = false
+        mapView.userInteractionEnabled = false
+    }
+    
+    func showUserLocation()
+    {
+        //set up location manager
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -52,6 +67,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
 	
+    // MARK: Data Fetching Methods
 	private func loadFromOnline()
 	{
 		self.activityIndicator.startAnimating()
