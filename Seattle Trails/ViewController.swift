@@ -27,13 +27,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad()
     {
         super.viewDidLoad()
-		self.configureMapViewSettings()
         self.loadFromOnline()
+		self.configureMapViewSettings()
         self.showUserLocation()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        setMapViewPosition()
+        self.setMapViewPosition()
     }
     
     // MARK: Map View Methods
