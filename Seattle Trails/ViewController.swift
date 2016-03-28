@@ -146,15 +146,16 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
     
+    // TODO: Refactor from here down.
     func plotAllPoints()
     {
-        for park in self.trails.keys
+        for trailName in self.trails.keys
         {
             var numGood = 0
             var numBad = 0
             var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
             
-            for trail in self.trails[park]!
+            for trail in self.trails[trailName]!
             {
                 if trail.easyTrail
                 {
@@ -169,10 +170,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 totalCenter.latitude += center.latitude
                 totalCenter.longitude += center.longitude
             }
+            
             totalCenter.latitude /= Double(numGood + numBad)
             totalCenter.longitude /= Double(numGood + numBad)
             
             let difficulty: String
+            
             if (numGood > numBad)
             {
                 difficulty = "Accessible"
@@ -182,7 +185,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 difficulty = ""
             }
             
-            annotatePark(totalCenter, text: park, difficulty: difficulty)
+            annotatePark(totalCenter, text: trailName, difficulty: difficulty)
         }
     }
     
@@ -202,23 +205,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         annotation.subtitle = difficulty
         mapView.addAnnotation(annotation)
     }
-    
-    func plotTrailLine(trail: Trail)
-    {
-        // Plot All Trail Lines
-        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-        
-        // Example How To Alter Colors
-        if trail.easyTrail {
-            line.title = "green"
-        } else {
-            line.title = "blue"
-        }
-        
-        trail.isDrawn = true
-        mapView.addOverlay(line)
-    }
-
     
     // MARK: Map Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
@@ -249,8 +235,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         if let title = view.annotation!.title {
-			var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
-			var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
+            var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
+            var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
             
             for trailKey in self.trails.keys {
                 if trailKey == title && self.trails[trailKey] != nil {
@@ -269,13 +255,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                     }
                 }
             }
-			
-			//zoom in on location
-//			let region = MKCoordinateRegionForMapRect(MKMapRect(origin: MKMapPointForCoordinate(topRight), size: MKMapSizeMake(bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)))
-			let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
-//			let region = MKCoordinateRegionMakeWithDistance(center, bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)
-			let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
-			mapView.setRegion(region, animated: true)
+            
+            //zoom in on location
+            //			let region = MKCoordinateRegionForMapRect(MKMapRect(origin: MKMapPointForCoordinate(topRight), size: MKMapSizeMake(bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)))
+            let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
+            //			let region = MKCoordinateRegionMakeWithDistance(center, bottomLeft.latitude - topRight.latitude, bottomLeft.longitude - topRight.longitude)
+            let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
+            mapView.setRegion(region, animated: true)
         }
     }
     
@@ -283,29 +269,29 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let rect = mapView.visibleMapRect
         _ = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
         _ = CLLocationCoordinate2D(latitude: MKMapRectGetMaxX(rect), longitude: MKMapRectGetMinY(rect))
-//        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
-//        print("Distance: \(distance)")
-//        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
+        //        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
+        //        print("Distance: \(distance)")
+        //        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
         // let center = mapView.center
         // Do query, $where=within_box(..., center.lat, center.long, distance)
         
         // Removes all Annotations
-//        let annotationsToRemove = mapView.annotations.filter { $0 !== mapView.userLocation }
-//        mapView.removeAnnotations( annotationsToRemove )
-//        
-//        print("Hit Here")
-//        socrataService.getTrailsInArea(upLeft, lowerRight: downRight)
-//            { (trails) in
-//                if let trails = trails
-//                {
-//                    self.plotAllLines(trails)
-//                }
-//                else
-//                {
-//                    print("Something Bad Happened")
-//                }
-//        }
-
+        //        let annotationsToRemove = mapView.annotations.filter { $0 !== mapView.userLocation }
+        //        mapView.removeAnnotations( annotationsToRemove )
+        //
+        //        print("Hit Here")
+        //        socrataService.getTrailsInArea(upLeft, lowerRight: downRight)
+        //            { (trails) in
+        //                if let trails = trails
+        //                {
+        //                    self.plotAllLines(trails)
+        //                }
+        //                else
+        //                {
+        //                    print("Something Bad Happened")
+        //                }
+        //        }
+        
     }
     
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
@@ -321,6 +307,23 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         polyLineRenderer.lineWidth = 2
         return polyLineRenderer
+    }
+
+    // MARK: Helper Methods
+    func plotTrailLine(trail: Trail)
+    {
+        // Plot All Trail Lines
+        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.easyTrail {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
+        trail.isDrawn = true
+        mapView.addOverlay(line)
     }
 }
 
