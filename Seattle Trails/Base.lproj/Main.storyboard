@@ -53,16 +53,14 @@
                                     <action selector="infoButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oVu-ZT-0be"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QME-sA-Nc3">
-                                <rect key="frame" x="20" y="28" width="442" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBI-wc-wv7">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBI-wc-wv7">
                                 <rect key="frame" x="474" y="28" width="48" height="30"/>
                                 <state key="normal" title="Search"/>
                                 <connections>
                                     <action selector="searchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="np4-sP-Ydg"/>
+                                    <segue destination="1la-Ca-U7d" kind="popoverPresentation" identifier="PopoverSegue" popoverAnchorView="LBI-wc-wv7" id="doO-KU-0St">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
@@ -83,28 +81,124 @@
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TRb-UK-7u2"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="UPp-pd-522"/>
                             <constraint firstItem="0wD-m4-3oa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="Zf2-UW-sO3"/>
-                            <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="QME-sA-Nc3" secondAttribute="bottom" constant="-58" id="cem-bK-TAs"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="dJF-bG-qCE"/>
-                            <constraint firstItem="LBI-wc-wv7" firstAttribute="leading" secondItem="QME-sA-Nc3" secondAttribute="trailing" constant="12" id="gLq-fp-HkQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="kH6-xH-kC9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="nax-ZQ-GWA"/>
                             <constraint firstItem="0wD-m4-3oa" firstAttribute="leading" secondItem="LBI-wc-wv7" secondAttribute="trailing" constant="12" id="pG9-vN-DWf"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQf-7e-mHH"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="leading" secondItem="oKD-qu-38m" secondAttribute="leading" constant="20" id="xHl-DZ-QMG"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="QME-sA-Nc3" secondAttribute="leading" id="zCP-AU-xp3"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
-                        <outlet property="searchTextField" destination="QME-sA-Nc3" id="gCN-vG-Tny"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-69" y="449"/>
+        </scene>
+        <!--Popover View Controller-->
+        <scene sceneID="b90-z2-y7Y">
+            <objects>
+                <viewController id="1la-Ca-U7d" customClass="PopoverViewController" customModule="Seattle_Trails" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DNE-OS-I9b"/>
+                        <viewControllerLayoutGuide type="bottom" id="gMy-hC-dEn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HKa-g3-lbq">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search Trails" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D32-Yf-Nny">
+                                <rect key="frame" x="16" y="36" width="508" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="keyPressedInSearchTextField:" destination="1la-Ca-U7d" eventType="editingChanged" id="M0z-f9-Cg2"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lU8-h1-ah3">
+                                <rect key="frame" x="532" y="36" width="48" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="48" id="JgA-cD-GLb"/>
+                                </constraints>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="doneButtonPressed:" destination="1la-Ca-U7d" eventType="touchUpInside" id="CYB-3C-1Do"/>
+                                </connections>
+                            </button>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A43-Ga-dVe">
+                                <rect key="frame" x="16" y="74" width="564" height="506"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="nvt-Nz-6t0" kind="embed" identifier="EmbedTableView" id="FRF-TZ-90e"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lU8-h1-ah3" firstAttribute="leading" secondItem="D32-Yf-Nny" secondAttribute="trailing" constant="8" id="0Tb-Oq-JMY"/>
+                            <constraint firstItem="A43-Ga-dVe" firstAttribute="top" secondItem="D32-Yf-Nny" secondAttribute="bottom" constant="8" symbolic="YES" id="4nA-Uq-oa4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lU8-h1-ah3" secondAttribute="trailing" id="6gL-Tp-i7E"/>
+                            <constraint firstItem="D32-Yf-Nny" firstAttribute="top" secondItem="DNE-OS-I9b" secondAttribute="bottom" constant="16" id="F3N-Nc-HnV"/>
+                            <constraint firstItem="A43-Ga-dVe" firstAttribute="leading" secondItem="D32-Yf-Nny" secondAttribute="leading" id="Fik-98-Tdf"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="D32-Yf-Nny" secondAttribute="leading" constant="4" id="JCn-fE-GXS"/>
+                            <constraint firstAttribute="bottom" secondItem="A43-Ga-dVe" secondAttribute="bottom" constant="20" symbolic="YES" id="UD0-lE-2Cd"/>
+                            <constraint firstItem="A43-Ga-dVe" firstAttribute="trailing" secondItem="lU8-h1-ah3" secondAttribute="trailing" id="Vo9-R2-hvL"/>
+                            <constraint firstItem="lU8-h1-ah3" firstAttribute="top" secondItem="DNE-OS-I9b" secondAttribute="bottom" constant="16" id="XX8-jF-88G"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5t1-Hz-9x4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="661" y="443"/>
+        </scene>
+        <!--Popover Table View Controller-->
+        <scene sceneID="59Z-tb-Qck">
+            <objects>
+                <tableViewController id="nvt-Nz-6t0" customClass="PopoverTableViewController" customModule="Seattle_Trails" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="68" sectionHeaderHeight="28" sectionFooterHeight="28" id="lSU-JT-Br5">
+                        <rect key="frame" x="0.0" y="0.0" width="564" height="506"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="68" id="4At-qt-XdV" customClass="ParkCell" customModule="Seattle_Trails" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="564" height="68"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4At-qt-XdV" id="3BQ-IK-Sir">
+                                    <rect key="frame" x="0.0" y="0.0" width="531" height="67"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discovery Park" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JGY-Ms-ytE">
+                                            <rect key="frame" x="8" y="23" width="119" height="22"/>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="18"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="JGY-Ms-ytE" firstAttribute="centerY" secondItem="3BQ-IK-Sir" secondAttribute="centerY" id="NBR-P6-FHZ"/>
+                                        <constraint firstAttribute="leadingMargin" secondItem="JGY-Ms-ytE" secondAttribute="leading" id="huJ-vz-6WX"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="parkNameLabel" destination="JGY-Ms-ytE" id="qMx-Zt-6qK"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="nvt-Nz-6t0" id="vqU-V3-BMa"/>
+                            <outlet property="delegate" destination="nvt-Nz-6t0" id="gm0-5l-Gc4"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Ps-wn-nzb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1386" y="396"/>
         </scene>
     </scenes>
     <resources>
