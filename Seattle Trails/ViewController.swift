@@ -20,7 +20,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     @IBOutlet weak var mapView: MKMapView!
     var trails = [String:[Trail]]()
-    // @IBOutlet weak var locationButtonBackground: UIImageView!
     var parkNames = [String]()
     var locationManager: CLLocationManager?
 	var loaded = false
@@ -76,48 +75,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 //            searchTrails(parkName: search)
 //        }
     }
-    func dismissPopover()
-    {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    func performActionWithSelectedTrail(trail: String)
-    {
-        centerMapOnTrail(trailName: trail)
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
-    {
-        return UIModalPresentationStyle.None
-    }
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "PopoverSegue" {
-            let popoverViewController = segue.destinationViewController as! PopoverViewController
-            popoverViewController.popoverPresentationController?.delegate = self
-            popoverViewController.trailsDataSource = self
-            popoverViewController.delegate = self
-        }
-    }
-    func textFieldShouldReturn(textField: UITextField) -> Bool
-    {
-        view.endEditing(true)
-        if let search = textField.text {
-            searchTrails(parkName: search)
-        }
-        return false
-    }
-    func searchTrails(parkName name: String)
-    {
-        for trail in trails {
-            if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
-                defer {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.centerMapOnTrail(trailName: trail.0)
-                    })
-                }
-                return
-            }
-        }
-    }
+    
+    
     // MARK: Data Fetching Methods
     private func fetchAndRenderTrails()
     {
@@ -261,27 +220,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         annotation.subtitle = difficulty
         mapView.addAnnotation(annotation)
     }
+    
     // MARK: Helper Methods
-    func plotTrailLine(trail: Trail)
-    {
-        // Plot All Trail Lines
-        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-        
-        // Example How To Alter Colors
-        if trail.easyTrail {
-            line.title = "green"
-        } else {
-            line.title = "blue"
-        }
-        
-        trail.isDrawn = true
-        mapView.addOverlay(line)
-    }
     func centerMapOnTrail(trailName name: String)
     {
         var validPark = false  // Check that park name exists in list of parks
         var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
         var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
+        
         for trailKey in self.trails.keys {
             if trailKey == name && self.trails[trailKey] != nil {
                 for trail in self.trails[trailKey]! {
@@ -307,7 +253,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
         mapView.setRegion(region, animated: true)
     }
-    // MARK: Map Delegate Methods
+    
+    func plotTrailLine(trail: Trail)
+    {
+        // Plot All Trail Lines
+        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.easyTrail {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
+        trail.isDrawn = true
+        mapView.addOverlay(line)
+    }
+
+    
+    // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
         if let _ = annotation as? MKUserLocation {
@@ -328,6 +292,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         view.canShowCallout = true
         return view
     }
+    
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let _ = view.annotation as? MKUserLocation {
@@ -383,6 +348,53 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return polyLineRenderer
     }
 
+    // MARK: Misc Delegate Methods
+    func dismissPopover()
+    {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
     
+    func performActionWithSelectedTrail(trail: String)
+    {
+        centerMapOnTrail(trailName: trail)
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    //
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
+    {
+        return UIModalPresentationStyle.None
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "PopoverSegue" {
+            let popoverViewController = segue.destinationViewController as! PopoverViewController
+            popoverViewController.popoverPresentationController?.delegate = self
+            popoverViewController.trailsDataSource = self
+            popoverViewController.delegate = self
+        }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool
+    {
+        view.endEditing(true)
+        if let search = textField.text {
+            searchTrails(parkName: search)
+        }
+        return false
+    }
+    
+    func searchTrails(parkName name: String)
+    {
+        for trail in trails {
+            if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
+                defer {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.centerMapOnTrail(trailName: trail.0)
+                    })
+                }
+                return
+            }
+        }
+    }
 }
 
