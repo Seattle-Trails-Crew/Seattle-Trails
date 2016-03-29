@@ -57,7 +57,6 @@
                                 <rect key="frame" x="474" y="28" width="48" height="30"/>
                                 <state key="normal" title="Search"/>
                                 <connections>
-                                    <action selector="searchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="np4-sP-Ydg"/>
                                     <segue destination="1la-Ca-U7d" kind="popoverPresentation" identifier="PopoverSegue" popoverAnchorView="LBI-wc-wv7" id="doO-KU-0St">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
@@ -326,6 +325,6 @@
         <image name="UserLocation" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="6Ki-Bs-2Lp"/>
+        <segue reference="doO-KU-0St"/>
     </inferredMetricsTieBreakers>
 </document>

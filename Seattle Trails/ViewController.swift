@@ -20,7 +20,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     @IBOutlet weak var mapView: MKMapView!
     var trails = [String:[Trail]]()
-    // @IBOutlet weak var locationButtonBackground: UIImageView!
     var parkNames = [String]()
     var locationManager: CLLocationManager?
 	var loaded = false
@@ -68,64 +67,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             self.mapView.mapType = MKMapType.Satellite
         }
     }
-    @IBAction func searchButtonPressed(sender: UIButton)
-    {
-//        performSegueWithIdentifier("PopoverSegue", sender: nil)
-//        view.endEditing(true)
-//        if let search = searchTextField.text {
-//            searchTrails(parkName: search)
-//        }
-    }
-    func dismissPopover()
-    {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    func performActionWithSelectedTrail(trail: String)
-    {
-        centerMapOnTrail(trailName: trail)
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
-    {
-        return UIModalPresentationStyle.None
-    }
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let popoverViewController = segue.destinationViewController as? PopoverViewController
-		{
-            popoverViewController.popoverPresentationController?.delegate = self
-            popoverViewController.trailsDataSource = self
-            popoverViewController.delegate = self
-        }
-		else if let social = segue.destinationViewController as? SocialMediaViewController
-		{
-			//TODO: you shouldn't be able to load this view controller if you didn't load any parks
-			
-			social.atPark = nil //TODO: if the geofencing detected you were at a trail, return the trail's park name here
-			social.parkNames = parkNames
-			social.trails = trails
-		}
-    }
-    func textFieldShouldReturn(textField: UITextField) -> Bool
-    {
-        view.endEditing(true)
-        if let search = textField.text {
-            searchTrails(parkName: search)
-        }
-        return false
-    }
-    func searchTrails(parkName name: String)
-    {
-        for trail in trails {
-            if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
-                defer {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.centerMapOnTrail(trailName: trail.0)
-                    })
-                }
-                return
-            }
-        }
-    }
+    
     // MARK: Data Fetching Methods
     private func fetchAndRenderTrails()
     {
@@ -210,15 +152,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
     
-    // TODO: Refactor from here down.
+    // TODO: Does this name make sense? I feel like this can be refactored with a couple smaller methods.
     func plotAllPoints()
     {
+        // Go through trails/parks and get their trail objects.
         for trailName in self.trails.keys
         {
             var numGood = 0
             var numBad = 0
             var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
             
+            // Add all the trail centers and difficulties to get the overall center/difficulty of the park/trail.
             for trail in self.trails[trailName]!
             {
                 if trail.easyTrail
@@ -253,6 +197,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    /**
+     Annotates map with trail/park name in the middle of it's bounds.
+     
+     - parameter point:      The overall center point of the trail/park.
+     - parameter text:       The trail/park name.
+     - parameter difficulty: The overall difficulty rating of the trail.
+     */
     func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
         // Only Plot One Point Per Trail
@@ -269,7 +220,55 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         annotation.subtitle = difficulty
         mapView.addAnnotation(annotation)
     }
+    
     // MARK: Helper Methods
+    /**
+     Given a trail this will move the map view to it and draw all it's lines.
+     
+     - parameter name: The name of the trail to view and draw.
+     */
+    func showTrail(trailName name: String)
+    {
+        // Check that park name exists in list of parks and get the map view scale.
+        var validPark = false
+        var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
+        var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
+        
+        for trailKey in self.trails.keys {
+            if trailKey == name && self.trails[trailKey] != nil {
+                for trail in self.trails[trailKey]! {
+                    validPark = true
+                    
+                    if (!trail.isDrawn) {
+                        plotTrailLine(trail)
+                    }
+                    
+                    
+                    for point in trail.points
+                    {
+                        topRight.latitude = min(topRight.latitude, point.latitude)
+                        topRight.longitude = min(topRight.longitude, point.longitude)
+                        bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
+                        bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
+                    }
+                }
+            }
+        }
+        
+        if !validPark {
+            return
+        }
+        
+        let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
+        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
+        mapView.setRegion(region, animated: true)
+    }
+    
+    /**
+     Draws the path line for a given trail with color representing difficulty.
+     
+     - parameter trail: The Trail object to draw.
+     */
     func plotTrailLine(trail: Trail)
     {
         // Plot All Trail Lines
@@ -285,44 +284,16 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         trail.isDrawn = true
         mapView.addOverlay(line)
     }
-    func centerMapOnTrail(trailName name: String)
-    {
-        var validPark = false  // Check that park name exists in list of parks
-        var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
-        var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
-        for trailKey in self.trails.keys {
-            if trailKey == name && self.trails[trailKey] != nil {
-                for trail in self.trails[trailKey]! {
-                    validPark = true
-                    if (!trail.isDrawn) {
-                        plotTrailLine(trail)
-                    }
-                
-                    for point in trail.points
-                    {
-                        topRight.latitude = min(topRight.latitude, point.latitude)
-                        topRight.longitude = min(topRight.longitude, point.longitude)
-                        bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
-                        bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
-                    }
-                }
-            }
-        }
-        if !validPark {
-            return
-        }
-        let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
-        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
-        mapView.setRegion(region, animated: true)
-    }
-    // MARK: Map Delegate Methods
+
+    
+    // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
         if let _ = annotation as? MKUserLocation {
             return nil
         }
         
-        
+        // Set the annotation pin color based on overall trail difficulty.
         let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
         if let subtitle = annotation.subtitle {
             if subtitle == "Accessible" {
@@ -336,6 +307,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         view.canShowCallout = true
         return view
     }
+    
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let _ = view.annotation as? MKUserLocation {
@@ -343,7 +315,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         if let title = view.annotation!.title {
-            centerMapOnTrail(trailName: title!)
+            showTrail(trailName: title!)
         }
     }
     
@@ -387,10 +359,66 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 polyLineRenderer.strokeColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
             }
         }
+        
         polyLineRenderer.lineWidth = 2
         return polyLineRenderer
     }
 
+    // MARK: Popover View & Segue Delegate Methods
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "PopoverSegue" {
+            let popoverViewController = segue.destinationViewController as! PopoverViewController
+            popoverViewController.popoverPresentationController?.delegate = self
+            popoverViewController.trailsDataSource = self
+            popoverViewController.delegate = self
+        }
+    }
     
+    func dismissPopover()
+    {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    /**
+     Moves map to selected trail annotation.
+     
+     - parameter trail: The name of a given trail.
+     */
+    func performActionWithSelectedTrail(trail: String)
+    {
+        showTrail(trailName: trail)
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
+    {
+        return UIModalPresentationStyle.None
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool
+    {
+        view.endEditing(true)
+        
+        if let search = textField.text {
+            searchTrails(parkName: search)
+        }
+        
+        return false
+    }
+    
+    func searchTrails(parkName name: String)
+    {
+        for trail in trails {
+            if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
+                defer {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showTrail(trailName: trail.0)
+                    })
+                }
+                return
+            }
+        }
+    }
 }
 
