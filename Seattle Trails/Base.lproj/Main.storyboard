@@ -112,7 +112,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D32-Yf-Nny">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search Trails" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D32-Yf-Nny">
                                 <rect key="frame" x="16" y="36" width="508" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -132,12 +132,13 @@
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A43-Ga-dVe">
                                 <rect key="frame" x="16" y="74" width="564" height="506"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <segue destination="nvt-Nz-6t0" kind="embed" identifier="EmbedTableView" id="FRF-TZ-90e"/>
                                 </connections>
                             </containerView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="lU8-h1-ah3" firstAttribute="leading" secondItem="D32-Yf-Nny" secondAttribute="trailing" constant="8" id="0Tb-Oq-JMY"/>
                             <constraint firstItem="A43-Ga-dVe" firstAttribute="top" secondItem="D32-Yf-Nny" secondAttribute="bottom" constant="8" symbolic="YES" id="4nA-Uq-oa4"/>
@@ -163,6 +164,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="564" height="506"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="68" id="4At-qt-XdV" customClass="ParkCell" customModule="Seattle_Trails" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="564" height="68"/>
