@@ -24,25 +24,28 @@ class Trail
 	var isDrawn:Bool = false
 	
 	//utility functions
+    	/// Calculated trail center.
 	var center:CLLocationCoordinate2D
     {
 			//this calculates the center of the trail, by volume of points
 			//so it's kind of an approximation
 			
 			var c = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        
 			for point in points
 			{
 				c.latitude += point.latitude
 				c.longitude += point.longitude
 			}
+        
 			c.latitude /= Double(points.count)
 			c.longitude /= Double(points.count)
 			return c
 	}
 	
+    	/// This roughly rates the trail for accessability
 	var easyTrail:Bool
     {
-			//this roughly rates the trail for accessability
 			//IE muddy trails, or trails with high inclines, or whatever, return false
 			
 			if let surfaceType = surfaceType
