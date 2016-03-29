@@ -7,17 +7,16 @@
 //
 
 import UIKit
+import Social
 
-class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverViewDelegate, TrailsDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
+class SocialMediaViewController: UIViewController, PopoverViewDelegate, TrailsDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
 	
 	//MARK: outlets
 	@IBOutlet weak var imageBacker: UIView!
 	@IBOutlet weak var imageView: UIImageView!
 	@IBOutlet weak var trailButton: UIButton!
-	@IBOutlet weak var messageField: UITextField!
-	@IBOutlet weak var twitterButton: UIButton!
-	@IBOutlet weak var facebookButton: UIButton!
-	@IBOutlet weak var instagramButton: UIButton!
+	@IBOutlet weak var shareButton: UIButton!
+	
 	
 	
 	//MARK: inner data
@@ -35,11 +34,8 @@ class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverV
         super.viewDidLoad()
 
         imageBacker.layer.cornerRadius = 10
-		messageField.delegate = self
 		trailButton.setTitle(atPark ?? "PICK A PARK", forState: .Normal)
 		self.setButtonHiddenness()
-		
-		//TODO: message field should have a maximum text size to make sure it fits into twitter (be sure to account for the #Seatrails hashtag, etc)
     }
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -54,19 +50,58 @@ class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverV
 	func setButtonHiddenness()
 	{
 		//this determines if the social media buttons should be hidden or not
-		if (atPark != nil && imageView.image != nil) //TODO: if we add a default image image to the imageview, the image != nil check should be changed
+		shareButton.hidden = (atPark == nil || imageView.image == nil) //TODO: if we add a default image image to the imageview, the image != nil check should be changed
+	}
+	
+	
+	@IBAction func pressShare()
+	{
+		let actionSheet = UIAlertController(title: "Share your photo", message: "What platform do you want to share on?", preferredStyle: .ActionSheet)
+		
+		let tweet = UIAlertAction(title: "Twitter", style: .Default)
+		{ (action) in
+			self.finishSocial(SLServiceTypeTwitter, serviceName: "Twitter")
+		}
+		actionSheet.addAction(tweet)
+		
+		let book = UIAlertAction(title: "Facebook", style: .Default)
+		{ (action) in
+			self.finishSocial(SLServiceTypeFacebook, serviceName: "Facebook")
+		}
+		actionSheet.addAction(book)
+		
+		//TODO: instagram support; looks like it's not built into the social framework
+//		let gram = UIAlertAction(title: "Instagram", style: .Default)
+//		{ (action) in
+//		}
+//		actionSheet.addAction(gram)
+		
+		let nevermind = UIAlertAction(title: "Cancel", style: .Cancel)
+		{ (action) in
+		}
+		actionSheet.addAction(nevermind)
+		
+		presentViewController(actionSheet, animated: true, completion: nil)
+	}
+	
+	func finishSocial(serviceType:String, serviceName:String)
+	{
+		if (SLComposeViewController.isAvailableForServiceType(serviceType))
 		{
-			twitterButton.hidden = false
-			instagramButton.hidden = false
-			facebookButton.hidden = false
+			let composer = SLComposeViewController(forServiceType: serviceType)
+//			composer.setInitialText("#Seatrails Photo of \(atPark!). ")
+			composer.setInitialText("#TESTHASHTAG Photo of \(atPark!). ")
+			composer.addImage(imageView.image)
+			
+			presentViewController(composer, animated: true, completion: nil)
 		}
 		else
 		{
-			twitterButton.hidden = true
-			instagramButton.hidden = true
-			facebookButton.hidden = true
+			let alert = UIAlertController(title: "Log in", message: "You must log in to \(serviceName) first!", preferredStyle: UIAlertControllerStyle.Alert)
+			presentViewController(alert, animated: true, completion: nil)
 		}
 	}
+	
 	
 	@IBAction func pressPicture()
 	{

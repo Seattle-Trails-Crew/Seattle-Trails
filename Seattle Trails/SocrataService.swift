@@ -29,7 +29,7 @@ class SocrataService
     private class func doRequest(arguments:String?, completion:([String : [Trail]]?)->())
 	{
 		//prepare the URL string
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")&$where=trail_clas!=1"
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")&$where=trail_clas==1"
 		
 		if let url = NSURL(string: urlString)
 		{
