@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */; };
+		8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */; };
 		8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */; };
 		8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */; };
 		8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 
 /* Begin PBXFileReference section */
 		635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
+		8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueReport.swift; sourceTree = "<group>"; };
 		8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seattle Trails.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				E490637A1CA2670A00C1A3CA /* Trail.swift */,
+				8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */,
 				635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */,
 				E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */,
+				8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */,
 				E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */,
 				E41092AE1CAA329700EF7109 /* SocialMediaViewController.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
