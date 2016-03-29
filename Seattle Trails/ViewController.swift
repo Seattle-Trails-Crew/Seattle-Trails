@@ -90,12 +90,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return UIModalPresentationStyle.None
     }
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "PopoverSegue" {
-            let popoverViewController = segue.destinationViewController as! PopoverViewController
+        if let popoverViewController = segue.destinationViewController as? PopoverViewController
+		{
             popoverViewController.popoverPresentationController?.delegate = self
             popoverViewController.trailsDataSource = self
             popoverViewController.delegate = self
         }
+		else if let social = segue.destinationViewController as? SocialMediaViewController
+		{
+			//TODO: you shouldn't be able to load this view controller if you didn't load any parks
+			
+			social.atPark = nil //TODO: if the geofencing detected you were at a trail, return the trail's park name here
+			social.parkNames = parkNames
+			social.trails = trails
+		}
     }
     func textFieldShouldReturn(textField: UITextField) -> Bool
     {

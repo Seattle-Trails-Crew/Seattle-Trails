@@ -17,6 +17,7 @@
 		8CEB2CCB1C9D0AF4000358FC /* Seattle_TrailsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CCA1C9D0AF4000358FC /* Seattle_TrailsUITests.swift */; };
 		8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CD81C9D1A39000358FC /* .gitignore */; };
 		8CEB2CDF1C9E0FC0000358FC /* IMG_0169.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */; };
+		E41092AE1CAA329700EF7109 /* SocialMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41092AD1CAA329700EF7109 /* SocialMediaViewController.swift */; };
 		E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E490637A1CA2670A00C1A3CA /* Trail.swift */; };
 		E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E490637C1CA2673A00C1A3CA /* SocrataService.swift */; };
 /* End PBXBuildFile section */
@@ -55,6 +56,7 @@
 		8CEB2CCC1C9D0AF4000358FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8CEB2CD81C9D1A39000358FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0169.jpg; sourceTree = "<group>"; };
+		E41092AD1CAA329700EF7109 /* SocialMediaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialMediaViewController.swift; sourceTree = "<group>"; };
 		E490637A1CA2670A00C1A3CA /* Trail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trail.swift; sourceTree = "<group>"; };
 		E490637C1CA2673A00C1A3CA /* SocrataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocrataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +89,7 @@
 		8CA4D3051CA5EE8800A748FB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				E41092AD1CAA329700EF7109 /* SocialMediaViewController.swift */,
 				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
 				635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */,
 				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
@@ -310,6 +313,7 @@
 				635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */,
 				E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */,
 				E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */,
+				E41092AE1CAA329700EF7109 /* SocialMediaViewController.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
