@@ -68,12 +68,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
-    @IBAction func searchButtonPressed(sender: UIButton)
-    {
-
-    }
-    
-    
     // MARK: Data Fetching Methods
     private func fetchAndRenderTrails()
     {
