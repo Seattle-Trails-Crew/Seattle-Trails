@@ -97,7 +97,11 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, TrailsDa
 		}
 		else
 		{
-			let alert = UIAlertController(title: "Log in", message: "You must log in to \(serviceName) first!", preferredStyle: UIAlertControllerStyle.Alert)
+			let alert = UIAlertController(title: "Log in", message: "You must log in to \(serviceName) first! Go to settings and log in.", preferredStyle: UIAlertControllerStyle.Alert)
+			
+			let cancel = UIAlertAction(title: "Okay", style: .Cancel, handler: nil)
+			alert.addAction(cancel)
+			
 			presentViewController(alert, animated: true, completion: nil)
 		}
 	}
