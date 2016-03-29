@@ -253,9 +253,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                     for point in trail.points
                     {
                         topRight.latitude = min(topRight.latitude, point.latitude)
-                        //topRight.longitude = min(topRight.longitude, point.longitude)
+                        topRight.longitude = min(topRight.longitude, point.longitude)
                         bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
-                        //bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
+                        bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
                     }
                 }
             }
