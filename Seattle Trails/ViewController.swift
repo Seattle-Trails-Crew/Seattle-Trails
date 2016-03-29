@@ -9,7 +9,13 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate
+protocol TrailsDataSource
+{
+    var trails: [String: [Trail]] { get }
+    func performActionWithSelectedTrail(trail: String)
+}
+
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, TrailsDataSource, PopoverViewDelegate
 {
 
     @IBOutlet weak var mapView: MKMapView!
@@ -22,7 +28,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
-    @IBOutlet weak var searchTextField: UITextField!
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -32,7 +37,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		self.configureMapViewSettings()
         self.showUserLocation()
         self.setMapViewPosition()
-        searchTextField.delegate = self
     }
     
     // MARK: User Interaction
@@ -66,15 +70,37 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     @IBAction func searchButtonPressed(sender: UIButton)
     {
-        view.endEditing(true)
-        if let search = searchTextField.text {
-            searchTrails(parkName: search)
+//        performSegueWithIdentifier("PopoverSegue", sender: nil)
+//        view.endEditing(true)
+//        if let search = searchTextField.text {
+//            searchTrails(parkName: search)
+//        }
+    }
+    func dismissPopover()
+    {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    func performActionWithSelectedTrail(trail: String)
+    {
+        centerMapOnTrail(trailName: trail)
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
+    {
+        return UIModalPresentationStyle.None
+    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "PopoverSegue" {
+            let popoverViewController = segue.destinationViewController as! PopoverViewController
+            popoverViewController.popoverPresentationController?.delegate = self
+            popoverViewController.trailsDataSource = self
+            popoverViewController.delegate = self
         }
     }
     func textFieldShouldReturn(textField: UITextField) -> Bool
     {
         view.endEditing(true)
-        if let search = searchTextField.text {
+        if let search = textField.text {
             searchTrails(parkName: search)
         }
         return false
@@ -85,7 +111,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
                 defer {
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.centerMapOnTrail(parkName: trail.0)
+                        self.centerMapOnTrail(trailName: trail.0)
                     })
                 }
                 return
@@ -251,7 +277,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         trail.isDrawn = true
         mapView.addOverlay(line)
     }
-    func centerMapOnTrail(parkName name: String)
+    func centerMapOnTrail(trailName name: String)
     {
         var validPark = false  // Check that park name exists in list of parks
         var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
@@ -309,7 +335,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         if let title = view.annotation!.title {
-            centerMapOnTrail(parkName: title!)
+            centerMapOnTrail(trailName: title!)
         }
     }
     
