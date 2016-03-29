@@ -158,7 +158,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
     
-    // TODO: Does this name make sense?
+    // TODO: Does this name make sense? I feel like this can be refactored with a couple smaller methods.
     func plotAllPoints()
     {
         // Go through trails/parks and get their trail objects.
@@ -233,7 +233,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
      
      - parameter name: The name of the trail to view and draw.
      */
-    func centerMapOnTrail(trailName name: String)
+    func showTrail(trailName name: String)
     {
         // Check that park name exists in list of parks and get the map view scale.
         var validPark = false
@@ -321,7 +321,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         if let title = view.annotation!.title {
-            centerMapOnTrail(trailName: title!)
+            showTrail(trailName: title!)
         }
     }
     
@@ -370,7 +370,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return polyLineRenderer
     }
 
-    // MARK: Misc Delegate Methods
+    // MARK: Popover View & Segue Delegate Methods
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "PopoverSegue" {
             let popoverViewController = segue.destinationViewController as! PopoverViewController
@@ -392,7 +392,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
      */
     func performActionWithSelectedTrail(trail: String)
     {
-        centerMapOnTrail(trailName: trail)
+        showTrail(trailName: trail)
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -419,7 +419,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
                 defer {
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.centerMapOnTrail(trailName: trail.0)
+                        self.showTrail(trailName: trail.0)
                     })
                 }
                 return

@@ -24,7 +24,7 @@ class Trail
 	var isDrawn:Bool = false
 	
 	//utility functions
-    	/// Calculated trail center.
+    	/// Calculated individual trail center.
 	var center:CLLocationCoordinate2D
     {
 			//this calculates the center of the trail, by volume of points
