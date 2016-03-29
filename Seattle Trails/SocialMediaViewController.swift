@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverViewDelegate, TrailsDataSource, UIPopoverPresentationControllerDelegate {
+class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverViewDelegate, TrailsDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
 	
 	//MARK: outlets
 	@IBOutlet weak var imageBacker: UIView!
@@ -19,6 +19,9 @@ class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverV
 	@IBOutlet weak var facebookButton: UIButton!
 	@IBOutlet weak var instagramButton: UIButton!
 	
+	
+	//MARK: inner data
+	private var picker:UIImagePickerController?
 	
 	
 	//MARK: data to be set by view controller during transition
@@ -65,6 +68,52 @@ class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverV
 		}
 	}
 	
+	@IBAction func pressPicture()
+	{
+		if picker == nil //don't want to have multiple simultaneous pickers
+		{
+			picker = UIImagePickerController()
+			picker!.delegate = self
+			if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
+			{
+				//open a dialogue to finish this
+				let actionSheet = UIAlertController(title: "Where from?", message: "Should your use the camera, or the photo library?", preferredStyle: UIAlertControllerStyle.ActionSheet)
+				
+				let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
+				{ (action) in
+					self.finishPicker(UIImagePickerControllerSourceType.Camera)
+				}
+				actionSheet.addAction(cameraAction)
+				
+				let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
+				{ (action) in
+					self.finishPicker(UIImagePickerControllerSourceType.PhotoLibrary)
+				}
+				actionSheet.addAction(libraryAction)
+				
+				let cancelAction = UIAlertAction(title: "Nevermind", style: UIAlertActionStyle.Cancel)
+				{ (action) in
+					
+				}
+				actionSheet.addAction(cancelAction)
+				
+				presentViewController(actionSheet, animated: true, completion: nil)
+			}
+			else
+			{
+				//just use the library
+				finishPicker(UIImagePickerControllerSourceType.PhotoLibrary)
+			}
+		}
+	}
+	
+	private func finishPicker(sourceType: UIImagePickerControllerSourceType)
+	{
+		picker!.sourceType = sourceType
+		presentViewController(picker!, animated: true, completion: nil)
+	}
+	
+	
 	
 	//MARK: text field delegate
 	func textFieldShouldEndEditing(textField: UITextField) -> Bool
@@ -93,5 +142,21 @@ class SocialMediaViewController: UIViewController, UITextFieldDelegate, PopoverV
 		self.setButtonHiddenness()
 	}
 	
-	//MARK: popover presentation controller delegate
+	//MARK: image picker view controller
+	func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?)
+	{
+		imageView.image = image
+		setButtonHiddenness()
+		picker.dismissViewControllerAnimated(true)
+		{
+			self.picker = nil
+		}
+	}
+	func imagePickerControllerDidCancel(picker: UIImagePickerController)
+	{
+		picker.dismissViewControllerAnimated(true)
+		{
+			self.picker = nil
+		}
+	}
 }
