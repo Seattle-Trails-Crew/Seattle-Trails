@@ -40,7 +40,16 @@ class Park
 	}
 	
 	//MARK: utility functions
-	
+    var mapRect: MKMapRect {
+        let a = MKMapPointForCoordinate(CLLocationCoordinate2DMake(region.center.latitude + region.span.latitudeDelta / 2,
+            region.center.longitude - region.span.longitudeDelta / 2))
+        let b = MKMapPointForCoordinate(CLLocationCoordinate2DMake(
+            region.center.latitude - region.span.latitudeDelta / 2,
+            region.center.longitude + region.span.longitudeDelta / 2))
+        
+        return MKMapRectMake(min(a.x,b.x), min(a.y,b.y), abs(a.x-b.x), abs(a.y-b.y))
+    }
+    
 	var hasOfficial:Bool
 	{
 		for trail in trails

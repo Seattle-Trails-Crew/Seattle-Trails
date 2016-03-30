@@ -17,24 +17,17 @@ protocol ParksDataSource
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate
 {
-
     @IBOutlet weak var mapView: MKMapView!
-    var parks = [String:Park]()
- 
-	var loaded = false
-	var loading = false
-	
-	
-	//TODO: temporary filter stuff
-	var shouldFilter = false
-	
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
-    var trails = [String:[Trail]]()
-    var parkNames = [String]()
     var locationManager = CLLocationManager()
-    var loadedParkRegions = [MKCoordinateRegion]()
+    var currentPark: String?
+    var parks = [String:Park]()
+    var loaded = false
+    var loading = false
+    //TODO: temporary filter stuff
+    var shouldFilter = false
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -74,6 +67,21 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
 	
+    @IBAction func reportIssuePressed(sender: UIButton)
+    {
+        if let location = locationManager.location {
+            let userCooridinates = MKMapPointForCoordinate(location.coordinate)
+            
+            for (name, park) in self.parks {
+                if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
+                    self.currentPark = name
+                    
+                    print("USER IN PARK!!")
+                }
+            }
+        }
+    }
+    
 	@IBAction func filterButtonPressed()
 	{
 		shouldFilter = !shouldFilter
@@ -341,6 +349,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		//you shouldn't be able to segue while still loading points
 		return !loading
 	}
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let popoverViewController = segue.destinationViewController as? PopoverViewController
 		{
