@@ -19,14 +19,21 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 {
 
     @IBOutlet weak var mapView: MKMapView!
+    var parks = [String:Park]()
+ 
+	var loaded = false
+	var loading = false
+	
+	
+	//TODO: temporary filter stuff
+	var shouldFilter = false
+	
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
     var trails = [String:[Trail]]()
     var parkNames = [String]()
     var locationManager = CLLocationManager()
-    var loaded = false
-    var loading = false
     var loadedParkRegions = [MKCoordinateRegion]()
     
     // MARK: View Lifecyle Methods
@@ -174,6 +181,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func canReportIssues() {
         // Activate issue button
     }
+    
     // TODO: Does this name make sense? I feel like this can be refactored with a couple smaller methods.
     func plotAllPoints()
     {
@@ -205,6 +213,49 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         mapView.addAnnotation(annotation)
     }
+    
+    // MARK: Helper Methods
+    /**
+     Given a park this will move the map view to it and draw all it's lines.
+     
+     - parameter name: The name of the trail to view and draw.
+     */
+    func showPark(parkName name: String)
+    {
+        // Check that park name exists in list of parks and get the map view scale.
+		if let park = self.parks[name]
+		{
+			for trail in park.trails {
+				if (!trail.isDrawn && (!shouldFilter || trail.official)) { //TODO: remove the filter/official stuff once we remove filter
+					plotTrailLine(trail)
+				}
+			}
+			
+			mapView.setRegion(park.region, animated: true)
+		}
+    }
+    
+    /**
+     Draws the path line for a given trail with color representing difficulty.
+     
+     - parameter trail: The Trail object to draw.
+     */
+    func plotTrailLine(trail: Trail)
+    {
+        // Plot All Trail Lines
+        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.easyTrail {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
+        trail.isDrawn = true
+        mapView.addOverlay(line)
+    }
+
     
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
@@ -350,73 +401,5 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
         }
     }
-
-    
-    // MARK: Helper Methods
-    /**
-     Given a trail this will move the map view to it and draw all it's lines.
-     
-     - parameter name: The name of the trail to view and draw.
-     */
-    func showTrail(trailName name: String)
-    {
-        // Check that park name exists in list of parks and get the map view scale.
-        var validPark = false
-        var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
-        var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
-        
-        for trailKey in self.trails.keys {
-            if trailKey == name && self.trails[trailKey] != nil {
-                for trail in self.trails[trailKey]! {
-                    validPark = true
-                    
-                    if (!trail.isDrawn) {
-                        plotTrailLine(trail)
-                    }
-                    
-                    
-                    for point in trail.points
-                    {
-                        topRight.latitude = min(topRight.latitude, point.latitude)
-                        topRight.longitude = min(topRight.longitude, point.longitude)
-                        bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
-                        bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
-                    }
-                }
-            }
-        }
-        
-        if !validPark {
-            return
-        }
-        
-        let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
-        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
-        self.loadedParkRegions.append(region)
-        mapView.setRegion(region, animated: true)
-    }
-    
-    /**
-     Draws the path line for a given trail with color representing difficulty.
-     
-     - parameter trail: The Trail object to draw.
-     */
-    func plotTrailLine(trail: Trail)
-    {
-        // Plot All Trail Lines
-        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-        
-        // Example How To Alter Colors
-        if trail.easyTrail {
-            line.title = "green"
-        } else {
-            line.title = "blue"
-        }
-        
-        trail.isDrawn = true
-        mapView.addOverlay(line)
-    }
-
-    
-    }
+}
 
