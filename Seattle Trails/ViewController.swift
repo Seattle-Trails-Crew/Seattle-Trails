@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import MessageUI
 
 protocol ParksDataSource
 {
@@ -15,7 +16,7 @@ protocol ParksDataSource
     func performActionWithSelectedPark(park: String)
 }
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -69,15 +70,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	
     @IBAction func reportIssuePressed(sender: UIButton)
     {
-        if let parkName = isUserInPark() {
-            self.currentPark = parkName
-            self.performSegueWithIdentifier("issueReportVC", sender: self)
-        } else {
-            let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
-            let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-            issueView.addAction(okButton)
-            self.presentViewController(issueView, animated: true, completion: nil)
-        }
+        //if let parkName = isUserInPark() {
+        //self.currentPark = parkName
+            let issueReportVC = self.getMailComposeViewController()
+            if MFMailComposeViewController.canSendMail() {
+                self.presentViewController(issueReportVC, animated: true, completion: nil)
+            } else {
+                self.fireComposeViewErrorAlert()
+            }
+//        } else {
+//            self.fireNotInParkAlert()
+//        }
     }
     
 	@IBAction func filterButtonPressed()
@@ -220,6 +223,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: Helper Methods
+    func getMailComposeViewController() -> MFMailComposeViewController {
+        let issueReportVC = MFMailComposeViewController()
+        issueReportVC.mailComposeDelegate = self
+        issueReportVC.setToRecipients(["ericmentele@gmail.com"])
+        issueReportVC.setSubject("Issue Report for Park")
+        issueReportVC.setMessageBody("Bear attack on trail 12431!! Run for the hills!", isHTML: false)
+        
+        return issueReportVC
+    }
     /**
      Given a park this will move the map view to it and draw all it's lines.
      
@@ -359,7 +371,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return polyLineRenderer
     }
     
-    // MARK: Popover View & Segue Delegate Methods
+    // MARK: Popover View, Mail View & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
 		//you shouldn't be able to segue while still loading points
 		return !loading
@@ -376,9 +388,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		{
             smvc.atPark = self.isUserInPark()
             smvc.parks = parks // TODO: Do you need all parks or just parks[self.currentPark]. currentPark is set by isUserInPark()
-        } else if let issueReportViewController = segue.destinationViewController as? IssueReportViewController
-        {
-            
         }
     }
     
@@ -427,6 +436,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 return
             }
         }
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // MARK: Alerts
+    func fireNotInParkAlert() {
+        let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        issueView.addAction(okButton)
+        self.presentViewController(issueView, animated: true, completion: nil)
+    }
+    
+    func fireComposeViewErrorAlert() {
+        let issueErrorView = UIAlertController(title: "Report Failure", message: "Your device is currently unable to send email in app. Please check your email settings and network connection then try again. Thank you.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        issueErrorView.addAction(okButton)
+        self.presentViewController(issueErrorView, animated: true, completion: nil)
     }
 }
 
