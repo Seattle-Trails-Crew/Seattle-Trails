@@ -72,6 +72,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         if let parkName = isUserInPark() {
             self.currentPark = parkName
             self.performSegueWithIdentifier("issueReportVC", sender: self)
+        } else {
+            let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
+            let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            issueView.addAction(okButton)
+            self.presentViewController(issueView, animated: true, completion: nil)
         }
     }
     
@@ -90,7 +95,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 			}
 		}
 		
-		self.plotAllPoints()
+		self.annotateAllParks()
 	}
 	
     
@@ -120,7 +125,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
                 
                 self.parks = parks
-                self.plotAllPoints()
+                self.annotateAllParks()
                 self.loaded = true
         }
     }
@@ -183,8 +188,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Activate issue button
     }
     
-    // TODO: Does this name make sense? I feel like this can be refactored with a couple smaller methods.
-    func plotAllPoints()
+    func annotateAllParks()
     {
         // Go through trails/parks and get their trail objects.
         for (name, park) in parks
