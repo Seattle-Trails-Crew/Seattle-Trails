@@ -23,6 +23,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var locationManager: CLLocationManager?
 	var loaded = false
 	var loading = false
+	
+	
+	//TODO: temporary filter stuff
+	var shouldFilter = false
+	
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
@@ -66,6 +71,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             self.mapView.mapType = MKMapType.Satellite
         }
     }
+	
+	@IBAction func filterButtonPressed()
+	{
+		shouldFilter = !shouldFilter
+		
+		//clear all existing points and such
+		self.mapView.removeAnnotations(self.mapView.annotations)
+		self.mapView.removeOverlays(self.mapView.overlays)
+		for (_, park) in self.parks
+		{
+			for trail in park.trails
+			{
+				trail.isDrawn = false
+			}
+		}
+		
+		self.plotAllPoints()
+	}
+	
     
     // MARK: Data Fetching Methods
     private func fetchAndRenderTrails()
@@ -74,7 +98,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         SocrataService.getAllTrails()
             { [unowned self] (parks) in
-                //get rid of the loading
+                //get rid of the spinner
                 self.isLoading(false)
                 
                 guard let parks = parks else
@@ -157,42 +181,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Go through trails/parks and get their trail objects.
         for (name, park) in parks
         {
-            var numGood = 0
-            var numBad = 0
-            var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-            
-            // Add all the trail centers and difficulties to get the overall center/difficulty of the park/trail.
-            for trail in park.trails
-            {
-                if trail.easyTrail
-                {
-                    numGood += 1
-                }
-                else
-                {
-                    numBad += 1
-                }
-                
-                let center = trail.center
-                totalCenter.latitude += center.latitude
-                totalCenter.longitude += center.longitude
-            }
-            
-            totalCenter.latitude /= Double(numGood + numBad)
-            totalCenter.longitude /= Double(numGood + numBad)
-            
-            let difficulty: String
-            
-            if (numGood > numBad)
-            {
-                difficulty = "Accessible"
-            }
-            else
-            {
-                difficulty = ""
-            }
-            
-            annotatePark(totalCenter, text: name, difficulty: difficulty)
+			//TODO: remove this if statement once we remove filtering
+			if (!shouldFilter || park.hasOfficial)
+			{
+				annotatePark(park.region.center, text: name, difficulty: park.easyPark ? "Accessible" : "")
+			}
         }
     }
     
@@ -225,7 +218,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		if let park = self.parks[name]
 		{
 			for trail in park.trails {
-				if (!trail.isDrawn) {
+				if (!trail.isDrawn && (!shouldFilter || trail.official)) { //TODO: remove the filter/official stuff once we remove filter
 					plotTrailLine(trail)
 				}
 			}
@@ -335,6 +328,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
 
     // MARK: Popover View & Segue Delegate Methods
+	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+		//you shouldn't be able to segue while still loading points
+		return !loading
+	}
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let popoverViewController = segue.destinationViewController as? PopoverViewController
 		{

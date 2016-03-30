@@ -22,9 +22,11 @@ class Trail
 	var trailNum:Int = 0
 	var pmaid:Int = 0
 	var isDrawn:Bool = false
+	var official:Bool = false
 	
-	//utility functions
-    	/// Calculated individual trail center.
+	//MARK: utility functions
+	
+		/// Calculated individual trail center.
 	var center:CLLocationCoordinate2D
     {
 			//this calculates the center of the trail, by volume of points

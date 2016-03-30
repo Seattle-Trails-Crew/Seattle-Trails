@@ -38,4 +38,36 @@ class Park
 		let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
 		region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
 	}
+	
+	//MARK: utility functions
+	
+	var hasOfficial:Bool
+	{
+		for trail in trails
+		{
+			if trail.official
+			{
+				return true
+			}
+		}
+		return false
+	}
+	
+	var easyPark:Bool
+	{
+		var easy = 0
+		var hard = 0
+		for trail in trails
+		{
+			if trail.easyTrail
+			{
+				easy += 1
+			}
+			else
+			{
+				hard += 1
+			}
+		}
+		return easy > hard
+	}
 }

@@ -29,7 +29,8 @@ class SocrataService
     private class func doRequest(arguments:String?, completion:([String : Park]?)->())
 	{
 		//prepare the URL string
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")&$where=trail_clas==1"
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"//&$where=trail_clas==1"
+		//TODO: for now, I've disabled the park of the URL string that asks for the trail class; turn that back on later, once we no longer want the filter
 		
 		if let url = NSURL(string: urlString)
 		{
@@ -110,6 +111,9 @@ class SocrataService
                 trail.length = (length as NSString).floatValue
                 trail.trailNum = (trailNum as NSString).integerValue
                 trail.pmaid = (pmaid as NSString).integerValue
+				
+				//TODO: remove this once we remove filtering
+				trail.official = (dict["trail_clas"] as! NSString).intValue == 1
                 
                 
                 if let points = geom["coordinates"] as? [[Double]]
