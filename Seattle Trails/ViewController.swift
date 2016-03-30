@@ -69,16 +69,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	
     @IBAction func reportIssuePressed(sender: UIButton)
     {
-        if let location = locationManager.location {
-            let userCooridinates = MKMapPointForCoordinate(location.coordinate)
-            
-            for (name, park) in self.parks {
-                if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
-                    self.currentPark = name
-                    
-                    print("USER IN PARK!!")
-                }
-            }
+        if let parkName = isUserInPark() {
+            self.currentPark = parkName
+            self.performSegueWithIdentifier("issueReportVC", sender: self)
         }
     }
     
@@ -263,7 +256,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         trail.isDrawn = true
         mapView.addOverlay(line)
     }
-
+    
+    /**
+     Checks all park map rects against user's location and returns the name of the park they are in or nil. Also sets currentPark class property with park name.
+     - returns: Current park name or nil.
+     */
+    func isUserInPark() -> String? {
+        if let location = locationManager.location {
+            let userCooridinates = MKMapPointForCoordinate(location.coordinate)
+            
+            for (name, park) in self.parks {
+                if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
+                    self.currentPark = name
+                    return name
+                }
+            }
+        }
+        
+        return nil
+    }
     
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
@@ -359,9 +370,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
-			smvc.parks = parks
-			smvc.atPark = nil //TODO: once we have a way of knowing which park you are at, put it here (if there is one)
-		}
+            smvc.atPark = self.isUserInPark()
+            smvc.parks = parks // TODO: Do you need all parks or just parks[self.currentPark]. currentPark is set by isUserInPark()
+        } else if let issueReportViewController = segue.destinationViewController as? IssueReportViewController
+        {
+            
+        }
     }
     
     func dismissPopover()

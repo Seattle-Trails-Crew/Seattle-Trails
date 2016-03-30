@@ -125,6 +125,7 @@
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
+                        <segue destination="euP-Gn-s3F" kind="show" identifier="issueReportVC" id="tga-vb-ro3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -222,6 +223,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7vS-M3-zmv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="743" y="1125"/>
+        </scene>
+        <!--IssueReport-->
+        <scene sceneID="L0e-lp-bAr">
+            <objects>
+                <viewController storyboardIdentifier="issueReportView" title="IssueReport" useStoryboardIdentifierAsRestorationIdentifier="YES" id="euP-Gn-s3F" customClass="IssueReportViewController" customModule="Seattle_Trails" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="5lC-eM-udd"/>
+                        <viewControllerLayoutGuide type="bottom" id="5dX-LB-uW7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4Wz-Bt-L3m">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5tJ-jT-o9x" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1473" y="-282"/>
         </scene>
         <!--Popover View Controller-->
         <scene sceneID="b90-z2-y7Y">
