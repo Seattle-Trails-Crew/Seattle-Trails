@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Rfk-xm-ako">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Rfk-xm-ako">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -47,14 +47,14 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
                                 <rect key="frame" x="281" y="282" width="37" height="37"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0wD-m4-3oa" userLabel="InfoButton">
-                                <rect key="frame" x="534" y="28" width="22" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0wD-m4-3oa" userLabel="InfoButton">
+                                <rect key="frame" x="534" y="72" width="22" height="22"/>
                                 <connections>
                                     <action selector="infoButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oVu-ZT-0be"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBI-wc-wv7">
-                                <rect key="frame" x="474" y="28" width="48" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LBI-wc-wv7">
+                                <rect key="frame" x="474" y="72" width="48" height="30"/>
                                 <state key="normal" title="Search"/>
                                 <connections>
                                     <segue destination="1la-Ca-U7d" kind="popoverPresentation" identifier="PopoverSegue" popoverAnchorView="LBI-wc-wv7" id="doO-KU-0St">
@@ -66,11 +66,18 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oh7-qe-aMx">
-                                <rect key="frame" x="424" y="28" width="42" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oh7-qe-aMx">
+                                <rect key="frame" x="424" y="72" width="42" height="30"/>
                                 <state key="normal" title="Social"/>
                                 <connections>
                                     <segue destination="KZR-Bx-L22" kind="show" identifier="ShowSocial" id="Q9B-cd-olu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QL3-dv-REp">
+                                <rect key="frame" x="381" y="72" width="35" height="30"/>
+                                <state key="normal" title="Filter"/>
+                                <connections>
+                                    <action selector="filterButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vs4-dJ-Z9u"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -83,11 +90,13 @@
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="trailing" secondItem="oKD-qu-38m" secondAttribute="trailingMargin" constant="-20" id="FZl-ND-CP2"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="FuM-nd-Ope"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="J7h-61-pgf"/>
+                            <constraint firstItem="QL3-dv-REp" firstAttribute="centerY" secondItem="Oh7-qe-aMx" secondAttribute="centerY" id="L6U-Zx-s1f"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="Lg4-9o-uAQ"/>
                             <constraint firstItem="Oh7-qe-aMx" firstAttribute="centerY" secondItem="LBI-wc-wv7" secondAttribute="centerY" id="Nve-iP-QL1"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TRb-UK-7u2"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="UPp-pd-522"/>
                             <constraint firstItem="LBI-wc-wv7" firstAttribute="leading" secondItem="Oh7-qe-aMx" secondAttribute="trailing" constant="8" symbolic="YES" id="Vob-49-ZpG"/>
+                            <constraint firstItem="Oh7-qe-aMx" firstAttribute="leading" secondItem="QL3-dv-REp" secondAttribute="trailing" constant="8" symbolic="YES" id="X9W-Ft-tNA"/>
                             <constraint firstItem="0wD-m4-3oa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="Zf2-UW-sO3"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="dJF-bG-qCE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="kH6-xH-kC9"/>
