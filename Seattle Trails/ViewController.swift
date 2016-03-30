@@ -68,6 +68,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: Data Fetching Methods
+    func tryToLoad()
+    {
+        if !self.loaded && !self.loading
+        {
+            self.fetchAndRenderTrails()
+        }
+    }
+    
     private func fetchAndRenderTrails()
     {
         self.isLoading(true)
@@ -89,6 +97,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 self.loaded = true
         }
     }
+
+    func loadDataFailed() {
+        //display an error
+        let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try agian later.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        failAlert.addAction(okButton)
+        self.presentViewController(failAlert, animated: true, completion: nil)
+        
+        //set it up to try to load again, when the app returns to focus
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+    }
+
     
     func isLoading(loading: Bool)
     {
@@ -103,25 +123,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         self.loading = loading
     }
-    
-    func loadDataFailed() {
-        //display an error
-        let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try agian later.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        failAlert.addAction(okButton)
-        self.presentViewController(failAlert, animated: true, completion: nil)
-        
-        //set it up to try to load again, when the app returns to focus
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
-    }
-    
-    func tryToLoad()
-    {
-        if !self.loaded && !self.loading
-        {
-            self.fetchAndRenderTrails()
-        }
-    }
+
 
     // MARK: Map View Methods
     func setMapViewPosition()
