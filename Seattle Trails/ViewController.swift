@@ -19,15 +19,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var imageDamper: UIImageView!
+    
     var trails = [String:[Trail]]()
     var parkNames = [String]()
     var locationManager = CLLocationManager()
-	var loaded = false
-	var loading = false
+    var loaded = false
+    var loading = false
     var loadedParkRegions = [MKCoordinateRegion]()
-    
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var imageDamper: UIImageView!
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -152,6 +152,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.showsUserLocation = true
     }
     
+    func canReportIssues() {
+        // Activate issue button
+    }
     // TODO: Does this name make sense? I feel like this can be refactored with a couple smaller methods.
     func plotAllPoints()
     {
@@ -218,6 +221,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         annotation.coordinate = point
         annotation.title = text
         annotation.subtitle = difficulty
+        
         mapView.addAnnotation(annotation)
     }
     
@@ -239,6 +243,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         } else {
             return nil
         }
+        
         view.canShowCallout = true
         return view
     }
