@@ -15,7 +15,7 @@ protocol PopoverViewDelegate
 
 class PopoverViewController: UIViewController
 {
-    var trailsDataSource: TrailsDataSource?
+    var parksDataSource: ParksDataSource?
     var tableView: PopoverTableViewController?
     var delegate: PopoverViewDelegate?
     
@@ -34,7 +34,7 @@ class PopoverViewController: UIViewController
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "EmbedTableView" {
             tableView = segue.destinationViewController as? PopoverTableViewController
-            tableView!.trailsDataSource = trailsDataSource
+            tableView!.parksDataSource = parksDataSource
         }
     }
 }
@@ -46,8 +46,8 @@ class ParkCell: UITableViewCell
 
 class PopoverTableViewController:  UITableViewController
 {
-    var trailsDataSource: TrailsDataSource?
-    var visibleTrails = [String]()
+    var parksDataSource: ParksDataSource?
+    var visibleParks = [String]()
     
     override func viewDidLoad()
     {
@@ -57,10 +57,10 @@ class PopoverTableViewController:  UITableViewController
     
     func filterTrails(params: String)
     {
-        visibleTrails.removeAll()
-        for trail in trailsDataSource!.trails.keys {
-            if params == "" || trail.lowercaseString.rangeOfString(params.lowercaseString) != nil {
-                visibleTrails.append(trail)
+        visibleParks.removeAll()
+        for park in parksDataSource!.parks.keys {
+            if params == "" || park.lowercaseString.rangeOfString(params.lowercaseString) != nil {
+                visibleParks.append(park)
             }
         }
         tableView.reloadData()
@@ -68,19 +68,19 @@ class PopoverTableViewController:  UITableViewController
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return visibleTrails.count
+        return visibleParks.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCellWithIdentifier("ParkCell")! as! ParkCell
-        cell.parkNameLabel.text = visibleTrails[indexPath.row]
+        cell.parkNameLabel.text = visibleParks[indexPath.row]
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
-        let trail = visibleTrails[indexPath.row]
-        trailsDataSource?.performActionWithSelectedTrail(trail)
+        let park = visibleParks[indexPath.row]
+        parksDataSource?.performActionWithSelectedPark(park)
     }
 }

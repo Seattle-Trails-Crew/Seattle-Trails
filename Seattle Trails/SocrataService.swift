@@ -15,21 +15,22 @@ let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
 class SocrataService
 {
 	//MARK: Network Request Methods
-    class func getAllTrails(returnClosure:(([String : [Trail]]?)->()))
+    class func getAllTrails(returnClosure:(([String : Park]?)->()))
 	{
 		//do network calls
 		doRequest(nil, completion: returnClosure)
 	}
     
-    class func getTrailsInArea(upperLeft:CLLocationCoordinate2D, lowerRight:CLLocationCoordinate2D, returnClosure:(([String :[Trail]]?)->()))
+    class func getTrailsInArea(upperLeft:CLLocationCoordinate2D, lowerRight:CLLocationCoordinate2D, returnClosure:(([String : Park]?)->()))
     {
         doRequest("$where=within_box(the_geom, \(upperLeft.latitude), \(upperLeft.longitude), \(lowerRight.latitude), \(lowerRight.longitude))", completion: returnClosure)
     }
 	
-    private class func doRequest(arguments:String?, completion:([String : [Trail]]?)->())
+    private class func doRequest(arguments:String?, completion:([String : Park]?)->())
 	{
 		//prepare the URL string
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")&$where=trail_clas==1"
+		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"//&$where=trail_clas==1"
+		//TODO: for now, I've disabled the park of the URL string that asks for the trail class; turn that back on later, once we no longer want the filter
 		
 		if let url = NSURL(string: urlString)
 		{
@@ -71,7 +72,7 @@ class SocrataService
 	}
     
     //MARK: JSON serialization
-    private class func serialize(data:NSData) -> [String : [Trail]]?
+    private class func serialize(data:NSData) -> [String : Park]?
     {
         do
         {
@@ -87,7 +88,7 @@ class SocrataService
         return nil
     }
     
-    private class func serializeInner(json:[[String : AnyObject]]) -> [String : [Trail]]
+    private class func serializeInner(json:[[String : AnyObject]]) -> [String : Park]
     {
         var trails = [String : [Trail]]()
         
@@ -110,6 +111,9 @@ class SocrataService
                 trail.length = (length as NSString).floatValue
                 trail.trailNum = (trailNum as NSString).integerValue
                 trail.pmaid = (pmaid as NSString).integerValue
+				
+				//TODO: remove this once we remove filtering
+				trail.official = (dict["trail_clas"] as! NSString).intValue == 1
                 
                 
                 if let points = geom["coordinates"] as? [[Double]]
@@ -123,7 +127,8 @@ class SocrataService
                     if trail.points.count > 0
                     {
                         trail.startPoint = trail.points[0]
-                        if trails[trail.name] == nil {
+                        if trails[trail.name] == nil
+						{
                             trails[trail.name] = [Trail]()
                             trails[trail.name]?.append(trail)
                         } else {
@@ -146,8 +151,14 @@ class SocrataService
                 NSLog("ERROR: failed to load trail!");
             }
         }
-        
-        return trails
+		
+		//translate the trail dictionaries into parks
+		var parks = [String : Park]()
+		for (name, tr) in trails
+		{
+			parks[name] = Park(name: name, trails: tr)
+		}
+		return parks
     }
     
     //MARK: debug info checking
