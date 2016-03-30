@@ -16,7 +16,7 @@ protocol ParksDataSource
     func performActionWithSelectedPark(park: String)
 }
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -70,17 +70,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	
     @IBAction func reportIssuePressed(sender: UIButton)
     {
-        //if let parkName = isUserInPark() {
-        //self.currentPark = parkName
-            let issueReportVC = self.getMailComposeViewController()
-            if MFMailComposeViewController.canSendMail() {
-                self.presentViewController(issueReportVC, animated: true, completion: nil)
-            } else {
-                self.fireComposeViewErrorAlert()
-            }
-//        } else {
-//            self.fireNotInParkAlert()
-//        }
+        // If the user is in a park. Ask for optional image then file report.
+        if let parkName = isUserInPark() {
+            self.fireIssueReportAlertForPark(parkName)
+        } else {
+            self.fireNotInParkAlert()
+        }
     }
     
 	@IBAction func filterButtonPressed()
@@ -223,15 +218,33 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: Helper Methods
-    func getMailComposeViewController() -> MFMailComposeViewController {
+func fileIssueReportForPark(parkName: String, imageForIssue: UIImage)  {
+    if let issueReportVC = self.getIssueReportViewControllerForPark(self.parks[parkName], issueImage: imageForIssue) {
+        if MFMailComposeViewController.canSendMail() {
+            self.presentViewController(issueReportVC, animated: true, completion: nil)
+        } else {
+            self.fireComposeViewErrorAlert()
+        }
+    }
+}
+    func getIssueReportViewControllerForPark(park: Park, issueImage: UIImage?) -> MFMailComposeViewController? {
+        // TODO: Get image for issue report.
+        // TODO: Get Issue Report Object for park
+        // TODO: Populate issueReportVC with Issue
         let issueReportVC = MFMailComposeViewController()
         issueReportVC.mailComposeDelegate = self
         issueReportVC.setToRecipients(["ericmentele@gmail.com"])
         issueReportVC.setSubject("Issue Report for Park")
         issueReportVC.setMessageBody("Bear attack on trail 12431!! Run for the hills!", isHTML: false)
         
+        if let photoOfTrial = UIImageJPEGRepresentation(image!, 0.7) {
+            issueReportVC.addAttachmentData(photoOfTrial, mimeType: "image/jpeg", fileName: "Issue report: \(park.name)")
+        }
+        
         return issueReportVC
     }
+    
+
     /**
      Given a park this will move the map view to it and draw all it's lines.
      
@@ -281,11 +294,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         if let location = locationManager.location {
             let userCooridinates = MKMapPointForCoordinate(location.coordinate)
             
-            for (name, park) in self.parks {
-                if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
+            for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
+                //if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
                     self.currentPark = name
                     return name
-                }
+                //}
             }
         }
         
@@ -371,7 +384,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return polyLineRenderer
     }
     
-    // MARK: Popover View, Mail View & Segue Delegate Methods
+    // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
 		//you shouldn't be able to segue while still loading points
 		return !loading
@@ -442,6 +455,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        // TODO: Get image from picker.
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
+            dismissViewControllerAnimated(true, completion: { self.customFunction(pickedImage)} )
+        }else{
+            dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
     // MARK: Alerts
     func fireNotInParkAlert() {
         let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
@@ -455,6 +477,22 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
         issueErrorView.addAction(okButton)
         self.presentViewController(issueErrorView, animated: true, completion: nil)
+    }
+    
+    func fireIssueReportAlertForPark(parkName: String) {
+        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "Would you like to include a photo of the issue?.", preferredStyle: .Alert)
+        
+        let yesButton = UIAlertAction(title: "YES", style: .Default) { (yesAction) in
+            // TODO: Launch camera
+        }
+        
+        let noButton = UIAlertAction(title: "NO", style: .Default) { (noAction) in
+            // TODO: Launch issue report without image.
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        self.presentViewController(fileIssueView, animated: true, completion: nil)
     }
 }
 

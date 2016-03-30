@@ -15,6 +15,7 @@ struct IssueReport {
     var trailID: String
     var formFields:[String:String?] = ["name":nil,"email":nil,"phone":nil]
     let sendTo = "issues@seattle.gov" // TODO: Get real email.
+    
     var issueID: String {
         guard let phone = formFields["phone"], idNumber = phone?.substringToIndex(phone!.endIndex.advancedBy(-4)) else {
             return "Failure To Generate ID"
