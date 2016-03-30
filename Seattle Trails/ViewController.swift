@@ -9,18 +9,17 @@
 import UIKit
 import MapKit
 
-protocol TrailsDataSource
+protocol ParksDataSource
 {
-    var trails: [String: [Trail]] { get }
-    func performActionWithSelectedTrail(trail: String)
+    var parks: [String: Park] { get }
+    func performActionWithSelectedPark(park: String)
 }
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, TrailsDataSource, PopoverViewDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate
 {
 
     @IBOutlet weak var mapView: MKMapView!
-    var trails = [String:[Trail]]()
-    var parkNames = [String]()
+    var parks = [String:Park]()
     var locationManager: CLLocationManager?
 	var loaded = false
 	var loading = false
@@ -74,18 +73,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.isLoading(true)
         
         SocrataService.getAllTrails()
-            { [unowned self] (trails) in
+            { [unowned self] (parks) in
                 //get rid of the loading
                 self.isLoading(false)
                 
-                guard let trails = trails else
+                guard let parks = parks else
                 {
                     self.loadDataFailed()
                     //TODO: also detect if they turn airplane mode off while in-app
                     return
                 }
                 
-                self.trails = trails
+                self.parks = parks
                 self.plotAllPoints()
                 self.loaded = true
         }
@@ -156,14 +155,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func plotAllPoints()
     {
         // Go through trails/parks and get their trail objects.
-        for trailName in self.trails.keys
+        for (name, park) in parks
         {
             var numGood = 0
             var numBad = 0
             var totalCenter = CLLocationCoordinate2D(latitude: 0, longitude: 0)
             
             // Add all the trail centers and difficulties to get the overall center/difficulty of the park/trail.
-            for trail in self.trails[trailName]!
+            for trail in park.trails
             {
                 if trail.easyTrail
                 {
@@ -193,7 +192,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 difficulty = ""
             }
             
-            annotatePark(totalCenter, text: trailName, difficulty: difficulty)
+            annotatePark(totalCenter, text: name, difficulty: difficulty)
         }
     }
     
@@ -206,13 +205,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
      */
     func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: String)
     {
-        // Only Plot One Point Per Trail
-        if parkNames.indexOf(text) >= 0 {
-            return
-        }
-        
-        parkNames.append(text)
-        
         // Annotation
         let annotation = MKPointAnnotation()
         annotation.coordinate = point
@@ -223,45 +215,23 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     // MARK: Helper Methods
     /**
-     Given a trail this will move the map view to it and draw all it's lines.
+     Given a park this will move the map view to it and draw all it's lines.
      
      - parameter name: The name of the trail to view and draw.
      */
-    func showTrail(trailName name: String)
+    func showPark(parkName name: String)
     {
         // Check that park name exists in list of parks and get the map view scale.
-        var validPark = false
-        var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
-        var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
-        
-        for trailKey in self.trails.keys {
-            if trailKey == name && self.trails[trailKey] != nil {
-                for trail in self.trails[trailKey]! {
-                    validPark = true
-                    
-                    if (!trail.isDrawn) {
-                        plotTrailLine(trail)
-                    }
-                    
-                    
-                    for point in trail.points
-                    {
-                        topRight.latitude = min(topRight.latitude, point.latitude)
-                        topRight.longitude = min(topRight.longitude, point.longitude)
-                        bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
-                        bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
-                    }
-                }
-            }
-        }
-        
-        if !validPark {
-            return
-        }
-        
-        let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
-        let region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
-        mapView.setRegion(region, animated: true)
+		if let park = self.parks[name]
+		{
+			for trail in park.trails {
+				if (!trail.isDrawn) {
+					plotTrailLine(trail)
+				}
+			}
+			
+			mapView.setRegion(park.region, animated: true)
+		}
     }
     
     /**
@@ -315,7 +285,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         if let title = view.annotation!.title {
-            showTrail(trailName: title!)
+            showPark(parkName: title!)
         }
     }
     
@@ -366,12 +336,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     // MARK: Popover View & Segue Delegate Methods
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "PopoverSegue" {
-            let popoverViewController = segue.destinationViewController as! PopoverViewController
+        if let popoverViewController = segue.destinationViewController as? PopoverViewController
+		{
             popoverViewController.popoverPresentationController?.delegate = self
-            popoverViewController.trailsDataSource = self
+            popoverViewController.parksDataSource = self
             popoverViewController.delegate = self
         }
+		else if let smvc = segue.destinationViewController as? SocialMediaViewController
+		{
+			smvc.parks = parks
+			smvc.atPark = nil //TODO: once we have a way of knowing which park you are at, put it here (if there is one)
+		}
     }
     
     func dismissPopover()
@@ -384,9 +359,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
      
      - parameter trail: The name of a given trail.
      */
-    func performActionWithSelectedTrail(trail: String)
+    func performActionWithSelectedPark(park: String)
     {
-        showTrail(trailName: trail)
+        showPark(parkName: park)
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -401,19 +376,19 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         view.endEditing(true)
         
         if let search = textField.text {
-            searchTrails(parkName: search)
+            searchParks(parkName: search)
         }
         
         return false
     }
     
-    func searchTrails(parkName name: String)
+    func searchParks(parkName name: String)
     {
-        for trail in trails {
-            if (name.caseInsensitiveCompare(trail.0) == .OrderedSame) {
+        for park in parks {
+            if (name.caseInsensitiveCompare(park.0) == .OrderedSame) {
                 defer {
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.showTrail(trailName: trail.0)
+                        self.showPark(parkName: park.0)
                     })
                 }
                 return

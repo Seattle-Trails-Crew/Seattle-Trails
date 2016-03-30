@@ -9,7 +9,7 @@
 import UIKit
 import Social
 
-class SocialMediaViewController: UIViewController, PopoverViewDelegate, TrailsDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
+class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
 	
 	//MARK: outlets
 	@IBOutlet weak var imageBacker: UIView!
@@ -24,8 +24,7 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, TrailsDa
 	
 	
 	//MARK: data to be set by view controller during transition
-	var parkNames = [String]()
-	var trails = [String:[Trail]]()
+	var parks = [String:Park]()
 	var atPark:String?
 	
 
@@ -42,7 +41,7 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, TrailsDa
 		if let popoverViewController = segue.destinationViewController as? PopoverViewController
 		{
 			popoverViewController.popoverPresentationController?.delegate = self
-			popoverViewController.trailsDataSource = self
+			popoverViewController.parksDataSource = self
 			popoverViewController.delegate = self
 		}
 	}
@@ -173,11 +172,11 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, TrailsDa
 	}
 	
 	//MARK: trails datasource
-	func performActionWithSelectedTrail(trail: String)
+	func performActionWithSelectedPark(park: String)
 	{
 		dismissViewControllerAnimated(true, completion: nil)
-		atPark = trail
-		trailButton.setTitle(trail, forState: .Normal)
+		atPark = park
+		trailButton.setTitle(park, forState: .Normal)
 		self.setButtonHiddenness()
 	}
 	
