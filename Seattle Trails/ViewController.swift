@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import MessageUI
 
 protocol ParksDataSource
 {
@@ -15,22 +16,20 @@ protocol ParksDataSource
     func performActionWithSelectedPark(park: String)
 }
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
-
     @IBOutlet weak var mapView: MKMapView!
-    var parks = [String:Park]()
-    var locationManager: CLLocationManager?
-	var loaded = false
-	var loading = false
-	
-	
-	//TODO: temporary filter stuff
-	var shouldFilter = false
-	
-    
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
+    
+    var locationManager = CLLocationManager()
+    lazy var issueImagePicker = UIImagePickerController()
+    var currentPark: String?
+    var parks = [String:Park]()
+    var loaded = false
+    var loading = false
+    //TODO: temporary filter stuff
+    var shouldFilter = false
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -54,12 +53,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
-        if locationManager != nil {
-            if let location = locationManager!.location {
-                let center = location.coordinate
-                let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
-                mapView.setRegion(region, animated: true)
-            }
+        if let location = locationManager.location {
+            let center = location.coordinate
+            let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
+            mapView.setRegion(region, animated: true)
         }
     }
     
@@ -72,6 +69,16 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
 	
+    @IBAction func reportIssuePressed(sender: UIButton)
+    {
+        // If the user is in a park. Ask for optional image then file report.
+        if let parkName = isUserInPark() {
+            self.presentIssueImageOptionView(parkName)
+        } else {
+            self.fireNotInParkAlert()
+        }
+    }
+    
 	@IBAction func filterButtonPressed()
 	{
 		shouldFilter = !shouldFilter
@@ -87,11 +94,19 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 			}
 		}
 		
-		self.plotAllPoints()
+		self.annotateAllParks()
 	}
 	
     
     // MARK: Data Fetching Methods
+    func tryToLoad()
+    {
+        if !self.loaded && !self.loading
+        {
+            self.fetchAndRenderTrails()
+        }
+    }
+    
     private func fetchAndRenderTrails()
     {
         self.isLoading(true)
@@ -109,10 +124,22 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
                 
                 self.parks = parks
-                self.plotAllPoints()
+                self.annotateAllParks()
                 self.loaded = true
         }
     }
+
+    func loadDataFailed() {
+        //display an error
+        let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try agian later.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        failAlert.addAction(okButton)
+        self.presentViewController(failAlert, animated: true, completion: nil)
+        
+        //set it up to try to load again, when the app returns to focus
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+    }
+
     
     func isLoading(loading: Bool)
     {
@@ -127,25 +154,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         self.loading = loading
     }
-    
-    func loadDataFailed() {
-        //display an error
-        let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try agian later.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        failAlert.addAction(okButton)
-        self.presentViewController(failAlert, animated: true, completion: nil)
-        
-        //set it up to try to load again, when the app returns to focus
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
-    }
-    
-    func tryToLoad()
-    {
-        if !self.loaded && !self.loading
-        {
-            self.fetchAndRenderTrails()
-        }
-    }
+
 
     // MARK: Map View Methods
     func setMapViewPosition()
@@ -167,16 +176,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func showUserLocation()
     {
         //set up location manager
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager?.requestWhenInUseAuthorization()
-        locationManager?.startUpdatingLocation()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
         mapView.showsUserLocation = true
     }
     
-    // TODO: Does this name make sense? I feel like this can be refactored with a couple smaller methods.
-    func plotAllPoints()
+    func canReportIssues() {
+        // Activate issue button
+    }
+    
+    func annotateAllParks()
     {
         // Go through trails/parks and get their trail objects.
         for (name, park) in parks
@@ -203,51 +214,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         annotation.coordinate = point
         annotation.title = text
         annotation.subtitle = difficulty
+        
         mapView.addAnnotation(annotation)
     }
     
-    // MARK: Helper Methods
-    /**
-     Given a park this will move the map view to it and draw all it's lines.
-     
-     - parameter name: The name of the trail to view and draw.
-     */
-    func showPark(parkName name: String)
-    {
-        // Check that park name exists in list of parks and get the map view scale.
-		if let park = self.parks[name]
-		{
-			for trail in park.trails {
-				if (!trail.isDrawn && (!shouldFilter || trail.official)) { //TODO: remove the filter/official stuff once we remove filter
-					plotTrailLine(trail)
-				}
-			}
-			
-			mapView.setRegion(park.region, animated: true)
-		}
-    }
-    
-    /**
-     Draws the path line for a given trail with color representing difficulty.
-     
-     - parameter trail: The Trail object to draw.
-     */
-    func plotTrailLine(trail: Trail)
-    {
-        // Plot All Trail Lines
-        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-        
-        // Example How To Alter Colors
-        if trail.easyTrail {
-            line.title = "green"
-        } else {
-            line.title = "blue"
-        }
-        
-        trail.isDrawn = true
-        mapView.addOverlay(line)
-    }
-
     
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
@@ -267,6 +237,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         } else {
             return nil
         }
+        
         view.canShowCallout = true
         return view
     }
@@ -326,12 +297,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         polyLineRenderer.lineWidth = 2
         return polyLineRenderer
     }
-
-    // MARK: Popover View & Segue Delegate Methods
+    
+    // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
 		//you shouldn't be able to segue while still loading points
 		return !loading
 	}
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let popoverViewController = segue.destinationViewController as? PopoverViewController
 		{
@@ -341,9 +313,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
-			smvc.parks = parks
-			smvc.atPark = nil //TODO: once we have a way of knowing which park you are at, put it here (if there is one)
-		}
+            smvc.atPark = self.isUserInPark()
+            smvc.parks = parks // TODO: Do you need all parks or just parks[self.currentPark]. currentPark is set by isUserInPark()
+        }
     }
     
     func dismissPopover()
@@ -362,7 +334,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-
+    
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
     {
         return UIModalPresentationStyle.None
@@ -390,6 +362,196 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
                 return
             }
+        }
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark{
+            dismissViewControllerAnimated(true, completion: { 
+                self.getConfiguredIssueReportForPark("Discovery Park", imageForIssue: pickedImage)
+            })
+        }else{
+            dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
+    // MARK: Option Alert Views
+    func presentImageSourceSelectionView() {
+        // Present image picker options.
+        let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
+        { (action) in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.Camera)
+            })
+        }
+        
+        let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
+        { (action) in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
+            })
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        actionSheet.addAction(cameraAction)
+        actionSheet.addAction(libraryAction)
+        actionSheet.addAction(cancelAction)
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.presentViewController(actionSheet, animated: true, completion: nil)
+        })
+    }
+    
+    func presentIssueImageOptionView(parkName: String) {
+        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "Would you like to include a photo of the issue?.", preferredStyle: .Alert)
+        
+        let yesButton = UIAlertAction(title: "YES", style: .Default) { (yesAction) in
+            self.getImageForParkIssue()
+        }
+        
+        let noButton = UIAlertAction(title: "NO", style: .Default) { (noAction) in
+            self.getConfiguredIssueReportForPark(parkName, imageForIssue: nil)
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        fileIssueView.addAction(yesButton)
+        fileIssueView.addAction(noButton)
+        fileIssueView.addAction(cancelButton)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(fileIssueView, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: Helper Methods
+    func getImageForParkIssue() {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
+        {
+            self.presentImageSourceSelectionView()
+        }
+        else
+        {
+            presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
+        }
+        
+    }
+    
+    private func presentIssueImagePickerWithSourceType(sourceType: UIImagePickerControllerSourceType)
+    {
+        self.issueImagePicker.delegate = self
+        self.issueImagePicker.sourceType = sourceType
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(self.issueImagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?) {
+        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location {
+            let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
+            
+            self.presentIssueReportViewControllerForIssue(parkIssueReport)
+        }
+    }
+    
+    func presentIssueReportViewControllerForIssue(issue: IssueReport) {
+        let issueReportVC = MFMailComposeViewController()
+        issueReportVC.mailComposeDelegate = self
+        issueReportVC.setToRecipients([issue.sendTo])
+        issueReportVC.setSubject(issue.subject)
+        issueReportVC.setMessageBody(issue.formFields, isHTML: false)
+        issueReportVC.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.presentViewController(issueReportVC, animated: true, completion: nil)
+        })
+    }
+    
+    
+    
+    /**
+     Given a park this will move the map view to it and draw all it's lines.
+     
+     - parameter name: The name of the trail to view and draw.
+     */
+    func showPark(parkName name: String)
+    {
+        // Check that park name exists in list of parks and get the map view scale.
+        if let park = self.parks[name]
+        {
+            for trail in park.trails {
+                if (!trail.isDrawn && (!shouldFilter || trail.official)) { //TODO: remove the filter/official stuff once we remove filter
+                    plotTrailLine(trail)
+                }
+            }
+            
+            mapView.setRegion(park.region, animated: true)
+        }
+    }
+    
+    /**
+     Draws the path line for a given trail with color representing difficulty.
+     
+     - parameter trail: The Trail object to draw.
+     */
+    func plotTrailLine(trail: Trail)
+    {
+        // Plot All Trail Lines
+        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
+        
+        // Example How To Alter Colors
+        if trail.easyTrail {
+            line.title = "green"
+        } else {
+            line.title = "blue"
+        }
+        
+        trail.isDrawn = true
+        mapView.addOverlay(line)
+    }
+    
+    /**
+     Checks all park map rects against user's location and returns the name of the park they are in or nil. Also sets currentPark class property with park name.
+     - returns: Current park name or nil.
+     */
+    func isUserInPark() -> String? {
+        if let location = locationManager.location {
+            let userCooridinates = MKMapPointForCoordinate(location.coordinate)
+            
+            for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
+                //if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
+                self.currentPark = name
+                return name
+                //}
+            }
+        }
+        
+        return nil
+    }
+    
+    // MARK: Alert Views
+    func fireNotInParkAlert() {
+        let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        issueView.addAction(okButton)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(issueView, animated: true, completion: nil)
+        }
+    }
+    
+    func fireComposeViewErrorAlert() {
+        let issueErrorView = UIAlertController(title: "Report Failure", message: "Your device is currently unable to send email in app. Please check your email settings and network connection then try again. Thank you.", preferredStyle: .Alert)
+        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        issueErrorView.addAction(okButton)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(issueErrorView, animated: true, completion: nil)
         }
     }
 }
