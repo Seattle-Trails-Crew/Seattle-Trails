@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */; };
 		8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */; };
-		8CCEA2201CAB407900CF117C /* GeoFenceRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA21F1CAB407900CF117C /* GeoFenceRegion.swift */; };
-		8CCEA2221CABB86900CF117C /* IssueReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2211CABB86900CF117C /* IssueReportViewController.swift */; };
+		8CCEA2261CAD5C8000CF117C /* AlertViewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */; };
 		8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */; };
 		8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */; };
 		8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */; };
@@ -47,8 +46,7 @@
 /* Begin PBXFileReference section */
 		635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueReport.swift; sourceTree = "<group>"; };
-		8CCEA21F1CAB407900CF117C /* GeoFenceRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoFenceRegion.swift; sourceTree = "<group>"; };
-		8CCEA2211CABB86900CF117C /* IssueReportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueReportViewController.swift; sourceTree = "<group>"; };
+		8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewsController.swift; sourceTree = "<group>"; };
 		8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seattle Trails.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -100,11 +98,8 @@
 		8CA4D3051CA5EE8800A748FB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				E41092AD1CAA329700EF7109 /* SocialMediaViewController.swift */,
-				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
-				635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */,
-				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
-				8CCEA2211CABB86900CF117C /* IssueReportViewController.swift */,
+				8CCEA2231CAD5B2A00CF117C /* Main UI Views */,
+				8CCEA2241CAD5B6800CF117C /* Utility Classes */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -115,7 +110,6 @@
 				E41092B11CAB571C00EF7109 /* Park.swift */,
 				E490637A1CA2670A00C1A3CA /* Trail.swift */,
 				8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */,
-				8CCEA21F1CAB407900CF117C /* GeoFenceRegion.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -138,6 +132,25 @@
 				8CEB2CB61C9D0AF4000358FC /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8CCEA2231CAD5B2A00CF117C /* Main UI Views */ = {
+			isa = PBXGroup;
+			children = (
+				8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */,
+				E41092AD1CAA329700EF7109 /* SocialMediaViewController.swift */,
+				635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */,
+			);
+			name = "Main UI Views";
+			sourceTree = "<group>";
+		};
+		8CCEA2241CAD5B6800CF117C /* Utility Classes */ = {
+			isa = PBXGroup;
+			children = (
+				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
+				8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */,
+			);
+			name = "Utility Classes";
 			sourceTree = "<group>";
 		};
 		8CEB2C9E1C9D0AF3000358FC = {
@@ -325,16 +338,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CCEA2261CAD5C8000CF117C /* AlertViewsController.swift in Sources */,
 				8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */,
 				E41092B21CAB571C00EF7109 /* Park.swift in Sources */,
 				635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */,
 				E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */,
-				8CCEA2221CABB86900CF117C /* IssueReportViewController.swift in Sources */,
 				8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */,
 				E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */,
 				E41092AE1CAA329700EF7109 /* SocialMediaViewController.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
-				8CCEA2201CAB407900CF117C /* GeoFenceRegion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
