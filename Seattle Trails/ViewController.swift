@@ -73,7 +73,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         // If the user is in a park. Ask for optional image then file report.
         if let parkName = isUserInPark() {
-            self.fireIssueReportAlertForPark(parkName)
+            self.presentIssueImageOptionView(parkName)
         } else {
             self.fireNotInParkAlert()
         }
@@ -371,10 +371,64 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         // TODO: Get image from picker.
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
-            dismissViewControllerAnimated(true, completion: { self.customFunction(pickedImage)} )
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark{
+            dismissViewControllerAnimated(true, completion: { 
+                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
+            })
         }else{
             dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
+    // MARK: Option Alert Views
+    func presentImageSourceSelectionView() {
+        // Present image picker options.
+        let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
+        { (action) in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.Camera)
+            })
+        }
+        
+        let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
+        { (action) in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
+            })
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        actionSheet.addAction(cameraAction)
+        actionSheet.addAction(libraryAction)
+        actionSheet.addAction(cancelAction)
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.presentViewController(actionSheet, animated: true, completion: nil)
+        })
+    }
+    
+    func presentIssueImageOptionView(parkName: String) {
+        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "Would you like to include a photo of the issue?.", preferredStyle: .Alert)
+        
+        let yesButton = UIAlertAction(title: "YES", style: .Default) { (yesAction) in
+            self.getImageForParkIssue()
+        }
+        
+        let noButton = UIAlertAction(title: "NO", style: .Default) { (noAction) in
+            self.getConfiguredIssueReportForPark(parkName, imageForIssue: nil)
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        fileIssueView.addAction(yesButton)
+        fileIssueView.addAction(noButton)
+        fileIssueView.addAction(cancelButton)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(fileIssueView, animated: true, completion: nil)
         }
     }
     
@@ -382,38 +436,16 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func getImageForParkIssue() {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         {
-            //open a dialogue to finish this
-            let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-            
-            let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
-            { (action) in
-                self.finishPicker(UIImagePickerControllerSourceType.Camera)
-            }
-            actionSheet.addAction(cameraAction)
-            
-            let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
-            { (action) in
-                self.finishPicker(UIImagePickerControllerSourceType.PhotoLibrary)
-            }
-            actionSheet.addAction(libraryAction)
-            
-            let cancelAction = UIAlertAction(title: "Nevermind", style: UIAlertActionStyle.Cancel)
-            { (action) in
-                
-            }
-            actionSheet.addAction(cancelAction)
-            
-            presentViewController(actionSheet, animated: true, completion: nil)
+            self.presentImageSourceSelectionView()
         }
         else
         {
-            //just use the library
-            finishPicker(UIImagePickerControllerSourceType.PhotoLibrary)
+            presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
         }
         
     }
     
-    private func finishPicker(sourceType: UIImagePickerControllerSourceType)
+    private func presentIssueImagePickerWithSourceType(sourceType: UIImagePickerControllerSourceType)
     {
         self.issueImagePicker.delegate = self
         self.issueImagePicker.sourceType = sourceType
@@ -422,33 +454,26 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
-    private func fileIssueReportForPark(parkName: String, imageForIssue: UIImage)  {
-        if let issueReportVC = self.getIssueReportViewControllerForPark(self.parks[parkName]!, issueImage: imageForIssue) {
-            if MFMailComposeViewController.canSendMail() {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.presentViewController(issueReportVC, animated: true, completion: nil)
-                }
-            } else {
-                self.fireComposeViewErrorAlert()
-            }
+    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?) {
+        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location {
+            let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
+            
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.launchIssueReportViewControllerForIssueWithPresenter(parkIssueReport)
+            })
         }
     }
     
-    func getIssueReportViewControllerForPark(park: Park, issueImage: UIImage?) -> MFMailComposeViewController? {
-        self.getConfiguredIssueReportForPark()
+    func launchIssueReportViewControllerForIssueWithPresenter(issue: IssueReport) {
         // TODO: Populate issueReportVC with Issue
         let issueReportVC = MFMailComposeViewController()
         issueReportVC.mailComposeDelegate = self
-        issueReportVC.setToRecipients(["ericmentele@gmail.com"])
-        issueReportVC.setSubject("Issue Report for Park")
-        issueReportVC.setMessageBody("Bear attack on trail 12431!! Run for the hills!", isHTML: false)
-        
-        if let photoOfTrial = UIImageJPEGRepresentation(image!, 0.7) {
-            issueReportVC.addAttachmentData(photoOfTrial, mimeType: "image/jpeg", fileName: "Issue report: \(park.name)")
-        }
-        
-        return issueReportVC
+        issueReportVC.setToRecipients([issue.sendTo])
+        issueReportVC.setSubject(issue.subject)
+        issueReportVC.setMessageBody(issue.formFields, isHTML: false)
+        issueReportVC.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
     }
+    
     
     
     /**
@@ -511,7 +536,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return nil
     }
     
-    // MARK: Alerts
+    // MARK: Alert Views
     func fireNotInParkAlert() {
         let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
@@ -527,24 +552,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         issueErrorView.addAction(okButton)
         dispatch_async(dispatch_get_main_queue()) {
             self.presentViewController(issueErrorView, animated: true, completion: nil)
-        }
-    }
-    
-    func fireIssueReportAlertForPark(parkName: String) {
-        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "Would you like to include a photo of the issue?.", preferredStyle: .Alert)
-        
-        let yesButton = UIAlertAction(title: "YES", style: .Default) { (yesAction) in
-            // TODO: Launch camera
-        }
-        
-        let noButton = UIAlertAction(title: "NO", style: .Default) { (noAction) in
-            // TODO: Launch issue report without image.
-        }
-        
-        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        dispatch_async(dispatch_get_main_queue()) {
-            self.presentViewController(fileIssueView, animated: true, completion: nil)
         }
     }
 }

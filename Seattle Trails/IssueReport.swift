@@ -10,17 +10,24 @@ import Foundation
 import MapKit
 
 struct IssueReport {
-    var issuePict: UIImage
+    var issueImage: UIImage?
     var issueLocation: CLLocation
-    var trailID: String
-    var formFields:[String:String?] = ["name":nil,"email":nil,"phone":nil]
-    let sendTo = "issues@seattle.gov" // TODO: Get real email.
+    var parkName: String
+    let formFields = "Full Name:\n\n\n\nEmail Address:\n\n\n\nPhone Number:\n\n\n\nIssue Description:"
+    let sendTo = "ericmentele@gmail.com" // TODO: Get real email.
     
-    var issueID: String {
-        guard let phone = formFields["phone"], idNumber = phone?.substringToIndex(phone!.endIndex.advancedBy(-4)) else {
-            return "Failure To Generate ID"
-        }
-        
-        return phone! + idNumber
+    var subject: String
+    {
+        return "Issue Report (\(parkName): \(issueLocation)"
+    }
+    
+    var issueImageData: NSData?
+    {
+        return UIImageJPEGRepresentation(issueImage!, 0.7)
+    }
+    
+    var issueID: String
+    {
+        return parkName + String(arc4random())
     }
 }
