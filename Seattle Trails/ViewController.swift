@@ -370,10 +370,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        // TODO: Get image from picker.
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark{
             dismissViewControllerAnimated(true, completion: { 
-                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
+                self.getConfiguredIssueReportForPark("Discovery Park", imageForIssue: pickedImage)
             })
         }else{
             dismissViewControllerAnimated(true, completion: nil)
@@ -458,20 +457,21 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location {
             let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
             
-            dispatch_async(dispatch_get_main_queue(), { 
-                self.launchIssueReportViewControllerForIssueWithPresenter(parkIssueReport)
-            })
+            self.presentIssueReportViewControllerForIssue(parkIssueReport)
         }
     }
     
-    func launchIssueReportViewControllerForIssueWithPresenter(issue: IssueReport) {
-        // TODO: Populate issueReportVC with Issue
+    func presentIssueReportViewControllerForIssue(issue: IssueReport) {
         let issueReportVC = MFMailComposeViewController()
         issueReportVC.mailComposeDelegate = self
         issueReportVC.setToRecipients([issue.sendTo])
         issueReportVC.setSubject(issue.subject)
         issueReportVC.setMessageBody(issue.formFields, isHTML: false)
         issueReportVC.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.presentViewController(issueReportVC, animated: true, completion: nil)
+        })
     }
     
     
