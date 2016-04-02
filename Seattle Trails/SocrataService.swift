@@ -35,59 +35,63 @@ class SocrataService
 		if let url = NSURL(string: urlString)
 		{
 			//prepare the session
-			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+//			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
 			let request = NSMutableURLRequest(URL: url)
 			request.HTTPMethod = "GET"
 			
-			session.dataTaskWithRequest(request, completionHandler:
-				{ (data, response, error) in
-					if let error = error
+			let manager = AFURLSessionManager.init(sessionConfiguration: NSURLSessionConfiguration.defaultSessionConfiguration())
+			
+			let dataTask = manager.dataTaskWithRequest(request)
+			{ (response, responseObject, error) in
+				if let error = error
+				{
+					//you didn't get the data, so output an error
+					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
-						//you didn't get the data, so output an error
-						NSOperationQueue.mainQueue().addOperationWithBlock()
-                        {
-                            NSLog("ERROR: " + error.description)
-                            completion(nil)
-						}
+						NSLog("ERROR: " + error.description)
+						completion(nil)
 					}
-					else if let data = data
+				}
+				else if let json = responseObject as? [[String : AnyObject]]
+				{
+					//you got the serialized data, return it
+					let result = serializeInner(json)
+					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
-						//you got the data, serialize and return it
-						let result = serialize(data)
-						NSOperationQueue.mainQueue().addOperationWithBlock()
-							{
-								completion(result)
-						}
+						completion(result)
 					}
-					else
+				}
+				else
+				{
+					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
-						NSOperationQueue.mainQueue().addOperationWithBlock()
-							{
-								print("UNKNOWN ERROR")
-								completion(nil)
-						}
+						NSLog("ERROR: failed to load trails!");
+						completion(nil)
 					}
-			}).resume()
+				}
+			}
+			dataTask.resume()
 		}
 	}
     
     //MARK: JSON serialization
-    private class func serialize(data:NSData) -> [String : Park]?
-    {
-        do
-        {
-            if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
-            {
-                return serializeInner(json)
-            }
-        }
-        catch _
-        {
-        }
-        NSLog("ERROR: failed to load trails!");
-        return nil
-    }
-    
+	//this function is unnecessary now, AFNetworking does the serialization for us
+//    private class func serialize(data:NSData) -> [String : Park]?
+//    {
+//        do
+//        {
+//            if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
+//            {
+//                return serializeInner(json)
+//            }
+//        }
+//        catch _
+//        {
+//        }
+//        NSLog("ERROR: failed to load trails!");
+//        return nil
+//    }
+	
     private class func serializeInner(json:[[String : AnyObject]]) -> [String : Park]
     {
         var trails = [String : [Trail]]()
