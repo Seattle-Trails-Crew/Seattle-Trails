@@ -43,8 +43,6 @@ class SocrataService
 			
 			let dataTask = manager.dataTaskWithRequest(request)
 			{ (response, responseObject, error) in
-//			session.dataTaskWithRequest(request, completionHandler:
-//				{ (data, response, error) in
 				if let error = error
 				{
 					//you didn't get the data, so output an error
@@ -56,7 +54,7 @@ class SocrataService
 				}
 				else if let json = responseObject as? [[String : AnyObject]]
 				{
-					//you got the data, serialize and return it
+					//you got the serialized data, return it
 					let result = serializeInner(json)
 					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
@@ -67,13 +65,12 @@ class SocrataService
 				{
 					NSOperationQueue.mainQueue().addOperationWithBlock()
 					{
-						print("UNKNOWN ERROR")
+						NSLog("ERROR: failed to load trails!");
 						completion(nil)
 					}
 				}
 			}
 			dataTask.resume()
-//			}).resume()
 		}
 	}
     

@@ -119,9 +119,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 guard let parks = parks else
                 {
                     self.loadDataFailed()
-                    //TODO: also detect if they turn airplane mode off while in-app
                     return
                 }
+				
+				//stop monitoring reachability changes
+				AFNetworkReachabilityManager.sharedManager().stopMonitoring()
                 
                 self.parks = parks
                 self.annotateAllParks()
@@ -137,7 +139,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.presentViewController(failAlert, animated: true, completion: nil)
         
         //set it up to try to load again, when the app returns to focus
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+		
+		//set it up to also try to load again when reachability changes
+		AFNetworkReachabilityManager.sharedManager().setReachabilityStatusChangeBlock()
+		{ (status) in
+			if (status == AFNetworkReachabilityStatus.ReachableViaWiFi)
+			{
+				self.tryToLoad()
+			}
+		}
+		
+		AFNetworkReachabilityManager.sharedManager().startMonitoring()
     }
 
     
