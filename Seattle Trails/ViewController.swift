@@ -26,7 +26,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     lazy var issueImagePicker = UIImagePickerController()
     var currentPark: String?
     var parks = [String:Park]()
-    var loaded = false
     var loading = false
     //TODO: temporary filter stuff
     var shouldFilter = false
@@ -43,13 +42,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     // MARK: User Interaction
     @IBAction func infoButtonPressed(sender: UIButton) {
-        // Tell user what the different color pins mean
-        let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. \nGreen Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        infoAlert.addAction(okButton)
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.presentViewController(infoAlert, animated: true, completion: nil)
-        }
+        AlertViews.presentMapKeyAlert(sender: self)
     }
     
     @IBAction func navButtonPressed(sender: UIButton)
@@ -103,7 +96,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // MARK: Data Fetching Methods
     func tryToLoad()
     {
-        if !self.loaded && !self.loading
+        if self.parks.count == 0 && !self.loading
         {
             self.fetchAndRenderTrails()
         }
@@ -127,16 +120,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 
                 self.parks = parks
                 self.annotateAllParks()
-                self.loaded = true
         }
     }
 
     func loadDataFailed() {
         //display an error
-        let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try agian later.", preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        failAlert.addAction(okButton)
-        self.presentViewController(failAlert, animated: true, completion: nil)
+        AlertViews.presentNotConnectedAlert(sender: self)
         
         //set it up to try to load again, when the app returns to focus
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
@@ -302,8 +291,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-		//you shouldn't be able to segue while still loading points
-		return !loading
+		//you shouldn't be able to segue when you don't have any pins
+		return parks.count > 0
 	}
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -316,7 +305,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.isUserInPark()
-            smvc.parks = parks // TODO: Do you need all parks or just parks[self.currentPark]. currentPark is set by isUserInPark()
+            smvc.parks = parks //attach a list of all parks, for use in the search
         }
     }
     
@@ -480,10 +469,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
      */
     func isUserInPark() -> String? {
         if let location = locationManager.location {
-            let userCooridinates = MKMapPointForCoordinate(location.coordinate)
+            let userCoordinates = MKMapPointForCoordinate(location.coordinate)
             
             for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
-                //if MKMapRectContainsPoint(park.mapRect, userCooridinates) {
+                //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
                 self.currentPark = name
                 return name
                 //}

@@ -20,7 +20,24 @@ class AlertViews {
             sender.presentViewController(issueView, animated: true, completion: nil)
         }
     }
-    
+	
+	class func presentNotConnectedAlert(sender sender: UIViewController) {
+		let failAlert = UIAlertController(title: "Error", message: "Failed to load trail info from Socrata. Please check network connection and try again later.", preferredStyle: .Alert)
+		let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+		failAlert.addAction(okButton)
+		sender.presentViewController(failAlert, animated: true, completion: nil)
+	}
+	
+	class func presentMapKeyAlert(sender sender: UIViewController) {
+		// Tell user what the different color pins mean
+		let infoAlert = UIAlertController(title: "Color Key", message: "Blue Pins: Park trails that may have rought terrain. \nGreen Pins: Park trails that are easy to walk.", preferredStyle: .Alert)
+		let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
+		infoAlert.addAction(okButton)
+		dispatch_async(dispatch_get_main_queue()) {
+			sender.presentViewController(infoAlert, animated: true, completion: nil)
+		}
+	}
+	
     class func presentComposeViewErrorAlert(sender sender: UIViewController) {
         let issueErrorView = UIAlertController(title: "Report Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
