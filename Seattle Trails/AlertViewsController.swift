@@ -12,7 +12,7 @@ import UIKit
 class AlertViews {
     
     // MARK: Alert Views
-    static func presentNotInParkAlert(sender sender: UIViewController) {
+    class func presentNotInParkAlert(sender sender: UIViewController) {
         let issueView = UIAlertController(title: "Report Issue", message: "You must be on site at a trail or park to use this feature and report an issue. Thank you for helping us document park problems for service.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
         issueView.addAction(okButton)
@@ -21,7 +21,7 @@ class AlertViews {
         }
     }
     
-    static func presentComposeViewErrorAlert(sender sender: UIViewController) {
+    class func presentComposeViewErrorAlert(sender sender: UIViewController) {
         let issueErrorView = UIAlertController(title: "Report Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you.", preferredStyle: .Alert)
         let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
         issueErrorView.addAction(okButton)
@@ -31,7 +31,7 @@ class AlertViews {
     }
     
     // MARK: Option Alert Views
-    static func presentImageSourceSelectionView (sender sender: ViewController) {
+    class func presentImageSourceSelectionView (sender sender: ViewController) {
         // Present image picker options.
         let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
         
@@ -60,22 +60,14 @@ class AlertViews {
         })
     }
     
-    static func presentIssueReportImageOptionView(sender sender: ViewController, parkName: String) {
-        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "Would you like to include a photo of the issue?.", preferredStyle: .Alert)
+    class func presentIssueReportImageOptionView(sender sender: ViewController, parkName: String) {
+        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "A photo of the issue must be included to submit a report.", preferredStyle: .Alert)
         
-        let yesButton = UIAlertAction(title: "YES", style: .Default) { (yesAction) in
+        let okButton = UIAlertAction(title: "OK", style: .Default) { (yesAction) in
             sender.getImageForParkIssue()
         }
         
-        let noButton = UIAlertAction(title: "NO", style: .Default) { (noAction) in
-            sender.getConfiguredIssueReportForPark(parkName, imageForIssue: nil)
-        }
-        
-        let cancelButton = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        fileIssueView.addAction(yesButton)
-        fileIssueView.addAction(noButton)
-        fileIssueView.addAction(cancelButton)
+        fileIssueView.addAction(okButton)
         
         dispatch_async(dispatch_get_main_queue()) {
             sender.presentViewController(fileIssueView, animated: true, completion: nil)
