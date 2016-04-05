@@ -7,9 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 protocol ParksDataSource
 {
     var parks: [String: Park] { get }
     func performActionWithSelectedPark(park: String)
+}
+
+protocol GetsImageToShare {
+    var imagePicker: UIImagePickerController {get}
 }

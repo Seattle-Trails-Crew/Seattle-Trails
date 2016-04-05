@@ -40,37 +40,37 @@ class AlertViews {
      
      - parameter sender: <#sender description#>
      */
-    class func presentImageSourceSelectionView (sender sender: ViewController) {
-        // Present image picker options.
-        let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
-        { (action) in
-            dispatch_async(dispatch_get_main_queue())
-            {
-                sender.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.Camera)
-            }
-        }
-        
-        let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
-        { (action) in
-            dispatch_async(dispatch_get_main_queue())
-            {
-                sender.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        actionSheet.addAction(cameraAction)
-        actionSheet.addAction(libraryAction)
-        actionSheet.addAction(cancelAction)
-        
-        dispatch_async(dispatch_get_main_queue())
-        {
-            sender.presentViewController(actionSheet, animated: true, completion: nil)
-        }
-    }
+//    class func presentImageSourceSelectionView (sender sender: ViewController) {
+//        // Present image picker options.
+//        let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+//        
+//        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
+//        { (action) in
+//            dispatch_async(dispatch_get_main_queue())
+//            {
+//                sender.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.Camera)
+//            }
+//        }
+//        
+//        let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
+//        { (action) in
+//            dispatch_async(dispatch_get_main_queue())
+//            {
+//                sender.presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
+//            }
+//        }
+//        
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+//        
+//        actionSheet.addAction(cameraAction)
+//        actionSheet.addAction(libraryAction)
+//        actionSheet.addAction(cancelAction)
+//        
+//        dispatch_async(dispatch_get_main_queue())
+//        {
+//            sender.presentViewController(actionSheet, animated: true, completion: nil)
+//        }
+//    }
     
     class func presentIssueReportImageOptionView(sender sender: ViewController, parkName: String) {
         let fileIssueView = UIAlertController(title: "Send Issue Report", message: "A photo of the issue must be included to submit a report.", preferredStyle: .Alert)

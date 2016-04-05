@@ -17,7 +17,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var imageDamper: UIImageView!
     
     var locationManager = CLLocationManager()
-    lazy var imagePicker = UIImagePickerController()
+    var imagePicker: UIImagePickerController? = UIImagePickerController()
     var currentPark: String?
     var parks = [String:Park]()
     var loaded = false
@@ -68,7 +68,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         // If the user is in a park. Ask for optional image then file report.
         if let parkName = isUserInPark() {
-            AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
+            self.imagePicker!.getPictureFor("Report Issue", sender: self)
         } else {
             AlertViews.presentNotInParkAlert(sender: self)
         }
@@ -374,24 +374,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     // MARK: Helper Methods
     func getImageForParkIssue() {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
-        {
-            AlertViews.presentImageSourceSelectionView(sender: self)
-        }
-        else
-        {
-            presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
-        }
-        
-    }
-    
-    func presentIssueImagePickerWithSourceType(sourceType: UIImagePickerControllerSourceType)
-    {
-        self.imagePicker.delegate = self
-        self.imagePicker.sourceType = sourceType
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
-        }
+        self.imagePicker?.getPictureFor("Park Issue", sender: self)
     }
     
     func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?) {
