@@ -96,7 +96,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	}
     
     
-    // MARK: Set Up Toolbar & Search Bar
+    // MARK: Set Up Toolbar Buttons & Search
     func setupSearchBar() {
         self.navigationController?.navigationBar.tintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
         self.searchBar.delegate = self
@@ -107,7 +107,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let dismissGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         self.view.addGestureRecognizer(dismissGesture)
         
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: nil)
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(self.shareButtonPressed))
         
         self.navigationItem.leftBarButtonItem = navSearch
         self.navigationItem.rightBarButtonItem = shareButton
@@ -133,6 +133,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         let toolbarArray = [locationIcon, spacer, satelliteIcon, spacer, reportIcon, spacer, infoIcon]
         self.toolbarItems = toolbarArray
+    }
+
+    func shareButtonPressed() {
+        self.performSegueWithIdentifier("ShowSocial", sender: self)
     }
     
     

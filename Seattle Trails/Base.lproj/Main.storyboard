@@ -44,13 +44,6 @@
                                     <action selector="filterButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vs4-dJ-Z9u"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="De8-q5-rY4">
-                                <rect key="frame" x="479" y="72" width="42" height="30"/>
-                                <state key="normal" title="Social"/>
-                                <connections>
-                                    <segue destination="KZR-Bx-L22" kind="show" id="88o-xN-6f3"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -81,6 +74,7 @@
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
+                        <segue destination="KZR-Bx-L22" kind="show" identifier="ShowSocial" id="lns-2b-VUN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
