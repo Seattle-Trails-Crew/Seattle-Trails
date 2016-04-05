@@ -10,12 +10,6 @@ import UIKit
 import MapKit
 import MessageUI
 
-protocol ParksDataSource
-{
-    var parks: [String: Park] { get }
-    func performActionWithSelectedPark(park: String)
-}
-
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
@@ -23,7 +17,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var imageDamper: UIImageView!
     
     var locationManager = CLLocationManager()
-    lazy var issueImagePicker = UIImagePickerController()
+    lazy var imagePicker = UIImagePickerController()
     var currentPark: String?
     var parks = [String:Park]()
     var loaded = false
@@ -183,10 +177,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         mapView.showsUserLocation = true
-    }
-    
-    func canReportIssues() {
-        // Activate issue button
     }
     
     func annotateAllParks()
@@ -397,10 +387,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func presentIssueImagePickerWithSourceType(sourceType: UIImagePickerControllerSourceType)
     {
-        self.issueImagePicker.delegate = self
-        self.issueImagePicker.sourceType = sourceType
+        self.imagePicker.delegate = self
+        self.imagePicker.sourceType = sourceType
         dispatch_async(dispatch_get_main_queue()) { 
-            self.presentViewController(self.issueImagePicker, animated: true, completion: nil)
+            self.presentViewController(self.imagePicker, animated: true, completion: nil)
         }
     }
     

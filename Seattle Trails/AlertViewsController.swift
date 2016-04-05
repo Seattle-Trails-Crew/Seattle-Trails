@@ -32,6 +32,8 @@ class AlertViews {
         }
     }
     
+    // TODO: Refactor out. Make a subclass or extension of UIImage picker controller that will offer to select source. Create an communicatoin controller that can present the option alert view.
+    
     // MARK: Option Alert Views
     /**
      An alert controller allowing the user to pick their photo library or the camera as an image source.
@@ -74,7 +76,7 @@ class AlertViews {
         let fileIssueView = UIAlertController(title: "Send Issue Report", message: "A photo of the issue must be included to submit a report.", preferredStyle: .Alert)
         
         let okButton = UIAlertAction(title: "OK", style: .Default) { (yesAction) in
-            sender.getImageForParkIssue()
+            sender.getImageForParkIssue() // TODO: Add this to Communtication class.
         }
         
         fileIssueView.addAction(okButton)
