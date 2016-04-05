@@ -16,7 +16,7 @@ protocol ParksDataSource
     func performActionWithSelectedPark(park: String)
 }
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UISearchBarDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -29,6 +29,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var loading = false
     //TODO: temporary filter stuff
     var shouldFilter = false
+    let searchBar = UISearchBar()
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -38,6 +39,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		self.configureMapViewSettings()
         self.showUserLocation()
         self.setMapViewPosition()
+        self.setupSearchBar()
+        self.setupToolbar()
     }
     
     // MARK: User Interaction
@@ -91,6 +94,43 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		
 		self.annotateAllParks()
 	}
+    
+    
+    // MARK: Set Up Toolbar & Search Bar
+    func setupSearchBar() {
+        self.navigationController?.navigationBar.tintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
+        self.searchBar.delegate = self
+        self.searchBar.placeholder = "Search Trails"
+        self.searchBar.frame = CGRect(x: 0.0, y: 0.0, width: 240.0, height: 44.0)
+        let navSearch = UIBarButtonItem(customView: self.searchBar)
+        
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: nil)
+        
+        self.navigationItem.leftBarButtonItem = navSearch
+        self.navigationItem.rightBarButtonItem = shareButton
+    }
+    
+    func setupToolbar() {
+        self.navigationController?.toolbarHidden = false
+        self.navigationController?.toolbar.tintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
+        
+        let locationImage = UIImage(named: "locationIcon.png", inBundle: nil, compatibleWithTraitCollection: nil)
+        let locationIcon = UIBarButtonItem(image: locationImage, style: .Plain, target: self, action: #selector(self.navButtonPressed(_:)))
+        
+        let satelliteImage = UIImage(named: "satelliteIcon.png", inBundle: nil, compatibleWithTraitCollection: nil)
+        let satelliteIcon = UIBarButtonItem(image: satelliteImage, style: .Plain, target: self, action: #selector(self.satteliteViewButtonPressed(_:)))
+        
+        let reportIcon = UIBarButtonItem(barButtonSystemItem: .Compose, target: self, action: #selector(self.reportIssuePressed(_:)))
+        
+        let infoButton = UIButton(type: .InfoLight)
+        infoButton.addTarget(self, action: #selector(self.infoButtonPressed(_:)), forControlEvents: .TouchUpInside)
+        let infoIcon = UIBarButtonItem(customView: infoButton)
+        
+        let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+        
+        let toolbarArray = [locationIcon, spacer, satelliteIcon, spacer, reportIcon, spacer, infoIcon]
+        self.toolbarItems = toolbarArray
+    }
 	
     
     // MARK: Data Fetching Methods

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		589DBFEE1CB34B4F00B5D7A5 /* locationIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 589DBFE81CB34B4F00B5D7A5 /* locationIcon.png */; };
+		589DBFEF1CB34B4F00B5D7A5 /* locationIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 589DBFE91CB34B4F00B5D7A5 /* locationIcon@2x.png */; };
+		589DBFF01CB34B4F00B5D7A5 /* locationIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 589DBFEA1CB34B4F00B5D7A5 /* locationIcon@3x.png */; };
+		589DBFF11CB34B4F00B5D7A5 /* satelliteIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 589DBFEB1CB34B4F00B5D7A5 /* satelliteIcon.png */; };
+		589DBFF21CB34B4F00B5D7A5 /* satelliteIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 589DBFEC1CB34B4F00B5D7A5 /* satelliteIcon@2x.png */; };
+		589DBFF31CB34B4F00B5D7A5 /* satelliteIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 589DBFED1CB34B4F00B5D7A5 /* satelliteIcon@3x.png */; };
 		635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */; };
 		8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */; };
 		8CCEA2261CAD5C8000CF117C /* AlertViewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */; };
@@ -44,6 +50,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		589DBFE81CB34B4F00B5D7A5 /* locationIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationIcon.png; sourceTree = "<group>"; };
+		589DBFE91CB34B4F00B5D7A5 /* locationIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "locationIcon@2x.png"; sourceTree = "<group>"; };
+		589DBFEA1CB34B4F00B5D7A5 /* locationIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "locationIcon@3x.png"; sourceTree = "<group>"; };
+		589DBFEB1CB34B4F00B5D7A5 /* satelliteIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = satelliteIcon.png; sourceTree = "<group>"; };
+		589DBFEC1CB34B4F00B5D7A5 /* satelliteIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "satelliteIcon@2x.png"; sourceTree = "<group>"; };
+		589DBFED1CB34B4F00B5D7A5 /* satelliteIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "satelliteIcon@3x.png"; sourceTree = "<group>"; };
 		635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueReport.swift; sourceTree = "<group>"; };
 		8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewsController.swift; sourceTree = "<group>"; };
@@ -95,6 +107,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		589DBFE71CB34B2400B5D7A5 /* toolbarIcons */ = {
+			isa = PBXGroup;
+			children = (
+				589DBFE81CB34B4F00B5D7A5 /* locationIcon.png */,
+				589DBFE91CB34B4F00B5D7A5 /* locationIcon@2x.png */,
+				589DBFEA1CB34B4F00B5D7A5 /* locationIcon@3x.png */,
+				589DBFEB1CB34B4F00B5D7A5 /* satelliteIcon.png */,
+				589DBFEC1CB34B4F00B5D7A5 /* satelliteIcon@2x.png */,
+				589DBFED1CB34B4F00B5D7A5 /* satelliteIcon@3x.png */,
+			);
+			name = toolbarIcons;
+			sourceTree = "<group>";
+		};
 		8CA4D3051CA5EE8800A748FB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +151,7 @@
 		8CC0FD3E1CA5E8F90075C94C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				589DBFE71CB34B2400B5D7A5 /* toolbarIcons */,
 				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
 				8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */,
 				8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */,
@@ -272,7 +298,7 @@
 				TargetAttributes = {
 					8CEB2CA61C9D0AF3000358FC = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 8F48NKUJX6;
+						DevelopmentTeam = ZX6AAK6H5A;
 					};
 					8CEB2CBA1C9D0AF4000358FC = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -312,8 +338,14 @@
 				8CEB2CD91C9D1A39000358FC /* .gitignore in Resources */,
 				8CEB2CDF1C9E0FC0000358FC /* IMG_0169.jpg in Resources */,
 				8CEB2CB51C9D0AF3000358FC /* LaunchScreen.storyboard in Resources */,
+				589DBFF31CB34B4F00B5D7A5 /* satelliteIcon@3x.png in Resources */,
+				589DBFF01CB34B4F00B5D7A5 /* locationIcon@3x.png in Resources */,
+				589DBFF11CB34B4F00B5D7A5 /* satelliteIcon.png in Resources */,
+				589DBFEE1CB34B4F00B5D7A5 /* locationIcon.png in Resources */,
+				589DBFEF1CB34B4F00B5D7A5 /* locationIcon@2x.png in Resources */,
 				8CEB2CB21C9D0AF3000358FC /* Assets.xcassets in Resources */,
 				8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */,
+				589DBFF21CB34B4F00B5D7A5 /* satelliteIcon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
