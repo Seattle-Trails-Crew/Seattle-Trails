@@ -24,7 +24,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     var locationManager = CLLocationManager()
     lazy var issueImagePicker = UIImagePickerController()
-    var currentPark: String?
     var parks = [String:Park]()
     var loading = false
     //TODO: temporary filter stuff
@@ -63,16 +62,42 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
 	
-    @IBAction func reportIssuePressed(sender: UIButton)
-    {
-        // If the user is in a park. Ask for optional image then file report.
-        if let parkName = isUserInPark() {
-            AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
-        } else {
-            AlertViews.presentNotInParkAlert(sender: self)
-        }
-        
-    }
+//    @IBAction func reportIssuePressed(sender: UIButton)
+//    {
+//        // If the user is in a park. Ask for optional image then file report.
+//        if let parkName = self.currentPark {
+//            AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
+//        } else {
+//            AlertViews.presentNotInParkAlert(sender: self)
+//        }
+//        
+//    }
+	
+	@IBAction func parkButtonPressed()
+	{
+		let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+		
+		let sharePhoto = UIAlertAction(title: "Share Photo", style: .Default)
+		{ (action) in
+			self.performSegueWithIdentifier("showSocial", sender: self)
+		}
+		alert.addAction(sharePhoto)
+		
+		
+		if let parkName = self.currentPark
+		{
+			let report = UIAlertAction(title: "Report Issue", style: .Default)
+			{ (action) in
+				AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
+			}
+			alert.addAction(report)
+		}
+		
+		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+		alert.addAction(cancel)
+		
+		self.presentViewController(alert, animated: true, completion: nil)
+	}
     
 	@IBAction func filterButtonPressed()
 	{
@@ -172,10 +197,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         mapView.showsUserLocation = true
-    }
-    
-    func canReportIssues() {
-        // Activate issue button
     }
     
     func annotateAllParks()
@@ -304,7 +325,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
-            smvc.atPark = self.isUserInPark()
+            smvc.atPark = self.currentPark
             smvc.parks = parks //attach a list of all parks, for use in the search
         }
     }
@@ -361,9 +382,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark{// TODO: Replace Discovery Park (testing) with park
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
+		{
             dismissViewControllerAnimated(true, completion: { 
-                self.getConfiguredIssueReportForPark("Discovery Park", imageForIssue: pickedImage)
+                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
             })
         }else{
             dismissViewControllerAnimated(true, completion: nil)
@@ -467,14 +489,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
      Checks all park map rects against user's location and returns the name of the park they are in or nil. Also sets currentPark class property with park name.
      - returns: Current park name or nil.
      */
-    func isUserInPark() -> String? {
+	var currentPark:String?
+	{
         if let location = locationManager.location {
             let userCoordinates = MKMapPointForCoordinate(location.coordinate)
             
             for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
                 //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
-                self.currentPark = name
-                return name
+					return name
                 //}
             }
         }

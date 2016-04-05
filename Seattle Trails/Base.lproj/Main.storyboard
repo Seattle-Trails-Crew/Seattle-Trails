@@ -66,29 +66,18 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
                                 <rect key="frame" x="281" y="282" width="37" height="37"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oh7-qe-aMx">
-                                <rect key="frame" x="424" y="72" width="42" height="30"/>
-                                <state key="normal" title="Social"/>
-                                <connections>
-                                    <segue destination="KZR-Bx-L22" kind="show" identifier="ShowSocial" id="Q9B-cd-olu"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QL3-dv-REp">
-                                <rect key="frame" x="381" y="72" width="35" height="30"/>
+                                <rect key="frame" x="431" y="72" width="35" height="30"/>
                                 <state key="normal" title="Filter"/>
                                 <connections>
                                     <action selector="filterButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vs4-dJ-Z9u"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RTq-Kn-Zfh">
-                                <rect key="frame" x="317" y="72" width="56" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="56" id="LEL-zs-5Oi"/>
-                                    <constraint firstAttribute="height" constant="30" id="qSt-2u-yQH"/>
-                                </constraints>
-                                <state key="normal" title="Report"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="03s-nd-oTu">
+                                <rect key="frame" x="20" y="72" width="38" height="30"/>
+                                <state key="normal" title="PARK"/>
                                 <connections>
-                                    <action selector="reportIssuePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="L0o-fx-XUY"/>
+                                    <action selector="parkButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="Sbd-Iq-3RV"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -98,25 +87,23 @@
                             <constraint firstItem="LBI-wc-wv7" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="65Y-Yw-qCR"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="centerX" secondItem="0wD-m4-3oa" secondAttribute="centerX" id="8R4-Ms-5iL"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="93y-0P-GaQ"/>
-                            <constraint firstItem="QL3-dv-REp" firstAttribute="leading" secondItem="RTq-Kn-Zfh" secondAttribute="trailing" constant="8" id="FWZ-Mt-EV7"/>
                             <constraint firstItem="smM-Rw-jgB" firstAttribute="trailing" secondItem="oKD-qu-38m" secondAttribute="trailingMargin" constant="-20" id="FZl-ND-CP2"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="bottom" secondItem="oKD-qu-38m" secondAttribute="bottom" constant="-20" id="FuM-nd-Ope"/>
+                            <constraint firstItem="LBI-wc-wv7" firstAttribute="leading" secondItem="QL3-dv-REp" secondAttribute="trailing" constant="8" symbolic="YES" id="Hve-9R-09B"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="J7h-61-pgf"/>
-                            <constraint firstItem="QL3-dv-REp" firstAttribute="centerY" secondItem="Oh7-qe-aMx" secondAttribute="centerY" id="L6U-Zx-s1f"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="Lg4-9o-uAQ"/>
-                            <constraint firstItem="Oh7-qe-aMx" firstAttribute="centerY" secondItem="LBI-wc-wv7" secondAttribute="centerY" id="Nve-iP-QL1"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TRb-UK-7u2"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="UPp-pd-522"/>
-                            <constraint firstItem="LBI-wc-wv7" firstAttribute="leading" secondItem="Oh7-qe-aMx" secondAttribute="trailing" constant="8" symbolic="YES" id="Vob-49-ZpG"/>
-                            <constraint firstItem="Oh7-qe-aMx" firstAttribute="leading" secondItem="QL3-dv-REp" secondAttribute="trailing" constant="8" symbolic="YES" id="X9W-Ft-tNA"/>
+                            <constraint firstItem="QL3-dv-REp" firstAttribute="centerY" secondItem="LBI-wc-wv7" secondAttribute="centerY" id="YEY-GJ-voz"/>
                             <constraint firstItem="0wD-m4-3oa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="Zf2-UW-sO3"/>
+                            <constraint firstItem="03s-nd-oTu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="aYP-pf-6nd"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="dJF-bG-qCE"/>
+                            <constraint firstItem="03s-nd-oTu" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="hNp-ox-lhY"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="kH6-xH-kC9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="nax-ZQ-GWA"/>
                             <constraint firstItem="0wD-m4-3oa" firstAttribute="leading" secondItem="LBI-wc-wv7" secondAttribute="trailing" constant="12" id="pG9-vN-DWf"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQf-7e-mHH"/>
-                            <constraint firstItem="QL3-dv-REp" firstAttribute="centerY" secondItem="RTq-Kn-Zfh" secondAttribute="centerY" id="qTz-8i-amY"/>
                             <constraint firstItem="wDg-wb-BGF" firstAttribute="leading" secondItem="oKD-qu-38m" secondAttribute="leading" constant="20" id="xHl-DZ-QMG"/>
                         </constraints>
                     </view>
@@ -125,6 +112,7 @@
                         <outlet property="activityIndicator" destination="G4b-d4-bZO" id="tyB-Ev-fom"/>
                         <outlet property="imageDamper" destination="1lW-RW-yjI" id="UzH-eO-4RY"/>
                         <outlet property="mapView" destination="oKD-qu-38m" id="Xii-OW-6jP"/>
+                        <segue destination="KZR-Bx-L22" kind="show" identifier="showSocial" id="1f7-9x-4Zq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -221,7 +209,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7vS-M3-zmv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="743" y="1125"/>
+            <point key="canvasLocation" x="743" y="1190"/>
         </scene>
         <!--Popover View Controller-->
         <scene sceneID="b90-z2-y7Y">
@@ -347,6 +335,6 @@
         <image name="UserLocation" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="doO-KU-0St"/>
+        <segue reference="6Ki-Bs-2Lp"/>
     </inferredMetricsTieBreakers>
 </document>
