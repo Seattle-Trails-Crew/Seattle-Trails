@@ -104,6 +104,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.searchBar.frame = CGRect(x: 0.0, y: 0.0, width: 240.0, height: 44.0)
         let navSearch = UIBarButtonItem(customView: self.searchBar)
         
+        let dismissGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        self.view.addGestureRecognizer(dismissGesture)
+        
         let shareButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: nil)
         
         self.navigationItem.leftBarButtonItem = navSearch
@@ -130,6 +133,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         let toolbarArray = [locationIcon, spacer, satelliteIcon, spacer, reportIcon, spacer, infoIcon]
         self.toolbarItems = toolbarArray
+    }
+    
+    
+    // MARK: Search Bar Delegate Methods & dismiss on tap
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+//        self.performSegueWithIdentifier("PopoverSegue", sender: self)
+        return true
+    }
+    
+    func dismissKeyboard() {
+        self.searchBar.resignFirstResponder()
     }
 	
     
@@ -341,6 +355,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             popoverViewController.popoverPresentationController?.delegate = self
             popoverViewController.parksDataSource = self
             popoverViewController.delegate = self
+            popoverViewController.view.backgroundColor = UIColor.clearColor()
         }
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
