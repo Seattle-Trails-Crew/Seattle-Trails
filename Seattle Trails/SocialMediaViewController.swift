@@ -139,5 +139,6 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	{
 		imageView.image = image
 		setButtonHiddenness()
+        dismissViewControllerAnimated(true, completion: nil)
 	}
 }
