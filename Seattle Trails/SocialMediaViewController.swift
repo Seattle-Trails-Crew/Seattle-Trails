@@ -9,7 +9,7 @@
 import UIKit
 import Social
 
-class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
+class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDataSource, UIPopoverPresentationControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare,  UIGestureRecognizerDelegate {
 	
 	//MARK: outlets
 	@IBOutlet weak var imageBacker: UIView!
@@ -17,16 +17,10 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	@IBOutlet weak var trailButton: UIButton!
 	@IBOutlet weak var shareButton: UIButton!
 	
-	
-	
-	//MARK: inner data
-	private var picker:UIImagePickerController?
-	
-	
 	//MARK: data to be set by view controller during transition
 	var parks = [String:Park]()
 	var atPark:String?
-	
+	let imagePicker: UIImagePickerController = UIImagePickerController()
 
     override func viewDidLoad()
 	{
@@ -35,6 +29,7 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
         imageBacker.layer.cornerRadius = 10
 		trailButton.setTitle(atPark ?? "PICK A PARK", forState: .Normal)
 		self.setButtonHiddenness()
+        self.imagePicker.delegate = self
     }
 	
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -108,50 +103,8 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	
 	@IBAction func pressPicture()
 	{
-		if picker == nil //don't want to have multiple simultaneous pickers
-		{
-			picker = UIImagePickerController()
-			picker!.delegate = self
-			if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
-			{
-				//open a dialogue to finish this
-				let actionSheet = UIAlertController(title: "Where from?", message: "Should your use the camera, or the photo library?", preferredStyle: UIAlertControllerStyle.ActionSheet)
-				
-				let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
-				{ (action) in
-					self.finishPicker(UIImagePickerControllerSourceType.Camera)
-				}
-				actionSheet.addAction(cameraAction)
-				
-				let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
-				{ (action) in
-					self.finishPicker(UIImagePickerControllerSourceType.PhotoLibrary)
-				}
-				actionSheet.addAction(libraryAction)
-				
-				let cancelAction = UIAlertAction(title: "Nevermind", style: UIAlertActionStyle.Cancel)
-				{ (action) in
-					
-				}
-				actionSheet.addAction(cancelAction)
-				
-				presentViewController(actionSheet, animated: true, completion: nil)
-			}
-			else
-			{
-				//just use the library
-				finishPicker(UIImagePickerControllerSourceType.PhotoLibrary)
-			}
-		}
-	}
-	
-	private func finishPicker(sourceType: UIImagePickerControllerSourceType)
-	{
-		picker!.sourceType = sourceType
-		presentViewController(picker!, animated: true, completion: nil)
-	}
-	
-	
+		self.imagePicker.getPictureFor(sender: self)
+    }
 	
 	//MARK: text field delegate
 	func textFieldShouldEndEditing(textField: UITextField) -> Bool
@@ -159,6 +112,7 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 		textField.resignFirstResponder()
 		return true
 	}
+    
 	func textFieldShouldReturn(textField: UITextField) -> Bool
 	{
 		print("typed \(textField.text)");
@@ -185,16 +139,5 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	{
 		imageView.image = image
 		setButtonHiddenness()
-		picker.dismissViewControllerAnimated(true)
-		{
-			self.picker = nil
-		}
-	}
-	func imagePickerControllerDidCancel(picker: UIImagePickerController)
-	{
-		picker.dismissViewControllerAnimated(true)
-		{
-			self.picker = nil
-		}
 	}
 }
