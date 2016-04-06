@@ -17,11 +17,26 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var imageDamper: UIImageView!
     
     var locationManager = CLLocationManager()
-    lazy var issueImagePicker = UIImagePickerController()
+    var imagePicker = UIImagePickerController()
     var parks = [String:Park]()
     var loading = false
     //TODO: temporary filter stuff
     var shouldFilter = false
+    
+    var currentPark:String?
+    {
+        if let location = locationManager.location {
+            let userCoordinates = MKMapPointForCoordinate(location.coordinate)
+            
+            for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
+                //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
+                return name
+                //}
+            }
+        }
+        
+        return nil
+    }
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -57,17 +72,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
 	
-//    @IBAction func reportIssuePressed(sender: UIButton)
-//    {
-//        // If the user is in a park. Ask for optional image then file report.
-//        if let parkName = self.currentPark {
-//            AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
-//        } else {
-//            AlertViews.presentNotInParkAlert(sender: self)
-//        }
-//        
-//    }
-	
 	@IBAction func parkButtonPressed()
 	{
 		let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
@@ -83,7 +87,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
-				AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
+                self.imagePicker.getPictureFor(sender: self)
 			}
 			alert.addAction(report)
 		}
@@ -381,11 +385,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
+    {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
-		{
-            dismissViewControllerAnimated(true, completion: { 
-                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
+        {// TODO: Replace Discovery Park (testing) with park
+            dismissViewControllerAnimated(true, completion: {
+                self.getConfiguredIssueReportForPark("Discovery Park", imageForIssue: pickedImage)
             })
         }
         else
@@ -474,25 +479,5 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         trail.isDrawn = true
         mapView.addOverlay(line)
     }
-    
-    /**
-     Checks all park map rects against user's location and returns the name of the park they are in or nil. Also sets currentPark class property with park name.
-     - returns: Current park name or nil.
-     */
-	var currentPark:String?
-	{
-        if let location = locationManager.location {
-            let userCoordinates = MKMapPointForCoordinate(location.coordinate)
-            
-            for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
-                //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
-					return name
-                //}
-            }
-        }
-        
-        return nil
-    }
-    
-    }
+}
 
