@@ -30,8 +30,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         super.viewDidLoad()
         self.fetchAndRenderTrails()
-		self.configureMapViewSettings()
         self.showUserLocation()
+		self.configureMapViewSettings()
         self.setMapViewPosition()
         self.imagePicker.delegate = self
     }
@@ -69,7 +69,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         // If the user is in a park. Ask for optional image then file report.
         if let parkName = isUserInPark() {
-            self.imagePicker.getPictureFor("Report Issue", sender: self)
+            self.imagePicker.getPictureFor(sender: self)
         } else {
             AlertViews.presentNotInParkAlert(sender: self)
         }
@@ -337,7 +337,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         view.endEditing(true)
         
-        if let search = textField.text {
+        if let search = textField.text
+        {
             searchParks(parkName: search)
         }
         
@@ -347,8 +348,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func searchParks(parkName name: String)
     {
         for park in parks {
-            if (name.caseInsensitiveCompare(park.0) == .OrderedSame) {
-                defer {
+            if (name.caseInsensitiveCompare(park.0) == .OrderedSame)
+            {
+                defer
+                {
                     dispatch_async(dispatch_get_main_queue(), {
                         self.showPark(parkName: park.0)
                     })
@@ -357,37 +360,48 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
         }
     }
+    
     // TODO: Refactor
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
+    {
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark{// TODO: Replace Discovery Park (testing) with park
-            dismissViewControllerAnimated(true, completion: { 
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
+    {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
+        {// TODO: Replace Discovery Park (testing) with park
+            dismissViewControllerAnimated(true, completion: {
                 self.getConfiguredIssueReportForPark("Discovery Park", imageForIssue: pickedImage)
             })
-        }else{
+        }
+        else
+        {
             dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
         
     // MARK: Helper Methods
-    func getImageForParkIssue() {
-        self.imagePicker.getPictureFor("Park Issue", sender: self)
+    func getImageForParkIssue()
+    {
+        self.imagePicker.getPictureFor(sender: self)
     }
     
-    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?) {
-        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location {
+    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?)
+    {
+        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location
+        {
             let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
             
             self.presentIssueReportViewControllerForIssue(parkIssueReport)
         }
     }
     
-    func presentIssueReportViewControllerForIssue(issue: IssueReport) {
-        if MFMailComposeViewController.canSendMail() {
+    func presentIssueReportViewControllerForIssue(issue: IssueReport)
+    {
+        if MFMailComposeViewController.canSendMail()
+        {
             let issueReportVC = MFMailComposeViewController()
             issueReportVC.mailComposeDelegate = self
             issueReportVC.setToRecipients([issue.sendTo])
@@ -399,7 +413,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 self.presentViewController(issueReportVC, animated: true, completion: nil)
             })
         } else {
-            dispatch_async(dispatch_get_main_queue(), { 
+            dispatch_async(dispatch_get_main_queue(), {
                 AlertViews.presentComposeViewErrorAlert(sender: self)
             })
         }

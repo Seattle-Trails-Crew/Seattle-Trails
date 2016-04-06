@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIImagePickerController {
-    func getPictureFor<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(purpose: String, sender: VC) {
+    func getPictureFor<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         {
             self.presentImageSourceSelectionView(sender: sender)
