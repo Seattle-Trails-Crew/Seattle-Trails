@@ -25,10 +25,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     var currentPark:String?
     {
-        if let location = locationManager.location {
+        if let location = locationManager.location
+        {
             let userCoordinates = MKMapPointForCoordinate(location.coordinate)
             
-            for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
+            for (name, park) in self.parks
+            { // TODO: Uncomment code and after testing complete
                 //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
                 return name
                 //}
@@ -50,13 +52,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: User Interaction
-    @IBAction func infoButtonPressed(sender: UIButton) {
+    @IBAction func infoButtonPressed(sender: UIButton)
+    {
         AlertViews.presentMapKeyAlert(sender: self)
     }
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
-        if let location = locationManager.location {
+        if let location = locationManager.location
+        {
             let center = location.coordinate
             let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
             mapView.setRegion(region, animated: true)
@@ -65,9 +69,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBAction func satteliteViewButtonPressed(sender: UIButton)
     {
-        if self.mapView.mapType == MKMapType.Satellite {
+        if self.mapView.mapType == MKMapType.Satellite
+        {
             self.mapView.mapType = MKMapType.Standard
-        } else if mapView.mapType == MKMapType.Standard {
+        }
+        else if mapView.mapType == MKMapType.Standard
+        {
             self.mapView.mapType = MKMapType.Satellite
         }
     }
@@ -105,6 +112,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		//clear all existing points and such
 		self.mapView.removeAnnotations(self.mapView.annotations)
 		self.mapView.removeOverlays(self.mapView.overlays)
+        
 		for (_, park) in self.parks
 		{
 			for trail in park.trails
@@ -158,9 +166,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func isLoading(loading: Bool)
     {
-        if loading {
+        if loading
+        {
             self.activityIndicator.startAnimating()
-        } else {
+        }
+        else
+        {
             self.activityIndicator.stopAnimating()
         }
         
@@ -233,19 +244,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
-        if let _ = annotation as? MKUserLocation {
+        if let _ = annotation as? MKUserLocation
+        {
             return nil
         }
         
         // Set the annotation pin color based on overall trail difficulty.
         let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        if let subtitle = annotation.subtitle {
+        if let subtitle = annotation.subtitle
+        {
             if subtitle == "Accessible" {
                 view.pinTintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-            } else {
+            }
+            else
+            {
                 view.pinTintColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
             }
-        } else {
+        }
+        else
+        {
             return nil
         }
         
@@ -255,16 +272,19 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
-        if let _ = view.annotation as? MKUserLocation {
+        if let _ = view.annotation as? MKUserLocation
+        {
             return
         }
         
-        if let title = view.annotation!.title {
+        if let title = view.annotation!.title
+        {
             showPark(parkName: title!)
         }
     }
     
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+    {
         let rect = mapView.visibleMapRect
         _ = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
         _ = CLLocationCoordinate2D(latitude: MKMapRectGetMaxX(rect), longitude: MKMapRectGetMinY(rect))
@@ -297,10 +317,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         // Setting For Line Style
         let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
-        if let color = overlay.title {
-            if color == "blue" {
+        
+        if let color = overlay.title
+        {
+            if color == "blue"
+            {
                 polyLineRenderer.strokeColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
-            } else if color == "green" {
+            }
+            else if color == "green"
+            {
                 polyLineRenderer.strokeColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
             }
         }
@@ -310,12 +335,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
-	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
+    {
 		//you shouldn't be able to segue when you don't have any pins
 		return parks.count > 0
 	}
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
         if let popoverViewController = segue.destinationViewController as? PopoverViewController
 		{
             popoverViewController.popoverPresentationController?.delegate = self
@@ -444,8 +471,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Check that park name exists in list of parks and get the map view scale.
         if let park = self.parks[name]
         {
-            for trail in park.trails {
-                if (!trail.isDrawn && (!shouldFilter || trail.official)) { //TODO: remove the filter/official stuff once we remove filter
+            for trail in park.trails
+            {
+                if (!trail.isDrawn && (!shouldFilter || trail.official))
+                { //TODO: remove the filter/official stuff once we remove filter
                     plotTrailLine(trail)
                 }
             }
@@ -465,9 +494,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
         
         // Example How To Alter Colors
-        if trail.easyTrail {
+        if trail.easyTrail
+        {
             line.title = "green"
-        } else {
+        }
+        else
+        {
             line.title = "blue"
         }
         

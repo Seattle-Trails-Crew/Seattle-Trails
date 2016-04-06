@@ -7,5 +7,10 @@
 //
 
 import Foundation
+import MessageUI
+
+class CommController: MFMailComposeViewController, MFMailComposeViewControllerDelegate {
+    
+}
 
 
