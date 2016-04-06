@@ -125,7 +125,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	}
 	
     
-    // MARK: Data Fetching Methods
+    // MARK: Map Data Fetching Methods
     func tryToLoad()
     {
         if self.parks.count == 0 && !self.loading
