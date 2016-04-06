@@ -10,13 +10,7 @@ import UIKit
 import MapKit
 import MessageUI
 
-protocol ParksDataSource
-{
-    var parks: [String: Park] { get }
-    func performActionWithSelectedPark(park: String)
-}
-
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -34,9 +28,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         super.viewDidLoad()
         self.fetchAndRenderTrails()
-		self.configureMapViewSettings()
         self.showUserLocation()
+		self.configureMapViewSettings()
         self.setMapViewPosition()
+        self.imagePicker.delegate = self
     }
     
     // MARK: User Interaction
@@ -356,7 +351,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         view.endEditing(true)
         
-        if let search = textField.text {
+        if let search = textField.text
+        {
             searchParks(parkName: search)
         }
         
@@ -366,8 +362,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func searchParks(parkName name: String)
     {
         for park in parks {
-            if (name.caseInsensitiveCompare(park.0) == .OrderedSame) {
-                defer {
+            if (name.caseInsensitiveCompare(park.0) == .OrderedSame)
+            {
+                defer
+                {
                     dispatch_async(dispatch_get_main_queue(), {
                         self.showPark(parkName: park.0)
                     })
@@ -376,8 +374,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
         }
     }
+    
     // TODO: Refactor
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
+    {
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -387,44 +387,34 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             dismissViewControllerAnimated(true, completion: { 
                 self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
             })
-        }else{
+        }
+        else
+        {
             dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
         
     // MARK: Helper Methods
-    func getImageForParkIssue() {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
-        {
-            AlertViews.presentImageSourceSelectionView(sender: self)
-        }
-        else
-        {
-            presentIssueImagePickerWithSourceType(UIImagePickerControllerSourceType.PhotoLibrary)
-        }
-        
-    }
-    
-    func presentIssueImagePickerWithSourceType(sourceType: UIImagePickerControllerSourceType)
+    func getImageForParkIssue()
     {
-        self.issueImagePicker.delegate = self
-        self.issueImagePicker.sourceType = sourceType
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.presentViewController(self.issueImagePicker, animated: true, completion: nil)
-        }
+        self.imagePicker.getPictureFor(sender: self)
     }
     
-    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?) {
-        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location {
+    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?)
+    {
+        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location
+        {
             let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
             
             self.presentIssueReportViewControllerForIssue(parkIssueReport)
         }
     }
     
-    func presentIssueReportViewControllerForIssue(issue: IssueReport) {
-        if MFMailComposeViewController.canSendMail() {
+    func presentIssueReportViewControllerForIssue(issue: IssueReport)
+    {
+        if MFMailComposeViewController.canSendMail()
+        {
             let issueReportVC = MFMailComposeViewController()
             issueReportVC.mailComposeDelegate = self
             issueReportVC.setToRecipients([issue.sendTo])
@@ -436,7 +426,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 self.presentViewController(issueReportVC, animated: true, completion: nil)
             })
         } else {
-            dispatch_async(dispatch_get_main_queue(), { 
+            dispatch_async(dispatch_get_main_queue(), {
                 AlertViews.presentComposeViewErrorAlert(sender: self)
             })
         }

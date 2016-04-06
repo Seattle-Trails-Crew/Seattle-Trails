@@ -10,6 +10,9 @@
 		635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */; };
 		8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */; };
 		8CCEA2261CAD5C8000CF117C /* AlertViewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */; };
+		8CCEA2321CB3451300CF117C /* CommController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2311CB3451300CF117C /* CommController.swift */; };
+		8CCEA2341CB34FD900CF117C /* AppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2331CB34FD900CF117C /* AppExtensions.swift */; };
+		8CCEA2361CB3557000CF117C /* AppProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2351CB3557000CF117C /* AppProtocols.swift */; };
 		8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */; };
 		8CEB2CAD1C9D0AF3000358FC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */; };
 		8CEB2CB01C9D0AF3000358FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */; };
@@ -47,6 +50,9 @@
 		635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueReport.swift; sourceTree = "<group>"; };
 		8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewsController.swift; sourceTree = "<group>"; };
+		8CCEA2311CB3451300CF117C /* CommController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommController.swift; sourceTree = "<group>"; };
+		8CCEA2331CB34FD900CF117C /* AppExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
+		8CCEA2351CB3557000CF117C /* AppProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppProtocols.swift; sourceTree = "<group>"; };
 		8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seattle Trails.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -127,6 +133,8 @@
 			isa = PBXGroup;
 			children = (
 				8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */,
+				8CCEA2351CB3557000CF117C /* AppProtocols.swift */,
+				8CCEA2331CB34FD900CF117C /* AppExtensions.swift */,
 				8CEB2CB11C9D0AF3000358FC /* Assets.xcassets */,
 				8CEB2CDE1C9E0FC0000358FC /* IMG_0169.jpg */,
 				8CEB2CB61C9D0AF4000358FC /* Info.plist */,
@@ -149,6 +157,7 @@
 			children = (
 				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
 				8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */,
+				8CCEA2311CB3451300CF117C /* CommController.swift */,
 			);
 			name = "Utility Classes";
 			sourceTree = "<group>";
@@ -343,10 +352,13 @@
 				E41092B21CAB571C00EF7109 /* Park.swift in Sources */,
 				635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */,
 				E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */,
+				8CCEA2321CB3451300CF117C /* CommController.swift in Sources */,
 				8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */,
 				E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */,
 				E41092AE1CAA329700EF7109 /* SocialMediaViewController.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
+				8CCEA2341CB34FD900CF117C /* AppExtensions.swift in Sources */,
+				8CCEA2361CB3557000CF117C /* AppProtocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
