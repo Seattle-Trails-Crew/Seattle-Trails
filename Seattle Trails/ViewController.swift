@@ -401,11 +401,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
         
     // MARK: Helper Methods
-    func getImageForParkIssue()
-    {
-        self.imagePicker.getPictureFor(sender: self)
-    }
-    
     func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?)
     {
         if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location
