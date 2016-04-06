@@ -10,14 +10,14 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
     var locationManager = CLLocationManager()
-    var imagePicker: UIImagePickerController? = UIImagePickerController()
+    var imagePicker = UIImagePickerController()
     var currentPark: String?
     var parks = [String:Park]()
     var loaded = false
@@ -33,6 +33,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		self.configureMapViewSettings()
         self.showUserLocation()
         self.setMapViewPosition()
+        self.imagePicker.delegate = self
     }
     
     // MARK: User Interaction
@@ -68,7 +69,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     {
         // If the user is in a park. Ask for optional image then file report.
         if let parkName = isUserInPark() {
-            self.imagePicker!.getPictureFor("Report Issue", sender: self)
+            self.imagePicker.getPictureFor("Report Issue", sender: self)
         } else {
             AlertViews.presentNotInParkAlert(sender: self)
         }
@@ -374,7 +375,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     // MARK: Helper Methods
     func getImageForParkIssue() {
-        self.imagePicker?.getPictureFor("Park Issue", sender: self)
+        self.imagePicker.getPictureFor("Park Issue", sender: self)
     }
     
     func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?) {

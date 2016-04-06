@@ -35,11 +35,7 @@ class AlertViews {
     // TODO: Refactor out. Make a subclass or extension of UIImage picker controller that will offer to select source. Create an communicatoin controller that can present the option alert view.
     
     // MARK: Option Alert Views
-    /**
-     An alert controller allowing the user to pick their photo library or the camera as an image source.
-     
-     - parameter sender: <#sender description#>
-     */
+    
 //    class func presentImageSourceSelectionView (sender sender: ViewController) {
 //        // Present image picker options.
 //        let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
@@ -72,20 +68,20 @@ class AlertViews {
 //        }
 //    }
     
-    class func presentIssueReportImageOptionView(sender sender: ViewController, parkName: String) {
-        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "A photo of the issue must be included to submit a report.", preferredStyle: .Alert)
-        
-        let okButton = UIAlertAction(title: "OK", style: .Default) { (yesAction) in
-            sender.getImageForParkIssue() // TODO: Add this to Communtication class.
-        }
-        
-        fileIssueView.addAction(okButton)
-        
-        dispatch_async(dispatch_get_main_queue())
-        {
-            sender.presentViewController(fileIssueView, animated: true, completion: nil)
-        }
-    }
+//    class func presentIssueReportImageOptionView(sender sender: ViewController, parkName: String) {
+//        let fileIssueView = UIAlertController(title: "Send Issue Report", message: "A photo of the issue must be included to submit a report.", preferredStyle: .Alert)
+//        
+//        let okButton = UIAlertAction(title: "OK", style: .Default) { (yesAction) in
+//            sender.getImageForParkIssue() // TODO: Add this to Communtication class.
+//        }
+//        
+//        fileIssueView.addAction(okButton)
+//        
+//        dispatch_async(dispatch_get_main_queue())
+//        {
+//            sender.presentViewController(fileIssueView, animated: true, completion: nil)
+//        }
+//    }
 
 
 }
