@@ -17,11 +17,28 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var imageDamper: UIImageView!
     
     var locationManager = CLLocationManager()
-    lazy var issueImagePicker = UIImagePickerController()
+    var imagePicker = UIImagePickerController()
     var parks = [String:Park]()
     var loading = false
     //TODO: temporary filter stuff
     var shouldFilter = false
+    
+    var currentPark:String?
+    {
+        if let location = locationManager.location
+        {
+            let userCoordinates = MKMapPointForCoordinate(location.coordinate)
+            
+            for (name, park) in self.parks
+            { // TODO: Uncomment code and after testing complete
+                //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
+                return name
+                //}
+            }
+        }
+        
+        return nil
+    }
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -35,13 +52,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: User Interaction
-    @IBAction func infoButtonPressed(sender: UIButton) {
+    @IBAction func infoButtonPressed(sender: UIButton)
+    {
         AlertViews.presentMapKeyAlert(sender: self)
     }
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
-        if let location = locationManager.location {
+        if let location = locationManager.location
+        {
             let center = location.coordinate
             let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
             mapView.setRegion(region, animated: true)
@@ -50,23 +69,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBAction func satteliteViewButtonPressed(sender: UIButton)
     {
-        if self.mapView.mapType == MKMapType.Satellite {
+        if self.mapView.mapType == MKMapType.Satellite
+        {
             self.mapView.mapType = MKMapType.Standard
-        } else if mapView.mapType == MKMapType.Standard {
+        }
+        else if mapView.mapType == MKMapType.Standard
+        {
             self.mapView.mapType = MKMapType.Satellite
         }
     }
-	
-//    @IBAction func reportIssuePressed(sender: UIButton)
-//    {
-//        // If the user is in a park. Ask for optional image then file report.
-//        if let parkName = self.currentPark {
-//            AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
-//        } else {
-//            AlertViews.presentNotInParkAlert(sender: self)
-//        }
-//        
-//    }
 	
 	@IBAction func parkButtonPressed()
 	{
@@ -79,11 +90,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		alert.addAction(sharePhoto)
 		
 		
-		if let parkName = self.currentPark
+		if let _ = self.currentPark
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
-				AlertViews.presentIssueReportImageOptionView(sender: self, parkName: parkName)
+                self.imagePicker.getPictureFor(sender: self)
 			}
 			alert.addAction(report)
 		}
@@ -101,6 +112,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		//clear all existing points and such
 		self.mapView.removeAnnotations(self.mapView.annotations)
 		self.mapView.removeOverlays(self.mapView.overlays)
+        
 		for (_, park) in self.parks
 		{
 			for trail in park.trails
@@ -113,7 +125,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 	}
 	
     
-    // MARK: Data Fetching Methods
+    // MARK: Map Data Fetching Methods
     func tryToLoad()
     {
         if self.parks.count == 0 && !self.loading
@@ -154,9 +166,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func isLoading(loading: Bool)
     {
-        if loading {
+        if loading
+        {
             self.activityIndicator.startAnimating()
-        } else {
+        }
+        else
+        {
             self.activityIndicator.stopAnimating()
         }
         
@@ -229,19 +244,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
-        if let _ = annotation as? MKUserLocation {
+        if let _ = annotation as? MKUserLocation
+        {
             return nil
         }
         
         // Set the annotation pin color based on overall trail difficulty.
         let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        if let subtitle = annotation.subtitle {
+        if let subtitle = annotation.subtitle
+        {
             if subtitle == "Accessible" {
                 view.pinTintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-            } else {
+            }
+            else
+            {
                 view.pinTintColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
             }
-        } else {
+        }
+        else
+        {
             return nil
         }
         
@@ -251,52 +272,37 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
-        if let _ = view.annotation as? MKUserLocation {
+        if let _ = view.annotation as? MKUserLocation
+        {
             return
         }
         
-        if let title = view.annotation!.title {
+        if let title = view.annotation!.title
+        {
             showPark(parkName: title!)
         }
     }
     
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        let rect = mapView.visibleMapRect
-        _ = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
-        _ = CLLocationCoordinate2D(latitude: MKMapRectGetMaxX(rect), longitude: MKMapRectGetMinY(rect))
-        //        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
-        //        print("Distance: \(distance)")
-        //        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
-        // let center = mapView.center
-        // Do query, $where=within_box(..., center.lat, center.long, distance)
-        
-        // Removes all Annotations
-        //        let annotationsToRemove = mapView.annotations.filter { $0 !== mapView.userLocation }
-        //        mapView.removeAnnotations( annotationsToRemove )
-        //
-        //        print("Hit Here")
-        //        socrataService.getTrailsInArea(upLeft, lowerRight: downRight)
-        //            { (trails) in
-        //                if let trails = trails
-        //                {
-        //                    self.plotAllLines(trails)
-        //                }
-        //                else
-        //                {
-        //                    print("Something Bad Happened")
-        //                }
-        //        }
-        
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+    {
+		//TODO: in the future, if we want to add any kind of behavior to the map as it moves
+		//IE loading or unloading trails, whatever
+		//put it here
     }
     
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
         let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
-        if let color = overlay.title {
-            if color == "blue" {
+        
+        if let color = overlay.title
+        {
+            if color == "blue"
+            {
                 polyLineRenderer.strokeColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
-            } else if color == "green" {
+            }
+            else if color == "green"
+            {
                 polyLineRenderer.strokeColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
             }
         }
@@ -306,12 +312,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
-	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
+    {
 		//you shouldn't be able to segue when you don't have any pins
 		return parks.count > 0
 	}
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
         if let popoverViewController = segue.destinationViewController as? PopoverViewController
 		{
             popoverViewController.popoverPresentationController?.delegate = self
@@ -381,10 +389,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
+    {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
-		{
-            dismissViewControllerAnimated(true, completion: { 
+        {
+            dismissViewControllerAnimated(true, completion: {
                 self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
             })
         }
@@ -396,11 +405,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
         
     // MARK: Helper Methods
-    func getImageForParkIssue()
-    {
-        self.imagePicker.getPictureFor(sender: self)
-    }
-    
     func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?)
     {
         if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location
@@ -444,8 +448,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Check that park name exists in list of parks and get the map view scale.
         if let park = self.parks[name]
         {
-            for trail in park.trails {
-                if (!trail.isDrawn && (!shouldFilter || trail.official)) { //TODO: remove the filter/official stuff once we remove filter
+            for trail in park.trails
+            {
+                if (!trail.isDrawn && (!shouldFilter || trail.official))
+                { //TODO: remove the filter/official stuff once we remove filter
                     plotTrailLine(trail)
                 }
             }
@@ -465,34 +471,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
         
         // Example How To Alter Colors
-        if trail.easyTrail {
+        if trail.easyTrail
+        {
             line.title = "green"
-        } else {
+        }
+        else
+        {
             line.title = "blue"
         }
         
         trail.isDrawn = true
         mapView.addOverlay(line)
     }
-    
-    /**
-     Checks all park map rects against user's location and returns the name of the park they are in or nil. Also sets currentPark class property with park name.
-     - returns: Current park name or nil.
-     */
-	var currentPark:String?
-	{
-        if let location = locationManager.location {
-            let userCoordinates = MKMapPointForCoordinate(location.coordinate)
-            
-            for (name, park) in self.parks { // TODO: Uncomment code and after testing complete
-                //if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
-					return name
-                //}
-            }
-        }
-        
-        return nil
-    }
-    
-    }
+}
 
