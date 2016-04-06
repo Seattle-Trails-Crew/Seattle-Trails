@@ -90,7 +90,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		alert.addAction(sharePhoto)
 		
 		
-		if let parkName = self.currentPark
+		if let _ = self.currentPark
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
@@ -285,32 +285,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
     {
-        let rect = mapView.visibleMapRect
-        _ = CLLocationCoordinate2D(latitude: MKMapRectGetMinX(rect), longitude: MKMapRectGetMaxY(rect))
-        _ = CLLocationCoordinate2D(latitude: MKMapRectGetMaxX(rect), longitude: MKMapRectGetMinY(rect))
-        //        let distance = MKMetersBetweenMapPoints(eastPoint, westPoint)
-        //        print("Distance: \(distance)")
-        //        polyLineRenderer?.lineWidth = CGFloat(distance * 0.001)
-        // let center = mapView.center
-        // Do query, $where=within_box(..., center.lat, center.long, distance)
-        
-        // Removes all Annotations
-        //        let annotationsToRemove = mapView.annotations.filter { $0 !== mapView.userLocation }
-        //        mapView.removeAnnotations( annotationsToRemove )
-        //
-        //        print("Hit Here")
-        //        socrataService.getTrailsInArea(upLeft, lowerRight: downRight)
-        //            { (trails) in
-        //                if let trails = trails
-        //                {
-        //                    self.plotAllLines(trails)
-        //                }
-        //                else
-        //                {
-        //                    print("Something Bad Happened")
-        //                }
-        //        }
-        
+		//TODO: in the future, if we want to add any kind of behavior to the map as it moves
+		//IE loading or unloading trails, whatever
+		//put it here
     }
     
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
@@ -415,9 +392,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
-        {// TODO: Replace Discovery Park (testing) with park
+        {
             dismissViewControllerAnimated(true, completion: {
-                self.getConfiguredIssueReportForPark("Discovery Park", imageForIssue: pickedImage)
+                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
             })
         }
         else
