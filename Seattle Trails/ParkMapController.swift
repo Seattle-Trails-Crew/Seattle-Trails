@@ -8,6 +8,9 @@
 
 import MapKit
 
+/**
+The ParkMapController is responsible for directly handling the parks, and translating them into map view pins and lines.
+*/
 class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate
 {
 	@IBOutlet weak var mapView: MKMapView!
@@ -47,6 +50,9 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
 	
 	// MARK: Map View Methods
+	/**
+	Sets the map view's starting position.
+	*/
 	func setMapViewPosition()
 	{
 		//set map view position
@@ -55,14 +61,19 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		mapView.setRegion(region, animated: true)
 	}
 	
+	/**
+	Sets up the map view as desired for the app.
+	*/
 	private func configureMapViewSettings()
 	{
-		//configure map view
 		mapView.delegate = self
 		mapView.showsBuildings = false
 		mapView.showsTraffic = false
 	}
 	
+	/**
+	Sets up the location manager to show user location.
+	*/
 	func showUserLocation()
 	{
 		//set up location manager
@@ -73,6 +84,9 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		mapView.showsUserLocation = true
 	}
 	
+	/**
+	Make the annotation pins for all parks.
+	*/
 	func annotateAllParks()
 	{
 		// Go through trails/parks and get their trail objects.
