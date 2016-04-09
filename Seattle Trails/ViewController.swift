@@ -8,16 +8,15 @@
 
 import UIKit
 import MapKit
-import MessageUI
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UINavigationControllerDelegate
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
-    var locationManager = CLLocationManager()
-    var imagePicker = UIImagePickerController()
+    let locationManager = CLLocationManager()
+    let commController = CommController()
     var parks = [String:Park]()
     var loading = false
     //TODO: temporary filter stuff
@@ -48,7 +47,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.showUserLocation()
 		self.configureMapViewSettings()
         self.setMapViewPosition()
-        self.imagePicker.delegate = self
     }
     
     // MARK: User Interaction
@@ -87,14 +85,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		{ (action) in
 			self.performSegueWithIdentifier("showSocial", sender: self)
 		}
+        
 		alert.addAction(sharePhoto)
-		
-		
+        
 		if let _ = self.currentPark
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
-                self.imagePicker.getPictureFor(sender: self)
+                if let park = self.parks[self.currentPark!], location = self.locationManager.location
+                {
+                    self.commController.reportIssue(park,atUserLocation: location)
+                }
 			}
 			alert.addAction(report)
 		}
@@ -326,6 +327,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             popoverViewController.parksDataSource = self
             popoverViewController.delegate = self
         }
+            
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.currentPark
@@ -382,61 +384,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
         }
     }
-    
-    // TODO: Refactor
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
-    {
-        controller.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
-    {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
-        {
-            dismissViewControllerAnimated(true, completion: {
-                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
-            })
-        }
-        else
-        {
-            dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
-    
-        
-    // MARK: Helper Methods
-    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?)
-    {
-        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location
-        {
-            let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
-            
-            self.presentIssueReportViewControllerForIssue(parkIssueReport)
-        }
-    }
-    
-    func presentIssueReportViewControllerForIssue(issue: IssueReport)
-    {
-        if MFMailComposeViewController.canSendMail()
-        {
-            let issueReportVC = MFMailComposeViewController()
-            issueReportVC.mailComposeDelegate = self
-            issueReportVC.setToRecipients([issue.sendTo])
-            issueReportVC.setSubject(issue.subject)
-            issueReportVC.setMessageBody(issue.formFields, isHTML: false)
-            issueReportVC.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.presentViewController(issueReportVC, animated: true, completion: nil)
-            })
-        } else {
-            dispatch_async(dispatch_get_main_queue(), {
-                AlertViews.presentComposeViewErrorAlert(sender: self)
-            })
-        }
-    }
-    
-    
     
     /**
      Given a park this will move the map view to it and draw all it's lines.
