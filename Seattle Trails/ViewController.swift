@@ -8,15 +8,17 @@
 
 import UIKit
 import MapKit
+import MessageUI
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UINavigationControllerDelegate
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare
 {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
     let locationManager = CLLocationManager()
-    let commController = CommController()
+    let imagePicker = UIImagePickerController()
+    
     var parks = [String:Park]()
     var loading = false
     //TODO: temporary filter stuff
@@ -47,6 +49,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.showUserLocation()
 		self.configureMapViewSettings()
         self.setMapViewPosition()
+        self.imagePicker.delegate = self
     }
     
     // MARK: User Interaction
@@ -92,10 +95,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
-                if let park = self.parks[self.currentPark!], location = self.locationManager.location
-                {
-                    self.commController.reportIssue(park,atUserLocation: location)
-                }
+                self.imagePicker.getPictureFor(sender: self)
 			}
 			alert.addAction(report)
 		}
@@ -335,6 +335,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
+    {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location
+        {
+            dismissViewControllerAnimated(true, completion: {
+                self.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
+            })
+        }
+        else
+        {
+            dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
+    {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     func dismissPopover()
     {
         dismissViewControllerAnimated(true, completion: nil)
@@ -367,6 +386,36 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         return false
+    }
+    
+    // MARK: Helper Methods
+    // Issue Reporting Methods
+    func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage)
+    {
+        let parkIssueReport = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
+        
+        self.presentIssueReportViewControllerForIssue(parkIssueReport)
+    }
+    
+    func presentIssueReportViewControllerForIssue(issue: IssueReport)
+    {
+        if MFMailComposeViewController.canSendMail()
+        {
+            let emailView = MFMailComposeViewController()
+            emailView.mailComposeDelegate = self
+            emailView.setToRecipients([issue.sendTo])
+            emailView.setSubject(issue.subject)
+            emailView.setMessageBody(issue.formFields, isHTML: false)
+            emailView.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.presentViewController(emailView, animated: true, completion: nil)
+            })
+        } else {
+            dispatch_async(dispatch_get_main_queue(), {
+                AlertViews.presentComposeViewErrorAlert(sender: self)
+            })
+        }
     }
     
     func searchParks(parkName name: String)
