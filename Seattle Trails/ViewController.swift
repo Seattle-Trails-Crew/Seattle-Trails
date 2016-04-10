@@ -140,7 +140,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.isLoading(true)
         
         SocrataService.getAllTrails()
-            { [unowned self] (parks) in
+            { [unowned self] (parks) in // TODO: Check if unowned is needed.
                 //get rid of the spinner
                 self.isLoading(false)
                 
