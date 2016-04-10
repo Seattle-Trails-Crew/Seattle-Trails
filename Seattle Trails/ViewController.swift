@@ -51,24 +51,12 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
-        if let location = locationManager.location
-        {
-            let center = location.coordinate
-            let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
-            mapView.setRegion(region, animated: true)
-        }
+        self.moveMapToUserLocation()
     }
     
     @IBAction func satteliteViewButtonPressed(sender: UIButton)
     {
-        if self.mapView.mapType == MKMapType.Satellite
-        {
-            self.mapView.mapType = MKMapType.Standard
-        }
-        else if mapView.mapType == MKMapType.Standard
-        {
-            self.mapView.mapType = MKMapType.Satellite
-        }
+        self.toggleSatteliteView()
     }
 	
 	@IBAction func parkButtonPressed()
@@ -156,7 +144,9 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
     }
 
-    
+    /**
+     Blocks the main main view and starts an activity indicator when data is loading, reverts when not loading.
+     */
     func isLoading(loading: Bool)
     {
         if loading
@@ -251,7 +241,34 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
+    func moveMapToUserLocation()
+    {
+        if let location = locationManager.location
+        {
+            let center = location.coordinate
+            let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+    
+    func toggleSatteliteView() {
+        if self.mapView.mapType == MKMapType.Satellite
+        {
+            self.mapView.mapType = MKMapType.Standard
+        }
+        else if mapView.mapType == MKMapType.Standard
+        {
+            self.mapView.mapType = MKMapType.Satellite
+        }
+    }
     // Issue Reporting Methods
+    /**
+     Reports an issue with a park via an email populated with the following parameters.
+     
+     - parameter park:     A park object containing park information.
+     - parameter location: The users current location.
+     - parameter image:    An image of the issue to report taken from the device camera.
+     */
     func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage)
     {
         let parkIssueReport = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
