@@ -95,8 +95,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
-                self.imagePicker.getPictureFor(sender: self)
+                self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
 			}
+            
 			alert.addAction(report)
 		}
 		

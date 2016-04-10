@@ -58,7 +58,7 @@ extension UIImagePickerController {
         }
     }
     
-    private func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
+    func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
     {
         sender.imagePicker.sourceType = sourceType
         dispatch_async(dispatch_get_main_queue()) {
