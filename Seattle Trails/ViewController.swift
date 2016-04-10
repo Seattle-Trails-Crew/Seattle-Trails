@@ -10,15 +10,12 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare
+class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
-    let locationManager = CLLocationManager()
-    let imagePicker = UIImagePickerController()
-    
-    var parks = [String:Park]()
+    var imagePicker = UIImagePickerController()
     var loading = false
     
     var currentPark:String?
@@ -298,51 +295,4 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
         }
     }
-    
-    /**
-     Given a park this will move the map view to it and draw all it's lines.
-     
-     - parameter name: The name of the trail to view and draw.
-     */
-    func showPark(parkName name: String)
-    {
-        // Check that park name exists in list of parks and get the map view scale.
-        if let park = self.parks[name]
-        {
-            for trail in park.trails
-            {
-                if (!trail.isDrawn && (!shouldFilter || trail.official))
-                { //TODO: remove the filter/official stuff once we remove filter
-                    plotTrailLine(trail)
-                }
-            }
-            
-            mapView.setRegion(park.region, animated: true)
-        }
-    }
-    
-    /**
-     Draws the path line for a given trail with color representing difficulty.
-     
-     - parameter trail: The Trail object to draw.
-     */
-    func plotTrailLine(trail: Trail)
-    {
-        // Plot All Trail Lines
-        let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-        
-        // Example How To Alter Colors
-        if trail.easyTrail
-        {
-            line.title = "green"
-        }
-        else
-        {
-            line.title = "blue"
-        }
-        
-        trail.isDrawn = true
-        mapView.addOverlay(line)
-    }
 }
-
