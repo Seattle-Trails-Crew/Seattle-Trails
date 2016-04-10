@@ -56,7 +56,10 @@ extension UIImagePickerController {
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         alert.addAction(cancel)
         
-        sender.presentViewController(alert, animated: true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            sender.presentViewController(alert, animated: true, completion: nil)
+        }
     }
     
     /**
@@ -99,7 +102,8 @@ extension UIImagePickerController {
     func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
     {
         sender.imagePicker.sourceType = sourceType
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue())
+        {
             sender.presentViewController(sender.imagePicker, animated: true, completion: nil)
         }
     }

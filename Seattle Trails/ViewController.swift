@@ -110,24 +110,35 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location
         {
-            dismissViewControllerAnimated(true, completion: {
-                self.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
-            })
+            dispatch_async(dispatch_get_main_queue()) {
+                self.dismissViewControllerAnimated(true, completion: {
+                    self.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
+                })
+            }
         }
         else
         {
-            dismissViewControllerAnimated(true, completion: nil)
+            dispatch_async(dispatch_get_main_queue())
+            {
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
         }
     }
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
     {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     func dismissPopover()
     {
-        dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     /**
@@ -138,7 +149,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func performActionWithSelectedPark(park: String)
     {
         showPark(parkName: park)
-        dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     
@@ -192,7 +206,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func loadDataFailed() {
         //display an error
-        AlertViews.presentNotConnectedAlert(sender: self)
+        AlertViews.presentErrorAlertView(sender: self, title: "Connection Error", message: "Failed to load trail info from Socrata. Please check network connection and try again later.")
         
         //set it up to try to load again, when the app returns to focus
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
@@ -269,7 +283,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
             })
         } else {
             dispatch_async(dispatch_get_main_queue(), {
-                AlertViews.presentComposeViewErrorAlert(sender: self)
+                AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
             })
         }
     }
