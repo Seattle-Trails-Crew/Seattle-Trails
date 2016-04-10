@@ -91,7 +91,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
 		alert.addAction(sharePhoto)
         
-		if let _ = self.currentPark
+		if UIImagePickerController.isSourceTypeAvailable(.Camera), let _ = self.currentPark
 		{
 			let report = UIAlertAction(title: "Report Issue", style: .Default)
 			{ (action) in
