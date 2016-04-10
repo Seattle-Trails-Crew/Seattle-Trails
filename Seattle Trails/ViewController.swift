@@ -61,32 +61,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
 	@IBAction func parkButtonPressed()
 	{
-		let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-		
-		let sharePhoto = UIAlertAction(title: "Share Photo", style: .Default)
-		{ (action) in
-			self.performSegueWithIdentifier("showSocial", sender: self)
-		}
-        
-		alert.addAction(sharePhoto)
-        
-		if UIImagePickerController.isSourceTypeAvailable(.Camera), let _ = self.currentPark
-		{
-			let report = UIAlertAction(title: "Report Issue", style: .Default)
-			{ (action) in
-                self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
-			}
-            
-			alert.addAction(report)
-		}
-		
-		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-		alert.addAction(cancel)
-		
-		self.presentViewController(alert, animated: true, completion: nil)
+        self.imagePicker.presentImagePurposeSelectionView(sender: self, inPark: self.currentPark)
 	}
     
-	@IBAction func filterButtonPressed()
+    @IBAction func filterButtonPressed() // Temporary functionality that will be deleted so no refactor performed
 	{
 		shouldFilter = !shouldFilter
 		
