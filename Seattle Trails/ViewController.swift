@@ -83,65 +83,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		self.annotateAllParks()
 	}
 	
-    
-    // MARK: Map Data Fetching Methods
-    func tryToLoad()
-    {
-        if self.parks.count == 0 && !self.loading
-        {
-            self.fetchAndRenderTrails()
-        }
-    }
-    
-    private func fetchAndRenderTrails()
-    {
-        self.isLoading(true)
-        
-        SocrataService.getAllTrails()
-            { [unowned self] (parks) in // TODO: Check if unowned is needed.
-                //get rid of the spinner
-                self.isLoading(false)
-                
-                guard let parks = parks else
-                {
-                    self.loadDataFailed()
-                    //TODO: also detect if they turn airplane mode off while in-app
-                    return
-                }
-                
-                self.parks = parks
-                self.annotateAllParks()
-        }
-    }
-
-    func loadDataFailed() {
-        //display an error
-        AlertViews.presentNotConnectedAlert(sender: self)
-        
-        //set it up to try to load again, when the app returns to focus
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
-    }
-
-    /**
-     Blocks the main main view and starts an activity indicator when data is loading, reverts when not loading.
-     */
-    func isLoading(loading: Bool)
-    {
-        if loading
-        {
-            self.activityIndicator.startAnimating()
-        }
-        else
-        {
-            self.activityIndicator.stopAnimating()
-        }
-        
-        self.imageDamper.userInteractionEnabled = loading
-        self.imageDamper.hidden = !loading
-        
-        self.loading = loading
-    }
-    
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
     {
@@ -219,6 +160,64 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
+    // MARK: Map Data Fetching Methods
+    func tryToLoad()
+    {
+        if self.parks.count == 0 && !self.loading
+        {
+            self.fetchAndRenderTrails()
+        }
+    }
+    
+    private func fetchAndRenderTrails()
+    {
+        self.isLoading(true)
+        
+        SocrataService.getAllTrails()
+            { [unowned self] (parks) in // TODO: Check if unowned is needed.
+                //get rid of the spinner
+                self.isLoading(false)
+                
+                guard let parks = parks else
+                {
+                    self.loadDataFailed()
+                    //TODO: also detect if they turn airplane mode off while in-app
+                    return
+                }
+                
+                self.parks = parks
+                self.annotateAllParks()
+        }
+    }
+    
+    func loadDataFailed() {
+        //display an error
+        AlertViews.presentNotConnectedAlert(sender: self)
+        
+        //set it up to try to load again, when the app returns to focus
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+    }
+    
+    /**
+     Blocks the main main view and starts an activity indicator when data is loading, reverts when not loading.
+     */
+    func isLoading(loading: Bool)
+    {
+        if loading
+        {
+            self.activityIndicator.startAnimating()
+        }
+        else
+        {
+            self.activityIndicator.stopAnimating()
+        }
+        
+        self.imageDamper.userInteractionEnabled = loading
+        self.imageDamper.hidden = !loading
+        
+        self.loading = loading
+    }
+
     func moveMapToUserLocation()
     {
         if let location = locationManager.location

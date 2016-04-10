@@ -64,12 +64,6 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 		}
 		actionSheet.addAction(book)
 		
-		//TODO: instagram support; looks like it's not built into the social framework
-//		let gram = UIAlertAction(title: "Instagram", style: .Default)
-//		{ (action) in
-//		}
-//		actionSheet.addAction(gram)
-		
 		let nevermind = UIAlertAction(title: "Cancel", style: .Cancel)
 		{ (action) in
 		}
@@ -103,7 +97,7 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	
 	@IBAction func pressPicture()
 	{
-		self.imagePicker.getPictureFor(sender: self)
+		self.imagePicker.presentImageSourceView(sender: self)
     }
 	
 	//MARK: text field delegate

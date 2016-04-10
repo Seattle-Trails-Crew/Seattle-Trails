@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 
 extension UIImagePickerController {
-    func getPictureFor<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
+    /**
+     Presents the photo library or a selection view for that or the camera if the latter is available.
+     
+     - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
+     */
+    func presentImageSourceView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         {
             self.presentImageSourceSelectionView(sender: sender)
@@ -21,6 +26,12 @@ extension UIImagePickerController {
         }
     }
     
+    /**
+     Presents an alert controller that has the user select the purpose for taking a photo.
+     
+     - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
+     - parameter inPark: The current park or nil. Shows report issue option only if in a park.
+     */
     func presentImagePurposeSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC, inPark: String?)
     {
         let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
