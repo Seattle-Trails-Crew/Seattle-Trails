@@ -51,53 +51,20 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
-        if let location = locationManager.location
-        {
-            let center = location.coordinate
-            let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
-            mapView.setRegion(region, animated: true)
-        }
+        self.moveMapToUserLocation()
     }
     
     @IBAction func satteliteViewButtonPressed(sender: UIButton)
     {
-        if self.mapView.mapType == MKMapType.Satellite
-        {
-            self.mapView.mapType = MKMapType.Standard
-        }
-        else if mapView.mapType == MKMapType.Standard
-        {
-            self.mapView.mapType = MKMapType.Satellite
-        }
+        self.toggleSatteliteView()
     }
 	
 	@IBAction func parkButtonPressed()
 	{
-		let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-		
-		let sharePhoto = UIAlertAction(title: "Share Photo", style: .Default)
-		{ (action) in
-			self.performSegueWithIdentifier("showSocial", sender: self)
-		}
-		alert.addAction(sharePhoto)
-		
-		
-		if let _ = self.currentPark
-		{
-			let report = UIAlertAction(title: "Report Issue", style: .Default)
-			{ (action) in
-                self.imagePicker.getPictureFor(sender: self)
-			}
-			alert.addAction(report)
-		}
-		
-		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-		alert.addAction(cancel)
-		
-		self.presentViewController(alert, animated: true, completion: nil)
+        self.imagePicker.presentImagePurposeSelectionView(sender: self, inPark: self.currentPark)
 	}
     
-	@IBAction func filterButtonPressed()
+    @IBAction func filterButtonPressed() // Temporary functionality that will be deleted so no refactor performed
 	{
 		shouldFilter = !shouldFilter
 		
@@ -116,63 +83,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		self.annotateAllParks()
 	}
 	
-    
-    // MARK: Map Data Fetching Methods
-    func tryToLoad()
-    {
-        if self.parks.count == 0 && !self.loading
-        {
-            self.fetchAndRenderTrails()
-        }
-    }
-    
-    private func fetchAndRenderTrails()
-    {
-        self.isLoading(true)
-        
-        SocrataService.getAllTrails()
-            { [unowned self] (parks) in
-                //get rid of the spinner
-                self.isLoading(false)
-                
-                guard let parks = parks else
-                {
-                    self.loadDataFailed()
-                    //TODO: also detect if they turn airplane mode off while in-app
-                    return
-                }
-                
-                self.parks = parks
-                self.annotateAllParks()
-        }
-    }
-
-    func loadDataFailed() {
-        //display an error
-        AlertViews.presentNotConnectedAlert(sender: self)
-        
-        //set it up to try to load again, when the app returns to focus
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
-    }
-
-    
-    func isLoading(loading: Bool)
-    {
-        if loading
-        {
-            self.activityIndicator.startAnimating()
-        }
-        else
-        {
-            self.activityIndicator.stopAnimating()
-        }
-        
-        self.imageDamper.userInteractionEnabled = loading
-        self.imageDamper.hidden = !loading
-        
-        self.loading = loading
-    }
-    
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
     {
@@ -188,6 +98,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
             popoverViewController.parksDataSource = self
             popoverViewController.delegate = self
         }
+            
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.currentPark
@@ -195,9 +106,39 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         }
     }
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
+    {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location
+        {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.dismissViewControllerAnimated(true, completion: {
+                    self.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
+                })
+            }
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue())
+            {
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
+    {
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
     func dismissPopover()
     {
-        dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     /**
@@ -208,7 +149,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func performActionWithSelectedPark(park: String)
     {
         showPark(parkName: park)
-        dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     
@@ -229,6 +173,121 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         return false
     }
     
+    // MARK: Helper Methods
+    // MARK: Map Data Fetching Methods
+    func tryToLoad()
+    {
+        if self.parks.count == 0 && !self.loading
+        {
+            self.fetchAndRenderTrails()
+        }
+    }
+    
+    private func fetchAndRenderTrails()
+    {
+        self.isLoading(true)
+        
+        SocrataService.getAllTrails()
+            { [unowned self] (parks) in // TODO: Check if unowned is needed.
+                //get rid of the spinner
+                self.isLoading(false)
+                
+                guard let parks = parks else
+                {
+                    self.loadDataFailed()
+                    //TODO: also detect if they turn airplane mode off while in-app
+                    return
+                }
+                
+                self.parks = parks
+                self.annotateAllParks()
+        }
+    }
+    
+    func loadDataFailed() {
+        //display an error
+        AlertViews.presentErrorAlertView(sender: self, title: "Connection Error", message: "Failed to load trail info from Socrata. Please check network connection and try again later.")
+        
+        //set it up to try to load again, when the app returns to focus
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.tryToLoad), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication());
+    }
+    
+    /**
+     Blocks the main main view and starts an activity indicator when data is loading, reverts when not loading.
+     */
+    func isLoading(loading: Bool)
+    {
+        if loading
+        {
+            self.activityIndicator.startAnimating()
+        }
+        else
+        {
+            self.activityIndicator.stopAnimating()
+        }
+        
+        self.imageDamper.userInteractionEnabled = loading
+        self.imageDamper.hidden = !loading
+        
+        self.loading = loading
+    }
+
+    func moveMapToUserLocation()
+    {
+        if let location = locationManager.location
+        {
+            let center = location.coordinate
+            let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+    
+    func toggleSatteliteView() {
+        if self.mapView.mapType == MKMapType.Satellite
+        {
+            self.mapView.mapType = MKMapType.Standard
+        }
+        else if mapView.mapType == MKMapType.Standard
+        {
+            self.mapView.mapType = MKMapType.Satellite
+        }
+    }
+    // Issue Reporting Methods
+    /**
+     Reports an issue with a park via an email populated with the following parameters.
+     
+     - parameter park:     A park object containing park information.
+     - parameter location: The users current location.
+     - parameter image:    An image of the issue to report taken from the device camera.
+     */
+    func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage)
+    {
+        let parkIssueReport = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
+        
+        self.presentIssueReportViewControllerForIssue(parkIssueReport)
+    }
+    
+    func presentIssueReportViewControllerForIssue(issue: IssueReport)
+    {
+        if MFMailComposeViewController.canSendMail()
+        {
+            let emailView = MFMailComposeViewController()
+            emailView.mailComposeDelegate = self
+            emailView.setToRecipients([issue.sendTo])
+            emailView.setSubject(issue.subject)
+            emailView.setMessageBody(issue.formFields, isHTML: false)
+            emailView.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.presentViewController(emailView, animated: true, completion: nil)
+            })
+        } else {
+            dispatch_async(dispatch_get_main_queue(), {
+                AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
+            })
+        }
+    }
+    
     func searchParks(parkName name: String)
     {
         for park in parks {
@@ -244,58 +303,4 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
             }
         }
     }
-    
-    // TODO: Refactor
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
-    {
-        controller.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
-    {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.currentPark
-        {
-            dismissViewControllerAnimated(true, completion: {
-                self.getConfiguredIssueReportForPark(park, imageForIssue: pickedImage)
-            })
-        }
-        else
-        {
-            dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
-    
-        
-    // MARK: Helper Methods
-    func getConfiguredIssueReportForPark(parkToParse: String, imageForIssue: UIImage?)
-    {
-        if let currentPark = self.parks[parkToParse], issueLocation = self.locationManager.location
-        {
-            let parkIssueReport = IssueReport(issueImage: imageForIssue, issueLocation: issueLocation, parkName: currentPark.name)
-            
-            self.presentIssueReportViewControllerForIssue(parkIssueReport)
-        }
-    }
-    
-    func presentIssueReportViewControllerForIssue(issue: IssueReport)
-    {
-        if MFMailComposeViewController.canSendMail()
-        {
-            let issueReportVC = MFMailComposeViewController()
-            issueReportVC.mailComposeDelegate = self
-            issueReportVC.setToRecipients([issue.sendTo])
-            issueReportVC.setSubject(issue.subject)
-            issueReportVC.setMessageBody(issue.formFields, isHTML: false)
-            issueReportVC.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.presentViewController(issueReportVC, animated: true, completion: nil)
-            })
-        } else {
-            dispatch_async(dispatch_get_main_queue(), {
-                AlertViews.presentComposeViewErrorAlert(sender: self)
-            })
-        }
-    }
 }
-

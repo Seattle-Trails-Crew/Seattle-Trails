@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 
 extension UIImagePickerController {
-    func getPictureFor<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
+    /**
+     Presents the photo library or a selection view for that or the camera if the latter is available.
+     
+     - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
+     */
+    func presentImageSourceView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         {
             self.presentImageSourceSelectionView(sender: sender)
@@ -18,6 +23,42 @@ extension UIImagePickerController {
         else
         {
             self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary)
+        }
+    }
+    
+    /**
+     Presents an alert controller that has the user select the purpose for taking a photo.
+     
+     - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
+     - parameter inPark: The current park or nil. Shows report issue option only if in a park.
+     */
+    func presentImagePurposeSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC, inPark: String?)
+    {
+        let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        let sharePhoto = UIAlertAction(title: "Share Photo", style: .Default)
+        { (action) in
+            sender.performSegueWithIdentifier("showSocial", sender: self)
+        }
+        
+        alert.addAction(sharePhoto)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.Camera), let _ = inPark
+        {
+            let report = UIAlertAction(title: "Report Issue", style: .Default)
+            { (action) in
+                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .Camera)
+            }
+            
+            alert.addAction(report)
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alert.addAction(cancel)
+        
+        dispatch_async(dispatch_get_main_queue())
+        {
+            sender.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
@@ -58,10 +99,11 @@ extension UIImagePickerController {
         }
     }
     
-    private func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
+    func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
     {
         sender.imagePicker.sourceType = sourceType
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue())
+        {
             sender.presentViewController(sender.imagePicker, animated: true, completion: nil)
         }
     }

@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol PopoverViewDelegate
-{
-    func dismissPopover()
-}
-
 class PopoverViewController: UIViewController
 {
     var parksDataSource: ParksDataSource?
@@ -24,6 +19,7 @@ class PopoverViewController: UIViewController
     {
         delegate?.dismissPopover()
     }
+    
     @IBAction func keyPressedInSearchTextField(sender: UITextField)
     {
         if let params = sender.text {

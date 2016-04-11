@@ -64,19 +64,16 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 		}
 		actionSheet.addAction(book)
 		
-		//TODO: instagram support; looks like it's not built into the social framework
-//		let gram = UIAlertAction(title: "Instagram", style: .Default)
-//		{ (action) in
-//		}
-//		actionSheet.addAction(gram)
-		
 		let nevermind = UIAlertAction(title: "Cancel", style: .Cancel)
 		{ (action) in
 		}
 		actionSheet.addAction(nevermind)
 		
-		presentViewController(actionSheet, animated: true, completion: nil)
-	}
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.presentViewController(actionSheet, animated: true, completion: nil)
+        }
+    }
 	
 	func finishSocial(serviceType:String, serviceName:String)
 	{
@@ -87,23 +84,22 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 			composer.setInitialText("#TESTHASHTAG Photo of \(atPark!). ")
 			composer.addImage(imageView.image)
 			
-			presentViewController(composer, animated: true, completion: nil)
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.presentViewController(composer, animated: true, completion: nil)
+            })
 		}
 		else
 		{
-			let alert = UIAlertController(title: "Log in", message: "You must log in to \(serviceName) first! Go to settings and log in.", preferredStyle: UIAlertControllerStyle.Alert)
-			
-			let cancel = UIAlertAction(title: "Okay", style: .Cancel, handler: nil)
-			alert.addAction(cancel)
-			
-			presentViewController(alert, animated: true, completion: nil)
+            dispatch_async(dispatch_get_main_queue(), { 
+                AlertViews.presentErrorAlertView(sender: self, title: "Log in", message: "You must log in to \(serviceName) first! Go to settings and log in.")
+            })
 		}
 	}
 	
 	
 	@IBAction func pressPicture()
 	{
-		self.imagePicker.getPictureFor(sender: self)
+		self.imagePicker.presentImageSourceView(sender: self)
     }
 	
 	//MARK: text field delegate
@@ -122,13 +118,20 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	//MARK: popover view delegate
 	func dismissPopover()
 	{
-		dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
 	}
 	
 	//MARK: trails datasource
 	func performActionWithSelectedPark(park: String)
 	{
-		dismissViewControllerAnimated(true, completion: nil)
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        
 		atPark = park
 		trailButton.setTitle(park, forState: .Normal)
 		self.setButtonHiddenness()
@@ -139,6 +142,10 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	{
 		imageView.image = image
 		setButtonHiddenness()
-        dismissViewControllerAnimated(true, completion: nil)
+        
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
 	}
 }

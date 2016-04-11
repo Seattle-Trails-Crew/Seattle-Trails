@@ -15,6 +15,11 @@ protocol ParksDataSource
     func performActionWithSelectedPark(park: String)
 }
 
+protocol PopoverViewDelegate
+{
+    func dismissPopover()
+}
+
 protocol GetsImageToShare {
     var imagePicker: UIImagePickerController {get}
 }
