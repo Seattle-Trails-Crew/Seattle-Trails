@@ -13,6 +13,10 @@ class ColoredLine: MKPolyline
 {
     var color: UIColor?
 }
+class ColoredAnnotation: MKPointAnnotation
+{
+    var color: UIColor?
+}
 
 /**
 The ParkMapController is responsible for directly handling the parks, and translating them into map view pins and lines.
@@ -43,14 +47,14 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	- parameter text:       The trail/park name.
 	- parameter difficulty: The overall difficulty rating of the trail.
 	*/
-	func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: String)
+    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: Int, surfaces: [String])
 	{
 		// Annotation
-		let annotation = MKPointAnnotation()
+		let annotation = ColoredAnnotation()
 		annotation.coordinate = point
 		annotation.title = text
-		annotation.subtitle = difficulty
-		
+        annotation.subtitle = surfaces.joinWithSeparator(", ")
+        annotation.color = gradientFromDifficulty(difficulty)
 		mapView.addAnnotation(annotation)
 	}
 
@@ -98,10 +102,12 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		// Go through trails/parks and get their trail objects.
 		for (name, park) in parks
 		{
+            let difficulty = park.difficulty
+            
 			//TODO: remove this if statement once we remove filtering
 			if (!shouldFilter || park.hasOfficial)
 			{
-				annotatePark(park.region.center, text: name, difficulty: park.easyPark ? "Accessible" : "")
+				annotatePark(park.region.center, text: name, difficulty: difficulty, surfaces: park.surfaces)
 			}
 		}
 	}
@@ -116,16 +122,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		
 		// Set the annotation pin color based on overall trail difficulty.
 		let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-		if let subtitle = annotation.subtitle
-		{
-			if subtitle == "Accessible" {
-				view.pinTintColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-			}
-			else
-			{
-				view.pinTintColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
-			}
-		}
+        if let coloredAnnotation = annotation as? ColoredAnnotation {
+            if let color  = coloredAnnotation.color {
+                view.pinTintColor = color
+            }
+        }
 		else
 		{
 			return nil
@@ -208,26 +209,33 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Easy   ->  Red: 0, Green: 1
         // Medium ->  Red: 1, Green: 1
         // Hard   ->  Red: 1, Green: 0
-        let diff = trail.gradePercent
-        let red: CGFloat
-        let green: CGFloat
-        if diff < 6 {
-            green = 1
-            red = CGFloat(diff!) / 5.0
-        } else if diff == 6 {
-            green = 1
-            red = 1
-        } else {
-            green = (10 - CGFloat(diff!)) / 5.0
-            red = 1
+        if let difficulty = trail.gradePercent {
+            line.color = gradientFromDifficulty(difficulty)
         }
-        print("Red: \(red), Green: \(green)")
         
-		line.color = UIColor(red: red, green: green, blue: 0, alpha: 1)
 		// Example How To Alter Colors
-		
-		
 		trail.isDrawn = true
 		mapView.addOverlay(line)
 	}
+}
+
+/**
+Returns Color From Green To Red Based On Difficulty
+ - parameter difficulty: Int 0 - 10
+ */
+func gradientFromDifficulty(difficulty: Int) -> UIColor
+{
+    let red: CGFloat
+    let green: CGFloat
+    if difficulty < 6 {
+        green = 0.9
+        red = CGFloat(difficulty) / 5.0
+    } else if difficulty == 6 {
+        green = 0.9
+        red = 0.9
+    } else {
+        green = (10 - CGFloat(difficulty)) / 5.0
+        red = 0.9
+    }
+    return UIColor(red: red, green: green, blue: 0, alpha: 1)
 }

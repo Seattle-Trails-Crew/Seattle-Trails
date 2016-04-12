@@ -14,6 +14,8 @@ class Park
 	let name:String
 	let region:MKCoordinateRegion
 	let trails:[Trail]
+    let difficulty: Int
+    var surfaces = [String]()
 	
 	init(name:String, trails:[Trail])
 	{
@@ -24,6 +26,7 @@ class Park
 		var topRight = CLLocationCoordinate2D(latitude: 999, longitude: 999)
 		var bottomLeft = CLLocationCoordinate2D(latitude: -999, longitude: -999)
 		
+        var sumPerc = 0
 		for trail in self.trails
 		{
 			for point in trail.points
@@ -33,7 +36,16 @@ class Park
 				bottomLeft.latitude = max(bottomLeft.latitude, point.latitude)
 				bottomLeft.longitude = max(bottomLeft.longitude, point.longitude)
 			}
+            if let perc = trail.gradePercent {
+                sumPerc += perc
+            }
+            if let surface = trail.surfaceType {
+                if surfaces.indexOf(surface) == nil {
+                    surfaces.append(surface)
+                }
+            }
 		}
+        difficulty = sumPerc / self.trails.count
 		
 		let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
 		region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
