@@ -8,6 +8,12 @@
 
 import MapKit
 
+
+class ColoredLine: MKPolyline
+{
+    var color: UIColor?
+}
+
 /**
 The ParkMapController is responsible for directly handling the parks, and translating them into map view pins and lines.
 */
@@ -154,17 +160,12 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		// Setting For Line Style
 		let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
 		
-		if let color = overlay.title
-		{
-			if color == "blue"
-			{
-				polyLineRenderer.strokeColor = UIColor(red: 0.1, green: 0.2, blue: 1, alpha: 1)
-			}
-			else if color == "green"
-			{
-				polyLineRenderer.strokeColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-			}
-		}
+        if let coloredLine = overlay as? ColoredLine {
+            if let color = coloredLine.color {
+                polyLineRenderer.strokeColor = color
+            }
+        }
+        polyLineRenderer.fillColor = UIColor.blueColor()
 		
 		polyLineRenderer.lineWidth = 2
 		return polyLineRenderer
@@ -202,17 +203,29 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	func plotTrailLine(trail: Trail)
 	{
 		// Plot All Trail Lines
-		let line = MKPolyline(coordinates: &trail.points, count: trail.points.count)
-		
+		let line = ColoredLine(coordinates: &trail.points, count: trail.points.count)
+        
+        // Easy   ->  Red: 0, Green: 1
+        // Medium ->  Red: 1, Green: 1
+        // Hard   ->  Red: 1, Green: 0
+        let diff = trail.gradePercent
+        let red: CGFloat
+        let green: CGFloat
+        if diff < 6 {
+            green = 1
+            red = CGFloat(diff!) / 5.0
+        } else if diff == 6 {
+            green = 1
+            red = 1
+        } else {
+            green = (10 - CGFloat(diff!)) / 5.0
+            red = 1
+        }
+        print("Red: \(red), Green: \(green)")
+        
+		line.color = UIColor(red: red, green: green, blue: 0, alpha: 1)
 		// Example How To Alter Colors
-		if trail.easyTrail
-		{
-			line.title = "green"
-		}
-		else
-		{
-			line.title = "blue"
-		}
+		
 		
 		trail.isDrawn = true
 		mapView.addOverlay(line)
