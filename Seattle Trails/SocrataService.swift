@@ -98,6 +98,11 @@ class SocrataService
             let canopy = dict["canopy"] as? String
             let condition = dict["condition"] as? String
             let gradeType = dict["grade_type"] as? String
+            let percent = dict["grade_perc"] as? String
+            var gradePercent: Int? = nil
+            if percent != nil {
+                gradePercent = Int(percent!)
+            }
             let surfaceType = dict["surface_ty"] as? String
             
             if let pmaid = dict["pmaid"] as? String, let trailNum = dict["trail_num"] as? String, let name = dict["pma_name"] as? String, let length = dict["gis_length"] as? String, let geom = dict["the_geom"] as? [String:AnyObject]
@@ -106,6 +111,7 @@ class SocrataService
                 trail.canopy = canopy
                 trail.condition = condition
                 trail.gradeType = gradeType
+                trail.gradePercent = gradePercent
                 trail.surfaceType = surfaceType
                 trail.name = name
                 trail.length = (length as NSString).floatValue

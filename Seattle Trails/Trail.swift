@@ -16,6 +16,7 @@ class Trail
 	var name:String = ""
 	var canopy:String?
 	var condition:String?
+    var gradePercent:Int?
 	var gradeType:String?
 	var surfaceType:String?
 	var length:Float = 0
