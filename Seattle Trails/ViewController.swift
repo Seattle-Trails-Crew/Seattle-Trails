@@ -65,6 +65,13 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.imagePicker.presentImagePurposeSelectionView(sender: self, inPark: self.currentPark)
 	}
     
+    @IBAction func volunteerPressed(sender: UIButton) {
+        let mailView = self.mailerView.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(mailView, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func filterButtonPressed() // Temporary functionality that will be deleted so no refactor performed
 	{
 		shouldFilter = !shouldFilter

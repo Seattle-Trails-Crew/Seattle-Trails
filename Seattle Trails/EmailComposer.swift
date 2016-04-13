@@ -37,6 +37,17 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
         return emailView
     }
     
+    func volunteerForParks() -> MFMailComposeViewController
+    {
+        let volunteerEmailView = MFMailComposeViewController()
+        volunteerEmailView.mailComposeDelegate = self
+        volunteerEmailView.setToRecipients(["parks@seattle.com"])
+        volunteerEmailView.setSubject("Volunteering For Seattle Parks")
+        volunteerEmailView.setMessageBody("Full Name: \n\n\n Contact Info:", isHTML: false)
+        
+        return volunteerEmailView
+    }
+    
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
     {
         dispatch_async(dispatch_get_main_queue())
