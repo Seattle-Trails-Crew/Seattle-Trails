@@ -15,7 +15,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
-    var imagePicker = UIImagePickerController()
+    let imagePicker = UIImagePickerController()
+    let mailerView = EmailComposer()
     var loading = false
     
     var currentPark:String?
@@ -107,19 +108,27 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail()
         {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.dismissViewControllerAnimated(true, completion: {
-                    self.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
-                })
-            }
+                dispatch_async(dispatch_get_main_queue())
+                {
+                    self.dismissViewControllerAnimated(true, completion: {
+                        let mailView = self.mailerView.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
+                        
+                        dispatch_async(dispatch_get_main_queue())
+                        {
+                            self.presentViewController(mailView, animated: true, completion: nil)
+                        }
+                    })
+                }
         }
         else
         {
             dispatch_async(dispatch_get_main_queue())
             {
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.dismissViewControllerAnimated(true, completion: { 
+                    AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
+                })
             }
         }
     }

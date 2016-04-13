@@ -11,7 +11,11 @@ import MessageUI
 import CoreLocation
 
 class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
-    // Issue Reporting Methods
+    func canSendMail() -> Bool
+    {
+        return MFMailComposeViewController.canSendMail()
+    }
+    
     /**
      Reports an issue with a park via an email populated with the following parameters.
      
@@ -19,32 +23,18 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
      - parameter location: The users current location.
      - parameter image:    An image of the issue to report taken from the device camera.
      */
-    func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage)
+    func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage) -> MFMailComposeViewController
     {
-        let parkIssueReport = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
+        let issue = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
         
-        self.presentIssueReportViewControllerForIssue(parkIssueReport)
-    }
-    
-    func presentIssueReportViewControllerForIssue(issue: IssueReport)
-    {
-        if MFMailComposeViewController.canSendMail()
-        {
-            let emailView = MFMailComposeViewController()
-            emailView.mailComposeDelegate = self
-            emailView.setToRecipients([issue.sendTo])
-            emailView.setSubject(issue.subject)
-            emailView.setMessageBody(issue.formFields, isHTML: false)
-            emailView.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.presentViewController(emailView, animated: true, completion: nil)
-            })
-        } else {
-            dispatch_async(dispatch_get_main_queue(), {
-                AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
-            })
-        }
+        let emailView = MFMailComposeViewController()
+        emailView.mailComposeDelegate = self
+        emailView.setToRecipients([issue.sendTo])
+        emailView.setSubject(issue.subject)
+        emailView.setMessageBody(issue.formFields, isHTML: false)
+        emailView.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
+        
+        return emailView
     }
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
