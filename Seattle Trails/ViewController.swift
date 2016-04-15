@@ -20,6 +20,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     let imagePicker = UIImagePickerController()
     var searchController: UISearchController!
     let mailerView = EmailComposer()
+	
+	var forReport = false
     
     var loading = false
     
@@ -61,6 +63,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
          // Check to see if user is in a park before reporting an issue.
         if reportAvailable
 		{
+			forReport = true
 			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
 		}
     }
@@ -99,7 +102,13 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
-		self.performSegueWithIdentifier("showSocial", sender: self)
+		dispatch_async(dispatch_get_main_queue()) {
+			AlertViews.presentShareTypeAlert(sender: self)
+			{ (shareType) in
+				self.forReport = false
+				self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: shareType)
+			}
+		}
 	}
 	
     @IBAction func navButtonPressed(sender: UIButton)
@@ -138,6 +147,32 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
+		if (!forReport)
+		{
+			//try to share socially
+			if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+			{
+				let activityItems:[AnyObject] = [pickedImage as AnyObject, "#SeaTrails" as AnyObject]
+				let avc = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+				
+				//set the subject field of email
+				avc.setValue("My photo of \(self.currentPark ?? "a Seattle Park")", forKey: "subject")
+				
+				
+				dispatch_async(dispatch_get_main_queue())
+				{
+					self.dismissViewControllerAnimated(true, completion: {
+						dispatch_async(dispatch_get_main_queue())
+						{
+							self.presentViewController(avc, animated: true, completion: nil)
+						}
+					})
+				}
+			}
+			return
+		}
+		
+		//try to send an issue report email
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail()
         {
                 dispatch_async(dispatch_get_main_queue())
