@@ -27,6 +27,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	
 	var locationManager = CLLocationManager()
 	var parks = [String:Park]()
+	var annotationButtonClosure:((MKPinAnnotationView)->())!
 	
 	//TODO: temporary filter stuff
 	var shouldFilter = false
@@ -112,6 +113,23 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
+	/**
+	Clears all map annotations
+	*/
+	func clearAnnotations()
+	{
+		self.mapView.removeAnnotations(self.mapView.annotations)
+		self.mapView.removeOverlays(self.mapView.overlays)
+		
+		for (_, park) in self.parks
+		{
+			for trail in park.trails
+			{
+				trail.isDrawn = false
+			}
+		}
+	}
+	
 	// MARK: Map View Delegate Methods
 	func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
 	{
@@ -131,6 +149,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		{
 			return nil
 		}
+		
+		self.annotationButtonClosure(view);
 		
 		view.canShowCallout = true
 		return view

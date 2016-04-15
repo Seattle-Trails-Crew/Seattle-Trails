@@ -10,13 +10,17 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
+class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate, UISearchBarDelegate
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
+    @IBOutlet weak var reportButton: UIBarButtonItem!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
     let imagePicker = UIImagePickerController()
+    var searchController: UISearchController!
     let mailerView = EmailComposer()
+    
     var loading = false
     
     var currentPark:String?
@@ -35,61 +39,80 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         
         return nil
     }
+	
+	var reportAvailable:Bool
+	{
+		return UIImagePickerController.isSourceTypeAvailable(.Camera) && currentPark != nil
+	}
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
     {
         super.viewDidLoad()
+		self.setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
+        self.setUpSearchBar()
         self.imagePicker.delegate = self
     }
-    
-    // MARK: User Interaction
-    @IBAction func infoButtonPressed(sender: UIButton)
+	
+	    // MARK: User Interaction
+    @IBAction func reportButtonPressed(sender: UIBarButtonItem)
     {
-        AlertViews.presentMapKeyAlert(sender: self)
+         // Check to see if user is in a park before reporting an issue.
+        if reportAvailable
+		{
+			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
+		}
     }
-    
+	
+	@IBAction func optionsButtonPressed(sender: UIButton)
+	{
+		let alert = UIAlertController(title: "Options", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+		
+		let key = UIAlertAction(title: "Map Key", style: .Default)
+		{ (action) in
+			AlertViews.presentMapKeyAlert(sender: self)
+		}
+		
+		let filter = UIAlertAction(title: "Filter", style: .Default)
+		{ (action) in
+			self.shouldFilter = !self.shouldFilter
+			
+			//clear all existing points and then remake them with the new filter settings
+			self.clearAnnotations()
+			self.annotateAllParks()
+		}
+		
+		let satellite = UIAlertAction(title: self.mapView.mapType == MKMapType.Satellite ? "Map View" : "Satellite View", style: .Default)
+		{ (action) in
+			self.toggleSatteliteView()
+		}
+		
+		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+		alert.addAction(key)
+		alert.addAction(filter)
+		alert.addAction(satellite)
+		alert.addAction(cancel)
+		
+		self.presentViewController(alert, animated: true, completion: nil)
+	}
+	
+    @IBAction func shareButtonPressed(sender: UIBarButtonItem)
+    {
+		self.performSegueWithIdentifier("showSocial", sender: self)
+	}
+	
     @IBAction func navButtonPressed(sender: UIButton)
     {
         self.moveMapToUserLocation()
     }
-    
-    @IBAction func satteliteViewButtonPressed(sender: UIButton)
-    {
-        self.toggleSatteliteView()
-    }
 	
-	@IBAction func parkButtonPressed()
-	{
-        self.imagePicker.presentImagePurposeSelectionView(sender: self, inPark: self.currentPark)
-	}
-    
     @IBAction func volunteerPressed(sender: UIButton) {
         let mailView = self.mailerView.volunteerForParks()
         dispatch_async(dispatch_get_main_queue()) { 
             self.presentViewController(mailView, animated: true, completion: nil)
         }
     }
-    
-    @IBAction func filterButtonPressed() // Temporary functionality that will be deleted so no refactor performed
-	{
-		shouldFilter = !shouldFilter
-		
-		//clear all existing points and such
-		self.mapView.removeAnnotations(self.mapView.annotations)
-		self.mapView.removeOverlays(self.mapView.overlays)
-        
-		for (_, park) in self.parks
-		{
-			for trail in park.trails
-			{
-				trail.isDrawn = false
-			}
-		}
-		
-		self.annotateAllParks()
-	}
 	
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
@@ -181,6 +204,50 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
+    func setUpSearchBar()
+    {
+        // TODO: init search results view and set updater property.
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.navigationController?.navigationBarHidden = false
+        self.searchController.dimsBackgroundDuringPresentation = true
+        self.searchController.searchBar.delegate = self
+        self.navigationItem.titleView = self.searchController.searchBar
+        self.definesPresentationContext = true
+    }
+    
+    /**
+     Sets up the ParkMapController to add buttons to the pin callouts.
+     **/
+    func setupAnnotationButtonClosure()
+    {
+        //TODO: assign custom images to these buttons using setImage
+        
+        self.annotationButtonClosure = { (view) in
+            let driving = UIButton(type: UIButtonType.DetailDisclosure)
+            //			driving.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
+            driving.addTarget(self, action: #selector(self.drivingButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
+            view.rightCalloutAccessoryView = driving
+            
+            let volunteering = UIButton(type: UIButtonType.ContactAdd)
+            //			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
+            volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
+            view.leftCalloutAccessoryView = volunteering
+        }
+    }
+    
+    func drivingButtonPressed()
+    {
+        //TODO: show driving directions
+    }
+    
+    func volunteeringButtonPressed()
+    {
+        let mailView = self.mailerView.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(mailView, animated: true, completion: nil)
+        }
+    }
+    
     // MARK: Map Data Fetching Methods
     func tryToLoad()
     {
@@ -235,6 +302,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         
         self.imageDamper.userInteractionEnabled = loading
         self.imageDamper.hidden = !loading
+        self.reportButton.enabled = !loading
+        self.shareButton.enabled = !loading
         
         self.loading = loading
     }
