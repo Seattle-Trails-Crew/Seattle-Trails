@@ -49,6 +49,22 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     {
         AlertViews.presentMapKeyAlert(sender: self)
     }
+	
+	@IBAction func reportButtonPressed(sender: UIButton)
+	{
+		
+	}
+	
+	@IBAction func optionsButtonPressed(sender: UIButton)
+	{
+		
+	}
+	
+	
+	@IBAction func shareButtonPressed(sender: UIButton)
+	{
+		
+	}
     
     @IBAction func navButtonPressed(sender: UIButton)
     {
