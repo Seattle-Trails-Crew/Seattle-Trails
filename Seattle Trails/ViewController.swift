@@ -50,8 +50,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
         self.imagePicker.delegate = self
-		
-		reportButton.hidden = !reportAvailable
+        self.navigationController?.navigationBarHidden = false
+        self.searchDisplayController?.displaysSearchBarInNavigationBar = true
     }
 	
 	/**
