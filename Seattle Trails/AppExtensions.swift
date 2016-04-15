@@ -27,41 +27,6 @@ extension UIImagePickerController {
     }
     
     /**
-     Presents an alert controller that has the user select the purpose for taking a photo.
-     
-     - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
-     - parameter inPark: The current park or nil. Shows report issue option only if in a park.
-     */
-    func presentImagePurposeSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC, inPark: String?)
-    {
-        let alert = UIAlertController(title: "Park Actions", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        
-        let sharePhoto = UIAlertAction(title: "Share Photo", style: .Default)
-        { (action) in
-            sender.performSegueWithIdentifier("showSocial", sender: self)
-        }
-        
-        if UIImagePickerController.isSourceTypeAvailable(.Camera), let _ = inPark
-        {
-            let report = UIAlertAction(title: "Report Issue", style: .Default)
-            { (action) in
-                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .Camera)
-            }
-            
-            alert.addAction(report)
-        }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        alert.addAction(sharePhoto)
-        alert.addAction(cancel)
-        
-        dispatch_async(dispatch_get_main_queue())
-        {
-            sender.presentViewController(alert, animated: true, completion: nil)
-        }
-    }
-    
-    /**
      An alert controller allowing the user to pick their photo library or the camera as an image source.
      
      - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.

@@ -14,12 +14,13 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
-	@IBOutlet weak var reportButton: UIButton!
-	
+    @IBOutlet weak var reportButton: UIBarButtonItem!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
     let imagePicker = UIImagePickerController()
     var searchController: UISearchController!
     let mailerView = EmailComposer()
+    
     var loading = false
     
     var currentPark:String?
@@ -54,48 +55,15 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.imagePicker.delegate = self
     }
 	
-	/**
-	Sets up the ParkMapController to add buttons to the pin callouts.
-	**/
-	func setupAnnotationButtonClosure()
-	{
-		//TODO: assign custom images to these buttons using setImage
-		
-		self.annotationButtonClosure = { (view) in
-			let driving = UIButton(type: UIButtonType.DetailDisclosure)
-//			driving.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
-			driving.addTarget(self, action: #selector(self.drivingButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
-			view.rightCalloutAccessoryView = driving
-			
-			let volunteering = UIButton(type: UIButtonType.ContactAdd)
-//			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
-			volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
-			view.leftCalloutAccessoryView = volunteering
-		}
-	}
-	
-	func drivingButtonPressed()
-	{
-		//TODO: show driving directions
-	}
-	
-	func volunteeringButtonPressed()
-	{
-		let mailView = self.mailerView.volunteerForParks()
-		dispatch_async(dispatch_get_main_queue()) {
-			self.presentViewController(mailView, animated: true, completion: nil)
-		}
-	}
-	
-    // MARK: User Interaction
-	
-	@IBAction func reportButtonPressed(sender: UIButton)
-	{
-		if (reportAvailable)
+	    // MARK: User Interaction
+    @IBAction func reportButtonPressed(sender: UIBarButtonItem)
+    {
+         // Check to see if user is in a park before reporting an issue.
+        if let _ = currentPark
 		{
-			//TODO: display the report issues image picker
+			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
 		}
-	}
+    }
 	
 	@IBAction func optionsButtonPressed(sender: UIButton)
 	{
@@ -129,9 +97,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		self.presentViewController(alert, animated: true, completion: nil)
 	}
 	
-	
-	@IBAction func shareButtonPressed(sender: UIButton)
-	{
+    @IBAction func shareButtonPressed(sender: UIBarButtonItem)
+    {
 		self.performSegueWithIdentifier("showSocial", sender: self)
 	}
 	
@@ -247,6 +214,40 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.navigationItem.titleView = self.searchController.searchBar
         self.definesPresentationContext = true
     }
+    
+    /**
+     Sets up the ParkMapController to add buttons to the pin callouts.
+     **/
+    func setupAnnotationButtonClosure()
+    {
+        //TODO: assign custom images to these buttons using setImage
+        
+        self.annotationButtonClosure = { (view) in
+            let driving = UIButton(type: UIButtonType.DetailDisclosure)
+            //			driving.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
+            driving.addTarget(self, action: #selector(self.drivingButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
+            view.rightCalloutAccessoryView = driving
+            
+            let volunteering = UIButton(type: UIButtonType.ContactAdd)
+            //			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
+            volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
+            view.leftCalloutAccessoryView = volunteering
+        }
+    }
+    
+    func drivingButtonPressed()
+    {
+        //TODO: show driving directions
+    }
+    
+    func volunteeringButtonPressed()
+    {
+        let mailView = self.mailerView.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(mailView, animated: true, completion: nil)
+        }
+    }
+    
     // MARK: Map Data Fetching Methods
     func tryToLoad()
     {
