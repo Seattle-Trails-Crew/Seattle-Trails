@@ -302,6 +302,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         
         self.imageDamper.userInteractionEnabled = loading
         self.imageDamper.hidden = !loading
+        self.reportButton.enabled = !loading
+        self.shareButton.enabled = !loading
         
         self.loading = loading
     }
