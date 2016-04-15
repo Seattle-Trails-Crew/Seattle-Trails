@@ -9,7 +9,6 @@
         <!--Title-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Seattle_Trails" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
@@ -28,7 +27,7 @@
                                     <constraint firstAttribute="height" constant="70" id="HgO-pa-Dk8"/>
                                     <constraint firstAttribute="width" constant="70" id="oo9-AP-Tr4"/>
                                 </constraints>
-                                <state key="normal" title="OPTIONS" image="7A5905CC-C4CA-49ED-B2CF-543721EFB8B9"/>
+                                <state key="normal" title="OPTIONS" image="604784C9-6FE9-4673-B2DA-D8F33E324CFB"/>
                                 <connections>
                                     <action selector="optionsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="geH-xN-tgG"/>
                                 </connections>
@@ -47,13 +46,6 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G4b-d4-bZO">
                                 <rect key="frame" x="281" y="282" width="37" height="37"/>
                             </activityIndicatorView>
-                            <searchBar contentMode="redraw" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oWE-zb-72d">
-                                <rect key="frame" x="78" y="64" width="445" height="44"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="jq8-bp-V7j" id="7Jp-Se-rea"/>
-                                </connections>
-                            </searchBar>
                             <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1lW-RW-yjI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -64,7 +56,6 @@
                             <constraint firstItem="oKD-qu-38m" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="03M-eS-UYM"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0FD-qo-DJm"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oKD-qu-38m" secondAttribute="bottom" id="37p-7P-qa7"/>
-                            <constraint firstItem="oWE-zb-72d" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ab8-9u-4hG"/>
                             <constraint firstItem="Pzl-Ua-dG0" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Dzx-7E-IHX"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="J7h-61-pgf"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="Lg4-9o-uAQ"/>
@@ -72,7 +63,6 @@
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="UPp-pd-522"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="k05-zL-xuw" secondAttribute="bottom" constant="8" symbolic="YES" id="WQe-Pj-A6O"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="ZJ2-ah-g9G"/>
-                            <constraint firstItem="oWE-zb-72d" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="aYb-tk-OLg"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Pzl-Ua-dG0" secondAttribute="bottom" constant="8" symbolic="YES" id="gvM-5f-ntQ"/>
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="kAw-3e-Bnj"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
@@ -81,7 +71,6 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="raf-MW-sYC"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="swf-YN-w8J"/>
                             <constraint firstAttribute="trailingMargin" secondItem="k05-zL-xuw" secondAttribute="trailing" id="v9Q-Id-Eua"/>
-                            <constraint firstItem="oWE-zb-72d" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" symbolic="YES" id="wzd-R2-YLG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="ynY-DQ-kuc"/>
                         </constraints>
                         <variation key="default">
@@ -90,8 +79,6 @@
                                 <exclude reference="UPp-pd-522"/>
                                 <exclude reference="nax-ZQ-GWA"/>
                                 <exclude reference="Lg4-9o-uAQ"/>
-                                <exclude reference="Ab8-9u-4hG"/>
-                                <exclude reference="aYb-tk-OLg"/>
                                 <exclude reference="lWA-tu-q5B"/>
                             </mask>
                         </variation>
@@ -108,6 +95,7 @@
                         <segue destination="KZR-Bx-L22" kind="show" identifier="showSocial" id="1f7-9x-4Zq"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="743" y="449"/>
         </scene>
@@ -123,20 +111,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photo from" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D1F-bs-KHJ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Photo from" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D1F-bs-KHJ">
                                 <rect key="frame" x="20" y="28" width="86" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" verticalHuggingPriority="252" translatesAutoresizingMaskIntoConstraints="NO" id="oTn-Yq-axi">
+                            <view contentMode="scaleToFill" verticalHuggingPriority="252" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oTn-Yq-axi">
                                 <rect key="frame" x="20" y="66" width="560" height="488"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LHC-yM-95H">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LHC-yM-95H">
                                         <rect key="frame" x="20" y="20" width="520" height="448"/>
                                         <color key="backgroundColor" red="0.99600285291671753" green="0.99619680643081665" blue="0.99162989854812622" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzZ-iF-jNu" userLabel="Camera Button">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzZ-iF-jNu" userLabel="Camera Button">
                                         <rect key="frame" x="20" y="20" width="520" height="448"/>
                                         <connections>
                                             <action selector="pressPicture" destination="KZR-Bx-L22" eventType="touchUpInside" id="NYA-iY-yAL"/>
@@ -162,7 +150,7 @@
                                     <action selector="pressShare" destination="KZR-Bx-L22" eventType="touchUpInside" id="BmV-zl-tFp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="255" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HZO-wO-g2y">
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="255" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HZO-wO-g2y">
                                 <rect key="frame" x="114" y="28" width="88" height="30"/>
                                 <state key="normal" title="TRAIL NAME"/>
                                 <connections>
@@ -323,7 +311,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="7A5905CC-C4CA-49ED-B2CF-543721EFB8B9" width="400" height="400">
+        <image name="604784C9-6FE9-4673-B2DA-D8F33E324CFB" width="400" height="400">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -11000,7 +10988,7 @@ AAEAAAEGAAMAAAABAAIAAAERAAQAAAAFAAnE0gESAAMAAAABAAEAAAEVAAMAAAABAAQAAAEWAAMAAAAB
 AFEAAAEXAAQAAAAFAAnEvgEcAAMAAAABAAEAAAFSAAMAAAABAAIAAAFTAAMAAAAEAAnE5odzAAcAAAxI
 AAnE7gAAAAAACAAIAAgACAAB+kAAAfpAAAH6QAAB+kAAAdsAAAAACAAB+kgAA/SIAAXuyAAH6QgAAQAB
 AAEAAQAADEhMaW5vAhAAAG1udHJSR0IgWFlaIAfOAAIACQAGADEAAGFjc3BNU0ZUAAAAAElFQyBzUkdC
-AAAAAAAAAAAAAAAAAAD21gABAAAAANMtSFAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAABAAD21gABAAAAANMtSFAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAEWNwcnQAAAFQAAAAM2Rlc2MAAAGEAAAAbHd0cHQAAAHwAAAAFGJrcHQAAAIE
 AAAAFHJYWVoAAAIYAAAAFGdYWVoAAAIsAAAAFGJYWVoAAAJAAAAAFGRtbmQAAAJUAAAAcGRtZGQAAALE
 AAAAiHZ1ZWQAAANMAAAAhnZpZXcAAAPUAAAAJGx1bWkAAAP4AAAAFG1lYXMAAAQMAAAAJHRlY2gAAAQw

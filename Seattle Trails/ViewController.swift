@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
+class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate, UISearchBarDelegate
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
@@ -18,6 +18,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     
     let imagePicker = UIImagePickerController()
+    var searchController: UISearchController!
     let mailerView = EmailComposer()
     var loading = false
     
@@ -47,11 +48,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     override func viewDidLoad()
     {
         super.viewDidLoad()
-		setupAnnotationButtonClosure()
+		self.setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
+        self.setUpSearchBar()
         self.imagePicker.delegate = self
-        self.navigationController?.navigationBarHidden = false
-        self.searchDisplayController?.displaysSearchBarInNavigationBar = true
     }
 	
 	/**
@@ -237,6 +237,16 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
+    func setUpSearchBar()
+    {
+        // TODO: init search results view and set updater property.
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.navigationController?.navigationBarHidden = false
+        self.searchController.dimsBackgroundDuringPresentation = true
+        self.searchController.searchBar.delegate = self
+        self.navigationItem.titleView = self.searchController.searchBar
+        self.definesPresentationContext = true
+    }
     // MARK: Map Data Fetching Methods
     func tryToLoad()
     {
