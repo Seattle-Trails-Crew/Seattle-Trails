@@ -59,7 +59,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     @IBAction func reportButtonPressed(sender: UIBarButtonItem)
     {
          // Check to see if user is in a park before reporting an issue.
-        if let _ = currentPark
+        if reportAvailable
 		{
 			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
 		}
