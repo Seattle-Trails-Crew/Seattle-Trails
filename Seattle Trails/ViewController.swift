@@ -14,6 +14,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
+	@IBOutlet weak var reportButton: UIButton!
+	
     
     let imagePicker = UIImagePickerController()
     let mailerView = EmailComposer()
@@ -35,6 +37,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         
         return nil
     }
+	
+	var reportAvailable:Bool
+	{
+		return UIImagePickerController.isSourceTypeAvailable(.Camera) && currentPark != nil
+	}
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -42,70 +49,69 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         super.viewDidLoad()
         self.fetchAndRenderTrails()
         self.imagePicker.delegate = self
+		
+		reportButton.hidden = !reportAvailable
     }
     
     // MARK: User Interaction
-    @IBAction func infoButtonPressed(sender: UIButton)
-    {
-        AlertViews.presentMapKeyAlert(sender: self)
-    }
 	
 	@IBAction func reportButtonPressed(sender: UIButton)
 	{
-		
+		if (reportAvailable)
+		{
+			//TODO: display the report issues image picker
+		}
 	}
 	
 	@IBAction func optionsButtonPressed(sender: UIButton)
 	{
+		let alert = UIAlertController(title: "Options", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
 		
+		let key = UIAlertAction(title: "Map Key", style: .Default)
+		{ (action) in
+			AlertViews.presentMapKeyAlert(sender: self)
+		}
+		
+		let filter = UIAlertAction(title: "Filter", style: .Default)
+		{ (action) in
+			self.shouldFilter = !self.shouldFilter
+			
+			//clear all existing points and then remake them with the new filter settings
+			self.clearAnnotations()
+			self.annotateAllParks()
+		}
+		
+		let satellite = UIAlertAction(title: self.mapView.mapType == MKMapType.Satellite ? "Map View" : "Satellite View", style: .Default)
+		{ (action) in
+			self.toggleSatteliteView()
+		}
+		
+		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+		alert.addAction(key)
+		alert.addAction(filter)
+		alert.addAction(satellite)
+		alert.addAction(cancel)
+		
+		self.presentViewController(alert, animated: true, completion: nil)
 	}
 	
 	
 	@IBAction func shareButtonPressed(sender: UIButton)
 	{
-		
+		self.performSegueWithIdentifier("showSocial", sender: self)
 	}
-    
+	
     @IBAction func navButtonPressed(sender: UIButton)
     {
         self.moveMapToUserLocation()
     }
-    
-    @IBAction func satteliteViewButtonPressed(sender: UIButton)
-    {
-        self.toggleSatteliteView()
-    }
 	
-	@IBAction func parkButtonPressed()
-	{
-        self.imagePicker.presentImagePurposeSelectionView(sender: self, inPark: self.currentPark)
-	}
-    
     @IBAction func volunteerPressed(sender: UIButton) {
         let mailView = self.mailerView.volunteerForParks()
         dispatch_async(dispatch_get_main_queue()) { 
             self.presentViewController(mailView, animated: true, completion: nil)
         }
     }
-    
-    @IBAction func filterButtonPressed() // Temporary functionality that will be deleted so no refactor performed
-	{
-		shouldFilter = !shouldFilter
-		
-		//clear all existing points and such
-		self.mapView.removeAnnotations(self.mapView.annotations)
-		self.mapView.removeOverlays(self.mapView.overlays)
-        
-		for (_, park) in self.parks
-		{
-			for trail in park.trails
-			{
-				trail.isDrawn = false
-			}
-		}
-		
-		self.annotateAllParks()
-	}
 	
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool

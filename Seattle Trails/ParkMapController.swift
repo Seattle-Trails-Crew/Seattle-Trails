@@ -112,6 +112,23 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
+	/**
+	Clears all map annotations
+	*/
+	func clearAnnotations()
+	{
+		self.mapView.removeAnnotations(self.mapView.annotations)
+		self.mapView.removeOverlays(self.mapView.overlays)
+		
+		for (_, park) in self.parks
+		{
+			for trail in park.trails
+			{
+				trail.isDrawn = false
+			}
+		}
+	}
+	
 	// MARK: Map View Delegate Methods
 	func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
 	{
