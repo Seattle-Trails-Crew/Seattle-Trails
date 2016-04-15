@@ -27,6 +27,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	
 	var locationManager = CLLocationManager()
 	var parks = [String:Park]()
+	var annotationButtonClosure:((MKPinAnnotationView)->())!
 	
 	//TODO: temporary filter stuff
 	var shouldFilter = false
@@ -148,6 +149,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		{
 			return nil
 		}
+		
+		self.annotationButtonClosure(view);
 		
 		view.canShowCallout = true
 		return view

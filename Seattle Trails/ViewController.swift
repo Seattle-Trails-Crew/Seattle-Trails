@@ -47,12 +47,46 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     override func viewDidLoad()
     {
         super.viewDidLoad()
+		setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
         self.imagePicker.delegate = self
 		
 		reportButton.hidden = !reportAvailable
     }
-    
+	
+	/**
+	Sets up the ParkMapController to add buttons to the pin callouts.
+	**/
+	func setupAnnotationButtonClosure()
+	{
+		//TODO: assign custom images to these buttons using setImage
+		
+		self.annotationButtonClosure = { (view) in
+			let driving = UIButton(type: UIButtonType.DetailDisclosure)
+//			driving.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
+			driving.addTarget(self, action: #selector(self.drivingButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
+			view.rightCalloutAccessoryView = driving
+			
+			let volunteering = UIButton(type: UIButtonType.ContactAdd)
+//			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
+			volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
+			view.leftCalloutAccessoryView = volunteering
+		}
+	}
+	
+	func drivingButtonPressed()
+	{
+		//TODO: show driving directions
+	}
+	
+	func volunteeringButtonPressed()
+	{
+		let mailView = self.mailerView.volunteerForParks()
+		dispatch_async(dispatch_get_main_queue()) {
+			self.presentViewController(mailView, animated: true, completion: nil)
+		}
+	}
+	
     // MARK: User Interaction
 	
 	@IBAction func reportButtonPressed(sender: UIButton)
