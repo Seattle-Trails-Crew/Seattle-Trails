@@ -41,8 +41,6 @@ extension UIImagePickerController {
             sender.performSegueWithIdentifier("showSocial", sender: self)
         }
         
-        alert.addAction(sharePhoto)
-        
         if UIImagePickerController.isSourceTypeAvailable(.Camera), let _ = inPark
         {
             let report = UIAlertAction(title: "Report Issue", style: .Default)
@@ -54,6 +52,7 @@ extension UIImagePickerController {
         }
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alert.addAction(sharePhoto)
         alert.addAction(cancel)
         
         dispatch_async(dispatch_get_main_queue())
@@ -102,6 +101,7 @@ extension UIImagePickerController {
     func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
     {
         sender.imagePicker.sourceType = sourceType
+        
         dispatch_async(dispatch_get_main_queue())
         {
             sender.presentViewController(sender.imagePicker, animated: true, completion: nil)

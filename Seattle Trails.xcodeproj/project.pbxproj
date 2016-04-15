@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		635CBF9F1CA9E05B00531A2F /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */; };
+		8C4A68BB1CBE1FD90057EE8D /* EmailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4A68BA1CBE1FD90057EE8D /* EmailComposer.swift */; };
 		8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */; };
 		8CCEA2261CAD5C8000CF117C /* AlertViewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */; };
 		8CCEA2341CB34FD900CF117C /* AppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCEA2331CB34FD900CF117C /* AppExtensions.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		635CBF9E1CA9E05B00531A2F /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
+		8C4A68BA1CBE1FD90057EE8D /* EmailComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailComposer.swift; sourceTree = "<group>"; };
 		8CCEA21D1CAA7ECD00CF117C /* IssueReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueReport.swift; sourceTree = "<group>"; };
 		8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewsController.swift; sourceTree = "<group>"; };
 		8CCEA2331CB34FD900CF117C /* AppExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 			children = (
 				E490637C1CA2673A00C1A3CA /* SocrataService.swift */,
 				8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */,
+				8C4A68BA1CBE1FD90057EE8D /* EmailComposer.swift */,
 			);
 			name = "Utility Classes";
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,
 				8CCEA2341CB34FD900CF117C /* AppExtensions.swift in Sources */,
 				8CCEA2361CB3557000CF117C /* AppProtocols.swift in Sources */,
+				8C4A68BB1CBE1FD90057EE8D /* EmailComposer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,12 +10,13 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, MFMailComposeViewControllerDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
+class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
     
-    var imagePicker = UIImagePickerController()
+    let imagePicker = UIImagePickerController()
+    let mailerView = EmailComposer()
     var loading = false
     
     var currentPark:String?
@@ -64,6 +65,13 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.imagePicker.presentImagePurposeSelectionView(sender: self, inPark: self.currentPark)
 	}
     
+    @IBAction func volunteerPressed(sender: UIButton) {
+        let mailView = self.mailerView.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(mailView, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func filterButtonPressed() // Temporary functionality that will be deleted so no refactor performed
 	{
 		shouldFilter = !shouldFilter
@@ -98,7 +106,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
             popoverViewController.parksDataSource = self
             popoverViewController.delegate = self
         }
-            
 		else if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.currentPark
@@ -108,28 +115,28 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail()
         {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.dismissViewControllerAnimated(true, completion: {
-                    self.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
-                })
-            }
+                dispatch_async(dispatch_get_main_queue())
+                {
+                    self.dismissViewControllerAnimated(true, completion: {
+                        let mailView = self.mailerView.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
+                        
+                        dispatch_async(dispatch_get_main_queue())
+                        {
+                            self.presentViewController(mailView, animated: true, completion: nil)
+                        }
+                    })
+                }
         }
         else
         {
             dispatch_async(dispatch_get_main_queue())
             {
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.dismissViewControllerAnimated(true, completion: { 
+                    AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
+                })
             }
-        }
-    }
-    
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
-    {
-        dispatch_async(dispatch_get_main_queue())
-        {
-            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
@@ -250,41 +257,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         else if mapView.mapType == MKMapType.Standard
         {
             self.mapView.mapType = MKMapType.Satellite
-        }
-    }
-    // Issue Reporting Methods
-    /**
-     Reports an issue with a park via an email populated with the following parameters.
-     
-     - parameter park:     A park object containing park information.
-     - parameter location: The users current location.
-     - parameter image:    An image of the issue to report taken from the device camera.
-     */
-    func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage)
-    {
-        let parkIssueReport = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
-        
-        self.presentIssueReportViewControllerForIssue(parkIssueReport)
-    }
-    
-    func presentIssueReportViewControllerForIssue(issue: IssueReport)
-    {
-        if MFMailComposeViewController.canSendMail()
-        {
-            let emailView = MFMailComposeViewController()
-            emailView.mailComposeDelegate = self
-            emailView.setToRecipients([issue.sendTo])
-            emailView.setSubject(issue.subject)
-            emailView.setMessageBody(issue.formFields, isHTML: false)
-            emailView.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.presentViewController(emailView, animated: true, completion: nil)
-            })
-        } else {
-            dispatch_async(dispatch_get_main_queue(), {
-                AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
-            })
         }
     }
     
