@@ -146,16 +146,12 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-//        return self.parks.count
         return self.tableView.visibleParks.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
-//        let parkNames = Array(self.parks.keys)
-//        cell.textLabel?.text = parkNames[indexPath.row]
-//        print(parkNames[indexPath.row])
         cell.textLabel?.text = self.tableView.visibleParks[indexPath.row]
         return cell
     }
@@ -165,7 +161,13 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         let park = self.tableView.visibleParks[indexPath.row]
         self.performActionWithSelectedPark(park)
     }
-
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
+        // Header Acts To Push TableView Down From NavBar
+        return UIView()
+    }
+    
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
     {
 		//you shouldn't be able to segue when you don't have any pins
@@ -174,12 +176,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     {
-//        if let popoverViewController = segue.destinationViewController as? PopoverViewController
-//		{
-//            popoverViewController.popoverPresentationController?.delegate = self
-//            popoverViewController.parksDataSource = self
-//            popoverViewController.delegate = self
-//        }
 		if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.currentPark
@@ -231,10 +227,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     {
         showPark(parkName: park)
         self.tableView.hidden = true
-//        dispatch_async(dispatch_get_main_queue())
-//        {
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//        }
     }
     
     
@@ -279,6 +271,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.hidden = true
+        let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
+        self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
     
     /**
