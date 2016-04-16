@@ -56,7 +56,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.setUpSearchBar()
         self.setupTableView()
         self.imagePicker.delegate = self
-        self.tableView.delegate = self
     }
 	
 	    // MARK: User Interaction
@@ -120,7 +119,12 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
     func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         self.tableView.hidden = false
+        self.tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
@@ -129,13 +133,15 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return self.tableView.visibleParks.count
+        return self.parks.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ParkCell")! as! ParkCell
-        cell.parkNameLabel.text = self.tableView.visibleParks[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
+        let parkNames = Array(self.parks.keys)
+        cell.textLabel?.text = parkNames[indexPath.row]
+        print(parkNames[indexPath.row])
         return cell
     }
     
@@ -249,12 +255,12 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func setupTableView()
     {
-        print("YO")
         self.tableView = PopoverViewController(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.tableView.registerClass(ParkCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.view.addSubview(self.tableView)
-        tableView.dataSource = self
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
         self.tableView.hidden = true
     }
     

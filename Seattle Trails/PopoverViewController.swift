@@ -28,8 +28,3 @@ class PopoverViewController: UITableView, UISearchControllerDelegate, UISearchRe
         print("placeholder")
     }
 }
-
-class ParkCell: UITableViewCell
-{
-    @IBOutlet weak var parkNameLabel: UILabel!
-}
