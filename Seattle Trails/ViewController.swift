@@ -110,7 +110,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.moveMapToUserLocation()
     }
 	
-    @IBAction func volunteerPressed(sender: UIButton) {
+    @IBAction func volunteerPressed(sender: UIButton)
+    {
         let mailView = self.mailerView.volunteerForParks()
         dispatch_async(dispatch_get_main_queue()) { 
             self.presentViewController(mailView, animated: true, completion: nil)
@@ -118,30 +119,44 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
 	
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResultsForSearchController(searchController: UISearchController)
+    {
         
     }
     
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar)
+    {
+        // Moved these here, rather than just upon typing
         self.tableView.hidden = false
+        self.tableView.filterTrails("") // Display All Trails
         self.tableView.reloadData()
     }
     
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        self.tableView.hidden = false  // Just In Case They Dismiss, But Are Still Typing
+        self.tableView.filterTrails(searchText)
+        self.tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar)
+    {
         self.tableView.hidden = true
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return self.parks.count
+//        return self.parks.count
+        return self.tableView.visibleParks.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
-        let parkNames = Array(self.parks.keys)
-        cell.textLabel?.text = parkNames[indexPath.row]
-        print(parkNames[indexPath.row])
+//        let parkNames = Array(self.parks.keys)
+//        cell.textLabel?.text = parkNames[indexPath.row]
+//        print(parkNames[indexPath.row])
+        cell.textLabel?.text = self.tableView.visibleParks[indexPath.row]
         return cell
     }
     
@@ -215,10 +230,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func performActionWithSelectedPark(park: String)
     {
         showPark(parkName: park)
-        dispatch_async(dispatch_get_main_queue())
-        {
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
+        self.tableView.hidden = true
+//        dispatch_async(dispatch_get_main_queue())
+//        {
+//            self.dismissViewControllerAnimated(true, completion: nil)
+//        }
     }
     
     
@@ -259,6 +275,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.view.addSubview(self.tableView)
+        self.tableView.parksDataSource = self
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.hidden = true
