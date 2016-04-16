@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate, UISearchBarDelegate
+class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
@@ -18,8 +18,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
     let imagePicker = UIImagePickerController()
+    
     var searchController: UISearchController!
     let mailerView = EmailComposer()
+    var tableView: PopoverViewController!
     
     var loading = false
     
@@ -52,7 +54,9 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		self.setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
         self.setUpSearchBar()
+        self.setupTableView()
         self.imagePicker.delegate = self
+        self.tableView.delegate = self
     }
 	
 	    // MARK: User Interaction
@@ -115,6 +119,24 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
 	
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return self.tableView.visibleParks.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = tableView.dequeueReusableCellWithIdentifier("ParkCell")! as! ParkCell
+        cell.parkNameLabel.text = self.tableView.visibleParks[indexPath.row]
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        let park = self.tableView.visibleParks[indexPath.row]
+        self.performActionWithSelectedPark(park)
+    }
+
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
     {
 		//you shouldn't be able to segue when you don't have any pins
@@ -123,13 +145,13 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     {
-        if let popoverViewController = segue.destinationViewController as? PopoverViewController
-		{
-            popoverViewController.popoverPresentationController?.delegate = self
-            popoverViewController.parksDataSource = self
-            popoverViewController.delegate = self
-        }
-		else if let smvc = segue.destinationViewController as? SocialMediaViewController
+//        if let popoverViewController = segue.destinationViewController as? PopoverViewController
+//		{
+//            popoverViewController.popoverPresentationController?.delegate = self
+//            popoverViewController.parksDataSource = self
+//            popoverViewController.delegate = self
+//        }
+		if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.currentPark
             smvc.parks = parks //attach a list of all parks, for use in the search
@@ -213,6 +235,23 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.searchController.searchBar.delegate = self
         self.navigationItem.titleView = self.searchController.searchBar
         self.definesPresentationContext = true
+        self.searchController.delegate = self.tableView
+    }
+    
+    func setupTableView()
+    {
+        print("YO")
+        self.tableView = PopoverViewController(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.registerClass(ParkCell.self, forCellReuseIdentifier: "cell")
+        self.view.addSubview(self.tableView)
+        tableView.dataSource = self
+        
+        //let margins = self.view.layoutMarginsGuide
+//        tableView.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor).active = true
+//        tableView.trailingAnchor.constraintEqualToAnchor(margins.leadingAnchor).active = true
+//        tableView.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
+//        tableView.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
     }
     
     /**

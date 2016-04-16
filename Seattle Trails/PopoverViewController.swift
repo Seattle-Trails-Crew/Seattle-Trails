@@ -8,48 +8,10 @@
 
 import UIKit
 
-class PopoverViewController: UIViewController
-{
-    var parksDataSource: ParksDataSource?
-    var tableView: PopoverTableViewController?
-    var delegate: PopoverViewDelegate?
-    
-    // MARK: User Interaction
-    @IBAction func doneButtonPressed(sender: UIButton)
-    {
-        delegate?.dismissPopover()
-    }
-    
-    @IBAction func keyPressedInSearchTextField(sender: UITextField)
-    {
-        if let params = sender.text {
-            tableView!.filterTrails(params)
-        }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "EmbedTableView" {
-            tableView = segue.destinationViewController as? PopoverTableViewController
-            tableView!.parksDataSource = parksDataSource
-        }
-    }
-}
-
-class ParkCell: UITableViewCell
-{
-    @IBOutlet weak var parkNameLabel: UILabel!
-}
-
-class PopoverTableViewController:  UITableViewController
+class PopoverViewController: UITableView, UISearchControllerDelegate, UISearchResultsUpdating
 {
     var parksDataSource: ParksDataSource?
     var visibleParks = [String]()
-    
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
-        filterTrails("")
-    }
     
     func filterTrails(params: String)
     {
@@ -59,24 +21,15 @@ class PopoverTableViewController:  UITableViewController
                 visibleParks.append(park)
             }
         }
-        tableView.reloadData()
+        self.reloadData()
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        return visibleParks.count
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        print("placeholder")
     }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ParkCell")! as! ParkCell
-        cell.parkNameLabel.text = visibleParks[indexPath.row]
-        return cell
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
-    {
-        let park = visibleParks[indexPath.row]
-        parksDataSource?.performActionWithSelectedPark(park)
-    }
+}
+
+class ParkCell: UITableViewCell
+{
+    @IBOutlet weak var parkNameLabel: UILabel!
 }

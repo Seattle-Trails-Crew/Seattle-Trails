@@ -32,14 +32,14 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
         self.imagePicker.delegate = self
     }
 	
-	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		if let popoverViewController = segue.destinationViewController as? PopoverViewController
-		{
-			popoverViewController.popoverPresentationController?.delegate = self
-			popoverViewController.parksDataSource = self
-			popoverViewController.delegate = self
-		}
-	}
+//	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//		if let popoverViewController = segue.destinationViewController as? PopoverViewController
+//		{
+//			popoverViewController.popoverPresentationController?.delegate = self
+//			popoverViewController.parksDataSource = self
+//			popoverViewController.delegate = self
+//		}
+//	}
 	
 	func setButtonHiddenness()
 	{
