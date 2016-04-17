@@ -159,6 +159,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         let park = self.tableView.visibleParks[indexPath.row]
+        self.searchController.active = false
         self.performActionWithSelectedPark(park)
     }
     
@@ -248,6 +249,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
+    // TODO: Refactor into computed properties?
     func setUpSearchBar()
     {
         // TODO: init search results view and set updater property.
