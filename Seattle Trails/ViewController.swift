@@ -315,25 +315,14 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func setupAnnotationButtonClosure()
     {
         //TODO: assign custom images to these buttons using setImage
-        
         self.annotationButtonClosure = { (view) in
-            let driving = UIButton(type: UIButtonType.DetailDisclosure)
-            //			driving.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
-            driving.addTarget(self, action: #selector(self.drivingButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
-            view.rightCalloutAccessoryView = driving
-            
             let volunteering = UIButton(type: UIButtonType.ContactAdd)
             //			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
             volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
             view.leftCalloutAccessoryView = volunteering
         }
     }
-    
-    func drivingButtonPressed()
-    {
-        //TODO: show driving directions
-    }
-    
+
     func volunteeringButtonPressed()
     {
         let mailView = self.mailerView.volunteerForParks()

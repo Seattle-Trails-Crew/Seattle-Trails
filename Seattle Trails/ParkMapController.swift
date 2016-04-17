@@ -17,6 +17,10 @@ class ColoredAnnotation: MKPointAnnotation
 {
     var color: UIColor?
 }
+class DrivingButton: UIButton
+{
+    var coordinate: CLLocationCoordinate2D?
+}
 
 /**
 The ParkMapController is responsible for directly handling the parks, and translating them into map view pins and lines.
@@ -149,13 +153,19 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		{
 			return nil
 		}
-		
+        // Can we remove this and define the annotation methods here? -David W
 		self.annotationButtonClosure(view);
-		
+        
+        // Button Takes User To Maps Directions
+        let driving = DrivingButton(type: .DetailDisclosure)
+        driving.coordinate = annotation.coordinate
+        driving.addTarget(self, action: #selector(self.drivingButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        view.rightCalloutAccessoryView = driving
+        
 		view.canShowCallout = true
 		return view
 	}
-	
+    
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
 	{
 		if let _ = view.annotation as? MKUserLocation
@@ -193,6 +203,16 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	}
 	
 	//MARK: helper methods
+    
+    func drivingButtonPressed(button: DrivingButton)
+    {
+        if let coords = button.coordinate {
+            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placemark)
+            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+            mapItem.openInMapsWithLaunchOptions(launchOptions)
+        }
+    }
 	
 	/**
 	Given a park this will move the map view to it and draw all it's lines.
