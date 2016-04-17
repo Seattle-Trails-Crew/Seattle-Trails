@@ -102,10 +102,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
-		dispatch_async(dispatch_get_main_queue()) {
 			self.forReport = false
-			self.imagePicker.presentImageSourceSelectionView(sender: self)
-		}
+			self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
 	}
 	
     @IBAction func navButtonPressed(sender: UIButton)
