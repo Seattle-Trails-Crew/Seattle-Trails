@@ -31,10 +31,19 @@ extension UIImagePickerController {
      
      - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
      */
-    private func presentImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare> (sender sender: VC) {
+	func presentImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare> (sender sender: VC) {
+		
+		//if they don't have a camera, just present the photo library without asking the user
+		if (!UIImagePickerController.isSourceTypeAvailable(.Camera))
+		{
+			self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .PhotoLibrary)
+			return;
+		}
+		
+		
         // Present image picker options.
         let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        
+		
         let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
         { (action) in
             dispatch_async(dispatch_get_main_queue())

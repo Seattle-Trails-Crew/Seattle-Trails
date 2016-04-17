@@ -103,11 +103,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
 		dispatch_async(dispatch_get_main_queue()) {
-			AlertViews.presentShareTypeAlert(sender: self)
-			{ (shareType) in
-				self.forReport = false
-				self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: shareType)
-			}
+			self.forReport = false
+			self.imagePicker.presentImageSourceSelectionView(sender: self)
 		}
 	}
 	
