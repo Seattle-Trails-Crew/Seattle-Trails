@@ -11,11 +11,12 @@ import UIKit
 
 extension UIImagePickerController {
     /**
-     Presents the photo library or a selection view for that or the camera if the latter is available.
+    This will present the photo library if there is no camera available. If the camera is available the user will be presented with an
+     option view that provides a choice between using the camera or the photo library.
      
      - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
      */
-    func presentImageSourceView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
+    func presentCameraOrImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         {
             self.presentImageSourceSelectionView(sender: sender)
@@ -31,10 +32,19 @@ extension UIImagePickerController {
      
      - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
      */
-    private func presentImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare> (sender sender: VC) {
+	private func presentImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare> (sender sender: VC) {
+		
+		//if they don't have a camera, just present the photo library without asking the user
+		if (!UIImagePickerController.isSourceTypeAvailable(.Camera))
+		{
+			self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .PhotoLibrary)
+			return;
+		}
+		
+		
         // Present image picker options.
         let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        
+		
         let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
         { (action) in
             dispatch_async(dispatch_get_main_queue())
