@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import MessageUI
 
-class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate, UISearchBarDelegate
+class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ParksDataSource, PopoverViewDelegate, UIImagePickerControllerDelegate, GetsImageToShare, UINavigationControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource
 {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageDamper: UIImageView!
@@ -18,10 +18,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
     let imagePicker = UIImagePickerController()
+    
     var searchController: UISearchController!
     let mailerView = EmailComposer()
-	
 	var forReport = false
+    var tableView: PopoverViewController!
     
     var loading = false
     
@@ -54,6 +55,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		self.setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
         self.setUpSearchBar()
+        self.setupTableView()
         self.imagePicker.delegate = self
     }
 	
@@ -111,7 +113,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.moveMapToUserLocation()
     }
 	
-    @IBAction func volunteerPressed(sender: UIButton) {
+    @IBAction func volunteerPressed(sender: UIButton)
+    {
         let mailView = self.mailerView.volunteerForParks()
         dispatch_async(dispatch_get_main_queue()) { 
             self.presentViewController(mailView, animated: true, completion: nil)
@@ -119,6 +122,56 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
 	
     // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
+    func updateSearchResultsForSearchController(searchController: UISearchController)
+    {
+        
+    }
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar)
+    {
+        // Moved these here, rather than just upon typing
+        self.tableView.hidden = false
+        self.tableView.filterTrails("") // Display All Trails
+        self.tableView.reloadData()
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        self.tableView.hidden = false  // Just In Case They Dismiss, But Are Still Typing
+        self.tableView.filterTrails(searchText)
+        self.tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar)
+    {
+        self.tableView.hidden = true
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return self.tableView.visibleParks.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
+        cell.textLabel?.text = self.tableView.visibleParks[indexPath.row]
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        let park = self.tableView.visibleParks[indexPath.row]
+        self.searchController.active = false
+        self.performActionWithSelectedPark(park)
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
+        // Header Acts To Push TableView Down From NavBar
+        return UIView()
+    }
+    
 	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
     {
 		//you shouldn't be able to segue when you don't have any pins
@@ -127,13 +180,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     {
-        if let popoverViewController = segue.destinationViewController as? PopoverViewController
-		{
-            popoverViewController.popoverPresentationController?.delegate = self
-            popoverViewController.parksDataSource = self
-            popoverViewController.delegate = self
-        }
-		else if let smvc = segue.destinationViewController as? SocialMediaViewController
+		if let smvc = segue.destinationViewController as? SocialMediaViewController
 		{
             smvc.atPark = self.currentPark
             smvc.parks = parks //attach a list of all parks, for use in the search
@@ -212,10 +259,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func performActionWithSelectedPark(park: String)
     {
         showPark(parkName: park)
-        dispatch_async(dispatch_get_main_queue())
-        {
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
+        self.tableView.hidden = true
     }
     
     
@@ -237,15 +281,32 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
+    // TODO: Refactor into computed properties?
     func setUpSearchBar()
     {
         // TODO: init search results view and set updater property.
         self.searchController = UISearchController(searchResultsController: nil)
         self.navigationController?.navigationBarHidden = false
-        self.searchController.dimsBackgroundDuringPresentation = true
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.dimsBackgroundDuringPresentation = false
+        self.searchController.definesPresentationContext = true
         self.searchController.searchBar.delegate = self
+        self.searchController.searchResultsUpdater = self
         self.navigationItem.titleView = self.searchController.searchBar
-        self.definesPresentationContext = true
+    }
+    
+    func setupTableView()
+    {
+        self.tableView = PopoverViewController(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.view.addSubview(self.tableView)
+        self.tableView.parksDataSource = self
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.hidden = true
+        let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
+        self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
     
     /**
