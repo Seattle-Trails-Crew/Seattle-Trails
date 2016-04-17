@@ -99,7 +99,7 @@ class SocialMediaViewController: UIViewController, PopoverViewDelegate, ParksDat
 	
 	@IBAction func pressPicture()
 	{
-		self.imagePicker.presentImageSourceView(sender: self)
+        //self.imagePicker.presentImageSourceView(sender: self)
     }
 	
 	//MARK: text field delegate

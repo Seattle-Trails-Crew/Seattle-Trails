@@ -149,6 +149,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			{
 				let activityItems:[AnyObject] = [pickedImage as AnyObject, "#SeaTrails" as AnyObject]
 				let avc = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                avc.completionWithItemsHandler = { (_, completed, _, activityError) in self.isLoading(false)}
 				
 				//set the subject field of email
 				avc.setValue("My photo of \(self.currentPark ?? "a Seattle Park")", forKey: "subject")
@@ -159,7 +160,9 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 					self.dismissViewControllerAnimated(true, completion: {
 						dispatch_async(dispatch_get_main_queue())
 						{
-							self.presentViewController(avc, animated: true, completion: nil)
+							self.presentViewController(avc, animated: true, completion: { 
+                                self.isLoading(true)
+                            })
 						}
 					})
 				}
