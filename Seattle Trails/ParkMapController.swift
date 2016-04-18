@@ -59,7 +59,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		annotation.coordinate = point
 		annotation.title = text
         annotation.subtitle = surfaces.joinWithSeparator(", ")
-        annotation.color = gradientFromDifficulty(difficulty)
+        annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
 		mapView.addAnnotation(annotation)
 	}
 
@@ -250,7 +250,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Medium ->  Red: 1, Green: 1
         // Hard   ->  Red: 1, Green: 0
         if let difficulty = trail.gradePercent {
-            line.color = gradientFromDifficulty(difficulty)
+            line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
         }
         
 		// Example How To Alter Colors
@@ -263,10 +263,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 Returns Color From Green To Red Based On Difficulty
  - parameter difficulty: Int 0 - 10
  */
-func gradientFromDifficulty(difficulty: Int) -> UIColor
+func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 {
-    let red: CGFloat
-    let green: CGFloat
+    var red: CGFloat
+    var green: CGFloat
+    
     if difficulty < 6 {
         green = 0.9
         red = CGFloat(difficulty) / 5.0
@@ -277,5 +278,12 @@ func gradientFromDifficulty(difficulty: Int) -> UIColor
         green = (10 - CGFloat(difficulty)) / 5.0
         red = 0.9
     }
+    
+    if forAnnotation
+    {
+        red = (difficulty < 6) ? 0.0 : red
+        green = (difficulty > 6) ? 0.0 : green
+    }
+    
     return UIColor(red: red, green: green, blue: 0, alpha: 1)
 }
