@@ -37,13 +37,13 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
         return emailView
     }
     
-    func volunteerForParks() -> MFMailComposeViewController
+    func volunteerForPark(park: String) -> MFMailComposeViewController
     {
         let volunteerEmailView = MFMailComposeViewController()
         volunteerEmailView.mailComposeDelegate = self
-        volunteerEmailView.setToRecipients(["parks@seattle.com"])
+        volunteerEmailView.setToRecipients(["trails@seattle.gov"])
         volunteerEmailView.setSubject("Volunteering For Seattle Parks")
-        volunteerEmailView.setMessageBody("Full Name: \n\n\n Contact Info:", isHTML: false)
+        volunteerEmailView.setMessageBody("Full Name: \n\n\n Email: \n\n\n Phone: \n\n\n One time volunteer or Trail Steward: \n\n\n Park: \(park)", isHTML: false)
         
         return volunteerEmailView
     }

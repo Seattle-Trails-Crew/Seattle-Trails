@@ -13,12 +13,13 @@ struct IssueReport {
     var issueImage: UIImage?
     var issueLocation: CLLocation
     var parkName: String
-    let formFields = "Full Name:\n\n\n\nEmail Address:\n\n\n\nPhone Number:\n\n\n\nIssue Description:"
-    let sendTo = "ericmentele@gmail.com" // TODO: Get real email.
+    var pmaid: String
+    let formFields = "Full Name:\n\n\n\nEmail:\n\n\n\nPhone:\n\n\n\nIssue Description:"
+    let sendTo = "trails@seattle.gov"
     
     var subject: String
     {
-        return "Issue Report (\(parkName): \(issueLocation)"
+        return "Issue Report (\(parkName): \(issueLocation.description)"
     }
     
     var issueImageData: NSData?
@@ -28,6 +29,6 @@ struct IssueReport {
     
     var issueID: String
     {
-        return parkName + String(arc4random())
+        return pmaid + NSDate
     }
 }

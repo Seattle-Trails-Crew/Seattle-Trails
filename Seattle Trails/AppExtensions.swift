@@ -43,7 +43,7 @@ extension UIImagePickerController {
 		
 		
         // Present image picker options.
-        let actionSheet = UIAlertController(title: "Image Source", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let actionSheet = UIAlertController(title: "Share Image", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
 		
         let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
         { (action) in
