@@ -18,12 +18,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
     let imagePicker = UIImagePickerController()
-    
     var searchController: UISearchController!
     let mailerView = EmailComposer()
-	var forReport = false
     var tableView: PopoverViewController!
-    
+	
+	var forReport = false
     var loading = false
     
     var currentPark:String?
@@ -85,6 +84,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			
 			//clear all existing points and then remake them with the new filter settings
 			self.clearAnnotations()
+			self.clearOverlays()
 			self.annotateAllParks()
 		}
 		
@@ -177,16 +177,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		//you shouldn't be able to segue when you don't have any pins
 		return parks.count > 0
 	}
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-    {
-		if let smvc = segue.destinationViewController as? SocialMediaViewController
-		{
-            smvc.atPark = self.currentPark
-            smvc.parks = parks //attach a list of all parks, for use in the search
-        }
-    }
-    
+	
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
 		if (!forReport)
@@ -258,7 +249,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
      */
     func performActionWithSelectedPark(park: String)
     {
-        showPark(parkName: park)
+        showPark(parkName: park, withAnnotation: true)
         self.tableView.hidden = true
     }
     
@@ -414,13 +405,14 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func searchParks(parkName name: String)
     {
+		print("SEARCHING PARK")
         for park in parks {
             if (name.caseInsensitiveCompare(park.0) == .OrderedSame)
             {
                 defer
                 {
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.showPark(parkName: park.0)
+						self.showPark(parkName: park.0, withAnnotation: true)
                     })
                 }
                 return

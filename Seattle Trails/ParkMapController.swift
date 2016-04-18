@@ -123,6 +123,13 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	func clearAnnotations()
 	{
 		self.mapView.removeAnnotations(self.mapView.annotations)
+	}
+	
+	/**
+	Clears all map overlays
+	*/
+	func clearOverlays()
+	{
 		self.mapView.removeOverlays(self.mapView.overlays)
 		
 		for (_, park) in self.parks
@@ -133,6 +140,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 			}
 		}
 	}
+	
 	
 	// MARK: Map View Delegate Methods
 	func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
@@ -153,7 +161,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		{
 			return nil
 		}
+		
         // Can we remove this and define the annotation methods here? -David W
+		// That would require moving the image picker logic into the park map controller, which is not responsible for it
+		// if you can think of a nicer method to avoid that, go ahead -Theodore
 		self.annotationButtonClosure(view);
         
         // Button Takes User To Maps Directions
@@ -175,7 +186,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		
 		if let title = view.annotation!.title
 		{
-			showPark(parkName: title!)
+			showPark(parkName: title!, withAnnotation: false)
 		}
 	}
 	
@@ -218,12 +229,34 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	Given a park this will move the map view to it and draw all it's lines.
 	
 	- parameter name: The name of the trail to view and draw.
+	- parameter withAnnotation: Set to true if you want to activate the pin.
 	*/
-	func showPark(parkName name: String)
+	func showPark(parkName name: String, withAnnotation:Bool)
 	{
 		// Check that park name exists in list of parks and get the map view scale.
 		if let park = self.parks[name]
 		{
+			// hides the previous park's lines
+			self.clearOverlays()
+			
+			if withAnnotation
+			{
+				//turn that annotation on
+				for annotation in self.mapView.annotations
+				{
+					if let title = annotation.title!
+					{
+						if title == name
+						{
+							self.mapView.selectAnnotation(annotation, animated: true)
+							
+							//turning the annotation on will call showPark again, without withAnnotation, so just end here
+							return
+						}
+					}
+				}
+			}
+			
 			for trail in park.trails
 			{
 				if (!trail.isDrawn && (!shouldFilter || trail.official))
