@@ -323,13 +323,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         }
     }
 
-    func volunteeringButtonPressed()
-    {
-        let mailView = self.mailerView.volunteerForParks()
-        dispatch_async(dispatch_get_main_queue()) {
-            self.presentViewController(mailView, animated: true, completion: nil)
-        }
-    }
+    
     
     // MARK: Map Data Fetching Methods
     func tryToLoad()
@@ -397,19 +391,26 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         {
             let center = location.coordinate
             let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
-            mapView.setRegion(region, animated: true)
+            
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.mapView.setRegion(region, animated: true)
+            })
+            
         }
     }
     
     func toggleSatteliteView() {
-        if self.mapView.mapType == MKMapType.Satellite
-        {
-            self.mapView.mapType = MKMapType.Standard
-        }
-        else if mapView.mapType == MKMapType.Standard
-        {
-            self.mapView.mapType = MKMapType.Satellite
-        }
+        dispatch_async(dispatch_get_main_queue(), {
+            if self.mapView.mapType == MKMapType.Satellite
+            {
+                self.mapView.mapType = MKMapType.Standard
+            }
+            else if self.mapView.mapType == MKMapType.Standard
+            {
+                self.mapView.mapType = MKMapType.Satellite
+            }
+        })
+        
     }
     
     func searchParks(parkName name: String)

@@ -16,6 +16,7 @@ class ColoredLine: MKPolyline
 class ColoredAnnotation: MKPointAnnotation
 {
     var color: UIColor?
+    
 }
 class DrivingButton: UIButton
 {
@@ -73,7 +74,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		//set map view position
 		let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
 		let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
-		mapView.setRegion(region, animated: true)
+        
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.mapView.setRegion(region, animated: true)
+        }
 	}
 	
 	/**
@@ -179,6 +183,28 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
+        
+        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
+           self.volunteeringButtonPressed()
+        }
+        
+        let drive = UIAlertAction(title: "Drive To Park", style: .Default) {(action) in
+            self.drivingButtonPressed(control as! DrivingButton)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        actionsView.addAction(drive)
+        actionsView.addAction(volunteer)
+        actionsView.addAction(cancel)
+        
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(actionsView, animated: true, completion: nil)
+        }
+    }
+    
 	func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
 	{
 		//TODO: in the future, if we want to add any kind of behavior to the map as it moves
@@ -203,6 +229,14 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	}
 	
 	//MARK: helper methods
+    func volunteeringButtonPressed()
+    {
+        let mailer = EmailComposer()
+        let mailerView = mailer.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(mailerView, animated: true, completion: nil)
+        }
+    }
     
     func drivingButtonPressed(button: DrivingButton)
     {
