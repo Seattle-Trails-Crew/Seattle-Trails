@@ -21,6 +21,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     var searchController: UISearchController!
     let mailerView = EmailComposer()
+	var forReport = false
     var tableView: PopoverViewController!
     
     var loading = false
@@ -51,7 +52,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     override func viewDidLoad()
     {
         super.viewDidLoad()
-		self.setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
         self.setUpSearchBar()
         self.setupTableView()
@@ -64,7 +64,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
          // Check to see if user is in a park before reporting an issue.
         if reportAvailable
 		{
-			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
+			forReport = true
+            self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera, forIssue: true)
 		}
     }
 	
@@ -72,7 +73,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	{
 		let alert = UIAlertController(title: "Options", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
 		
-		let key = UIAlertAction(title: "Map Key", style: .Default)
+		let key = UIAlertAction(title: "Key", style: .Default)
 		{ (action) in
 			AlertViews.presentMapKeyAlert(sender: self)
 		}
@@ -102,7 +103,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
-		self.performSegueWithIdentifier("showSocial", sender: self)
+			self.forReport = false
+			self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
 	}
 	
     @IBAction func navButtonPressed(sender: UIButton)
@@ -186,6 +188,35 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
+		if (!forReport)
+		{
+			//try to share socially
+			if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+			{
+				let activityItems:[AnyObject] = [pickedImage as AnyObject, "#SeaTrails" as AnyObject]
+				let avc = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                avc.completionWithItemsHandler = { (_, completed, _, activityError) in self.isLoading(false)}
+				
+				//set the subject field of email
+				avc.setValue("My photo of \(self.currentPark ?? "a Seattle Park")", forKey: "subject")
+				
+				
+				dispatch_async(dispatch_get_main_queue())
+				{
+					self.dismissViewControllerAnimated(true, completion: {
+						dispatch_async(dispatch_get_main_queue())
+						{
+							self.presentViewController(avc, animated: true, completion: { 
+                                self.isLoading(true)
+                            })
+						}
+					})
+				}
+			}
+			return
+		}
+		
+		//try to send an issue report email
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail()
         {
                 dispatch_async(dispatch_get_main_queue())
@@ -277,39 +308,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
     
-    /**
-     Sets up the ParkMapController to add buttons to the pin callouts.
-     **/
-    func setupAnnotationButtonClosure()
-    {
-        //TODO: assign custom images to these buttons using setImage
-        
-        self.annotationButtonClosure = { (view) in
-            let driving = UIButton(type: UIButtonType.DetailDisclosure)
-            //			driving.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
-            driving.addTarget(self, action: #selector(self.drivingButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
-            view.rightCalloutAccessoryView = driving
-            
-            let volunteering = UIButton(type: UIButtonType.ContactAdd)
-            //			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
-            volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
-            view.leftCalloutAccessoryView = volunteering
-        }
-    }
-    
-    func drivingButtonPressed()
-    {
-        //TODO: show driving directions
-    }
-    
-    func volunteeringButtonPressed()
-    {
-        let mailView = self.mailerView.volunteerForParks()
-        dispatch_async(dispatch_get_main_queue()) {
-            self.presentViewController(mailView, animated: true, completion: nil)
-        }
-    }
-    
     // MARK: Map Data Fetching Methods
     func tryToLoad()
     {
@@ -376,19 +374,26 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         {
             let center = location.coordinate
             let region = MKCoordinateRegionMakeWithDistance(center, 1200, 1200)
-            mapView.setRegion(region, animated: true)
+            
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.mapView.setRegion(region, animated: true)
+            })
+            
         }
     }
     
     func toggleSatteliteView() {
-        if self.mapView.mapType == MKMapType.Satellite
-        {
-            self.mapView.mapType = MKMapType.Standard
-        }
-        else if mapView.mapType == MKMapType.Standard
-        {
-            self.mapView.mapType = MKMapType.Satellite
-        }
+        dispatch_async(dispatch_get_main_queue(), {
+            if self.mapView.mapType == MKMapType.Satellite
+            {
+                self.mapView.mapType = MKMapType.Standard
+            }
+            else if self.mapView.mapType == MKMapType.Standard
+            {
+                self.mapView.mapType = MKMapType.Satellite
+            }
+        })
+        
     }
     
     func searchParks(parkName name: String)

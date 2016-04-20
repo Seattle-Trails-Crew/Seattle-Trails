@@ -16,6 +16,11 @@ class ColoredLine: MKPolyline
 class ColoredAnnotation: MKPointAnnotation
 {
     var color: UIColor?
+    
+}
+class DrivingButton: UIButton
+{
+    var coordinate: CLLocationCoordinate2D?
 }
 
 /**
@@ -26,8 +31,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	@IBOutlet weak var mapView: MKMapView!
 	
 	var locationManager = CLLocationManager()
+    var mailController = EmailComposer()
 	var parks = [String:Park]()
-	var annotationButtonClosure:((MKPinAnnotationView)->())!
 	
 	//TODO: temporary filter stuff
 	var shouldFilter = false
@@ -55,7 +60,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		annotation.coordinate = point
 		annotation.title = text
         annotation.subtitle = surfaces.joinWithSeparator(", ")
-        annotation.color = gradientFromDifficulty(difficulty)
+        annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
 		mapView.addAnnotation(annotation)
 	}
 
@@ -69,7 +74,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		//set map view position
 		let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
 		let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
-		mapView.setRegion(region, animated: true)
+        
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.mapView.setRegion(region, animated: true)
+        }
 	}
 	
 	/**
@@ -149,13 +157,16 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		{
 			return nil
 		}
-		
-		self.annotationButtonClosure(view);
-		
+        
+        // Button Takes User To Maps Directions
+        let driving = DrivingButton(type: .DetailDisclosure)
+        driving.coordinate = annotation.coordinate
+        view.rightCalloutAccessoryView = driving
+        
 		view.canShowCallout = true
 		return view
 	}
-	
+    
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
 	{
 		if let _ = view.annotation as? MKUserLocation
@@ -169,6 +180,28 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
+        
+        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
+           self.volunteeringButtonPressed()
+        }
+        
+        let drive = UIAlertAction(title: "Drive To Park", style: .Default) {(action) in
+            self.drivingButtonPressed(control as! DrivingButton)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        actionsView.addAction(drive)
+        actionsView.addAction(volunteer)
+        actionsView.addAction(cancel)
+        
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(actionsView, animated: true, completion: nil)
+        }
+    }
+    
 	func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
 	{
 		//TODO: in the future, if we want to add any kind of behavior to the map as it moves
@@ -193,6 +226,24 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	}
 	
 	//MARK: helper methods
+    func volunteeringButtonPressed()
+    {
+        let mailer = self.mailController
+        let mailerView = mailer.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(mailerView, animated: true, completion: nil)
+        }
+    }
+    
+    func drivingButtonPressed(button: DrivingButton)
+    {
+        if let coords = button.coordinate {
+            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placemark)
+            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+            mapItem.openInMapsWithLaunchOptions(launchOptions)
+        }
+    }
 	
 	/**
 	Given a park this will move the map view to it and draw all it's lines.
@@ -230,7 +281,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Medium ->  Red: 1, Green: 1
         // Hard   ->  Red: 1, Green: 0
         if let difficulty = trail.gradePercent {
-            line.color = gradientFromDifficulty(difficulty)
+            line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
         }
         
 		// Example How To Alter Colors
@@ -243,10 +294,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 Returns Color From Green To Red Based On Difficulty
  - parameter difficulty: Int 0 - 10
  */
-func gradientFromDifficulty(difficulty: Int) -> UIColor
+func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 {
-    let red: CGFloat
-    let green: CGFloat
+    var red: CGFloat
+    var green: CGFloat
+    
     if difficulty < 6 {
         green = 0.9
         red = CGFloat(difficulty) / 5.0
@@ -257,5 +309,12 @@ func gradientFromDifficulty(difficulty: Int) -> UIColor
         green = (10 - CGFloat(difficulty)) / 5.0
         red = 0.9
     }
+    
+    if forAnnotation
+    {
+        red = (difficulty < 6) ? 0.0 : red
+        green = (difficulty > 6) ? 0.0 : green
+    }
+    
     return UIColor(red: red, green: green, blue: 0, alpha: 1)
 }

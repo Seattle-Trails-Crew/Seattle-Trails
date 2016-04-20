@@ -25,7 +25,7 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
      */
     func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage) -> MFMailComposeViewController
     {
-        let issue = IssueReport(issueImage: image, issueLocation: location, parkName: park.name)
+        let issue = IssueReport(issueImage: image, issueLocation: location, parkName: park.name, pmaid: park.trails.first!.pmaid ?? 0)
         
         let emailView = MFMailComposeViewController()
         emailView.mailComposeDelegate = self
@@ -41,9 +41,9 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
     {
         let volunteerEmailView = MFMailComposeViewController()
         volunteerEmailView.mailComposeDelegate = self
-        volunteerEmailView.setToRecipients(["parks@seattle.com"])
+        volunteerEmailView.setToRecipients(["trails@seattle.gov"])
         volunteerEmailView.setSubject("Volunteering For Seattle Parks")
-        volunteerEmailView.setMessageBody("Full Name: \n\n\n Contact Info:", isHTML: false)
+        volunteerEmailView.setMessageBody("Full Name:\nEmail:\nPhone:\nOne time volunteer or Trail Steward:\nPreferred Park:\n\n\n\n", isHTML: false)
         
         return volunteerEmailView
     }

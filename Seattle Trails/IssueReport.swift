@@ -13,12 +13,23 @@ struct IssueReport {
     var issueImage: UIImage?
     var issueLocation: CLLocation
     var parkName: String
-    let formFields = "Full Name:\n\n\n\nEmail Address:\n\n\n\nPhone Number:\n\n\n\nIssue Description:"
-    let sendTo = "ericmentele@gmail.com" // TODO: Get real email.
+    var pmaid: Int
+    let formFields = "Full Name:\nEmail:\nPhone:\nIssue Description:\n\n\n\n"
+    let sendTo = "trails@seattle.gov"
+    
+    var issueID: String
+    {
+        let date = NSDate()
+        let format = NSDateFormatter()
+        format.dateStyle = .ShortStyle
+        format.timeStyle = .FullStyle
+        let current = format.stringFromDate(date)
+        return "\(pmaid)" + current
+    }
     
     var subject: String
     {
-        return "Issue Report (\(parkName): \(issueLocation)"
+        return "Issue Report (\(parkName): \(issueLocation.coordinate) \(issueLocation.timestamp) \(pmaid)"
     }
     
     var issueImageData: NSData?
@@ -26,8 +37,5 @@ struct IssueReport {
         return UIImageJPEGRepresentation(issueImage!, 0.7)
     }
     
-    var issueID: String
-    {
-        return parkName + String(arc4random())
-    }
+    
 }
