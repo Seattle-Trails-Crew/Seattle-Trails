@@ -31,7 +31,7 @@ struct IssueReport {
 	
 	var subject: String
 	{
-		return "Issue Report #\(issueID) for \(parkName) (\(issueLocation))"
+		return "Issue Report \(issueID) for \(parkName) (\(issueLocation.coordinate.latitude), \(issueLocation.coordinate.longitude))"
 	}
 	
 	var issueImageData: NSData?
