@@ -65,7 +65,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         if reportAvailable
 		{
 			forReport = true
-			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera)
+            self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera, forIssue: true)
 		}
     }
 	
@@ -73,7 +73,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	{
 		let alert = UIAlertController(title: "Options", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
 		
-		let key = UIAlertAction(title: "Map Key", style: .Default)
+		let key = UIAlertAction(title: "Key", style: .Default)
 		{ (action) in
 			AlertViews.presentMapKeyAlert(sender: self)
 		}

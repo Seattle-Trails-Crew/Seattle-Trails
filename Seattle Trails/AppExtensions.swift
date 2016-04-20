@@ -23,7 +23,7 @@ extension UIImagePickerController {
         }
         else
         {
-            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary)
+            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, forIssue: false)
         }
     }
     
@@ -37,7 +37,7 @@ extension UIImagePickerController {
 		//if they don't have a camera, just present the photo library without asking the user
 		if (!UIImagePickerController.isSourceTypeAvailable(.Camera))
 		{
-			self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .PhotoLibrary)
+            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .PhotoLibrary, forIssue: false)
 			return;
 		}
 		
@@ -49,7 +49,8 @@ extension UIImagePickerController {
         { (action) in
             dispatch_async(dispatch_get_main_queue())
             {
-                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.Camera)
+                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.Camera, forIssue: false)
+
             }
         }
         
@@ -57,7 +58,7 @@ extension UIImagePickerController {
         { (action) in
             dispatch_async(dispatch_get_main_queue())
             {
-                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary)
+                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, forIssue: false)
             }
         }
         
@@ -73,13 +74,17 @@ extension UIImagePickerController {
         }
     }
     
-    func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType)
+    func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType, forIssue: Bool)
     {
         sender.imagePicker.sourceType = sourceType
         
         dispatch_async(dispatch_get_main_queue())
         {
             sender.presentViewController(sender.imagePicker, animated: true, completion: nil)
+            if forIssue
+            {
+                AlertViews.presentReportAlert(sender: self)
+            }
         }
     }
 }
