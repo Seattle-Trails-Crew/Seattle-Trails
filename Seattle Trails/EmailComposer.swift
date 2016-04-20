@@ -11,7 +11,7 @@ import MessageUI
 import CoreLocation
 
 class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
-    func canSendMail() -> Bool
+	var canSendMail: Bool
     {
         return MFMailComposeViewController.canSendMail()
     }

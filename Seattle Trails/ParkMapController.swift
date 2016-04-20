@@ -169,7 +169,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Button Takes User To Maps Directions
         let driving = DrivingButton(type: .DetailDisclosure)
         driving.coordinate = annotation.coordinate
-        view.rightCalloutAccessoryView = driving
+        view.leftCalloutAccessoryView = driving
         
 		view.canShowCallout = true
 		return view
@@ -196,7 +196,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
            self.volunteeringButtonPressed()
         }
         
-        let drive = UIAlertAction(title: "Drive To Park", style: .Default) {(action) in
+        let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
             self.drivingButtonPressed(control as! DrivingButton)
         }
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
