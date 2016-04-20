@@ -18,7 +18,6 @@ class PopoverViewController: UITableView, UISearchControllerDelegate, UISearchRe
         visibleParks.removeAll()
         for park in parksDataSource!.parks.keys {
             if params == "" || park.lowercaseString.rangeOfString(params.lowercaseString) != nil {
-                print(park)
                 visibleParks.append(park)
             }
         }
