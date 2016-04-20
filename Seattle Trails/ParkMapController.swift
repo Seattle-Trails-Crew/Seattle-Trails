@@ -31,8 +31,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	@IBOutlet weak var mapView: MKMapView!
 	
 	var locationManager = CLLocationManager()
+    var mailController = EmailComposer()
 	var parks = [String:Park]()
-	var annotationButtonClosure:((MKPinAnnotationView)->())!
 	
 	//TODO: temporary filter stuff
 	var shouldFilter = false
@@ -157,13 +157,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		{
 			return nil
 		}
-        // Can we remove this and define the annotation methods here? -David W
-		self.annotationButtonClosure(view);
         
         // Button Takes User To Maps Directions
         let driving = DrivingButton(type: .DetailDisclosure)
         driving.coordinate = annotation.coordinate
-        driving.addTarget(self, action: #selector(self.drivingButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         view.rightCalloutAccessoryView = driving
         
 		view.canShowCallout = true
@@ -231,7 +228,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	//MARK: helper methods
     func volunteeringButtonPressed()
     {
-        let mailer = EmailComposer()
+        let mailer = self.mailController
         let mailerView = mailer.volunteerForParks()
         dispatch_async(dispatch_get_main_queue()) {
             self.presentViewController(mailerView, animated: true, completion: nil)

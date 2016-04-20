@@ -52,7 +52,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     override func viewDidLoad()
     {
         super.viewDidLoad()
-		self.setupAnnotationButtonClosure()
         self.fetchAndRenderTrails()
         self.setUpSearchBar()
         self.setupTableView()
@@ -308,22 +307,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
         self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
-    
-    /**
-     Sets up the ParkMapController to add buttons to the pin callouts.
-     **/
-    func setupAnnotationButtonClosure()
-    {
-        //TODO: assign custom images to these buttons using setImage
-        self.annotationButtonClosure = { (view) in
-            let volunteering = UIButton(type: UIButtonType.ContactAdd)
-            //			volunteering.setImage(<#T##image: UIImage?##UIImage?#>, forState: .Normal)
-            volunteering.addTarget(self, action: #selector(self.volunteeringButtonPressed), forControlEvents: UIControlEvents.TouchUpInside)
-            view.leftCalloutAccessoryView = volunteering
-        }
-    }
-
-    
     
     // MARK: Map Data Fetching Methods
     func tryToLoad()
