@@ -26,13 +26,12 @@ struct IssueReport {
 		let date = NSDate()
 		let format = NSDateFormatter()
 		format.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-		let current = format.stringFromDate(date)
-		return "\(pmaid)-" + current
+		return "\(pmaid)-\(format.stringFromDate(date))"
 	}
 	
 	var subject: String
 	{
-		return "Issue Report (\(parkName): \(issueLocation.coordinate) \(issueLocation.timestamp) \(pmaid)"
+		return "Issue Report #\(issueID) for \(parkName) (\(issueLocation))"
 	}
 	
 	var issueImageData: NSData?
