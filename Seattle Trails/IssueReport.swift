@@ -10,32 +10,34 @@ import Foundation
 import MapKit
 
 struct IssueReport {
-    var issueImage: UIImage?
-    var issueLocation: CLLocation
-    var parkName: String
-    var pmaid: Int
-    let formFields = "Full Name:\nEmail:\nPhone:\nIssue Description:\n\n\n\n"
-    let sendTo = "trails@seattle.gov"
-    
-    var issueID: String
-    {
-        let date = NSDate()
-        let format = NSDateFormatter()
-        format.dateStyle = .ShortStyle
-        format.timeStyle = .FullStyle
-        let current = format.stringFromDate(date)
-        return "\(pmaid)" + current
-    }
-    
-    var subject: String
-    {
-        return "Issue Report (\(parkName): \(issueLocation.coordinate) \(issueLocation.timestamp) \(pmaid)"
-    }
-    
-    var issueImageData: NSData?
-    {
-        return UIImageJPEGRepresentation(issueImage!, 0.7)
-    }
-    
-    
+	var issueImage: UIImage?
+	var issueLocation: CLLocation
+	var parkName: String
+	var pmaid: Int
+	let sendTo = "trails@seattle.gov"
+	
+	var formFields: String
+	{
+		return "Full Name:\nEmail:\nPhone:\nIssue Description:\n\n\n\nYour issue number is: \(issueID)"
+	}
+	
+	var issueID: String
+	{
+		let date = NSDate()
+		let format = NSDateFormatter()
+		format.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+		return "\(pmaid)-\(format.stringFromDate(date))"
+	}
+	
+	var subject: String
+	{
+		return "Issue Report \(issueID) for \(parkName) (\(issueLocation.coordinate.latitude), \(issueLocation.coordinate.longitude))"
+	}
+	
+	var issueImageData: NSData?
+	{
+		return UIImageJPEGRepresentation(issueImage!, 0.7)
+	}
+	
+	
 }

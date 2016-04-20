@@ -208,7 +208,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		}
 		
 		//try to send an issue report email
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail()
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail
         {
                 dispatch_async(dispatch_get_main_queue())
                 {
