@@ -287,25 +287,21 @@ Returns Color From Green To Red Based On Difficulty
  */
 func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 {
-    var red: CGFloat
-    var green: CGFloat
-    
-    if difficulty < 6 {
-        green = 0.9
-        red = CGFloat(difficulty) / 5.0
-    } else if difficulty == 6 {
-        green = 0.9
-        red = 0.9
-    } else {
-        green = (10 - CGFloat(difficulty)) / 5.0
-        red = 0.9
-    }
-    
-    if forAnnotation
-    {
-        red = (difficulty < 6) ? 0.0 : red
-        green = (difficulty > 6) ? 0.0 : green
-    }
-    
-    return UIColor(red: red, green: green, blue: 0, alpha: 1)
+	//when making a pin, set the difficulty to 0, 5, or 10, depending on what is the closest
+	//this way the park pins will be one of three standard colors (green for easy, yellow for medium, red for hard)
+	var difficulty = difficulty
+	if forAnnotation
+	{
+		if (difficulty > 5)
+		{
+			difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 5 : 10;
+		}
+		else
+		{
+			difficulty = abs(difficulty - 5) < difficulty ? 5 : 0;
+		}
+	}
+	
+	let green:CGFloat = 1.0 / 3.0;
+	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 1, brightness: 0.9, alpha: 1)
 }
