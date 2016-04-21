@@ -56,7 +56,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.setupTableView()
         self.imagePicker.delegate = self
 		
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidShowNotification, object: nil);
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidShowNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidChangeFrameNotification, object: nil)
     }
 	
 	    // MARK: User Interaction
@@ -317,6 +318,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     // MARK: Helper Methods
 	
+	override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+		self.tableView.reloadData()
+	}
+	
 	func keyboardWasShown(note:NSNotification)
 	{
 		let info = note.userInfo as! [NSString : AnyObject]
@@ -371,6 +376,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.hidden = true
+		self.tableView.autoresizingMask = UIViewAutoresizing.FlexibleWidth.union(UIViewAutoresizing.FlexibleHeight)
 		
         let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
         self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
