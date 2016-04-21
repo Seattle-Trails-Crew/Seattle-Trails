@@ -27,9 +27,20 @@
                                     <constraint firstAttribute="height" constant="70" id="HgO-pa-Dk8"/>
                                     <constraint firstAttribute="width" constant="70" id="oo9-AP-Tr4"/>
                                 </constraints>
-                                <state key="normal" title="OPTIONS"/>
+                                <state key="normal" title="OPTIONS" image="OptionsButton"/>
                                 <connections>
                                     <action selector="optionsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="geH-xN-tgG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOI-Cr-lSo" userLabel="CITYCENTER">
+                                <rect key="frame" x="265" y="522" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="RUp-3X-7RD"/>
+                                    <constraint firstAttribute="width" constant="70" id="bh8-mn-Gg7"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="CityButton"/>
+                                <connections>
+                                    <action selector="cityCenterPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4jC-Vu-p1s"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k05-zL-xuw">
@@ -67,10 +78,13 @@
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="kAw-3e-Bnj"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="nax-ZQ-GWA"/>
+                            <constraint firstItem="hOI-Cr-lSo" firstAttribute="centerY" secondItem="Pzl-Ua-dG0" secondAttribute="centerY" id="p9O-xn-KNT"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQf-7e-mHH"/>
+                            <constraint firstItem="k05-zL-xuw" firstAttribute="centerY" secondItem="Pzl-Ua-dG0" secondAttribute="centerY" id="rHs-2I-Ehl"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="raf-MW-sYC"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="swf-YN-w8J"/>
                             <constraint firstAttribute="trailingMargin" secondItem="k05-zL-xuw" secondAttribute="trailing" id="v9Q-Id-Eua"/>
+                            <constraint firstItem="hOI-Cr-lSo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wgn-d7-gCB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="ynY-DQ-kuc"/>
                         </constraints>
                         <variation key="default">
@@ -108,50 +122,6 @@
             </objects>
             <point key="canvasLocation" x="743" y="449"/>
         </scene>
-        <!--Popover View Controller-->
-        <scene sceneID="59Z-tb-Qck">
-            <objects>
-                <tableViewController id="nvt-Nz-6t0" customClass="PopoverViewController" customModule="Seattle_Trails" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="68" sectionHeaderHeight="28" sectionFooterHeight="28" id="lSU-JT-Br5">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ParkCell" rowHeight="68" id="4At-qt-XdV" customClass="ParkCell" customModule="Seattle_Trails" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="600" height="68"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4At-qt-XdV" id="3BQ-IK-Sir">
-                                    <rect key="frame" x="0.0" y="0.0" width="567" height="67"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discovery Park" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JGY-Ms-ytE">
-                                            <rect key="frame" x="8" y="23" width="119" height="22"/>
-                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="18"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="JGY-Ms-ytE" firstAttribute="centerY" secondItem="3BQ-IK-Sir" secondAttribute="centerY" id="NBR-P6-FHZ"/>
-                                        <constraint firstAttribute="leadingMargin" secondItem="JGY-Ms-ytE" secondAttribute="leading" id="huJ-vz-6WX"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="parkNameLabel" destination="JGY-Ms-ytE" id="qMx-Zt-6qK"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="nvt-Nz-6t0" id="vqU-V3-BMa"/>
-                            <outlet property="delegate" destination="nvt-Nz-6t0" id="gm0-5l-Gc4"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9Ps-wn-nzb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1444" y="449"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="pPI-pF-Thi">
             <objects>
@@ -172,6 +142,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="CityButton" width="400" height="400"/>
+        <image name="OptionsButton" width="400" height="400"/>
         <image name="UserLocation" width="400" height="400"/>
     </resources>
 </document>

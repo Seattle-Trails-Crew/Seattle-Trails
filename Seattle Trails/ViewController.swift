@@ -106,9 +106,26 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			self.forReport = false
 			self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
 	}
+    @IBAction func cityCenterPressed(sender: UIButton) {
+		//clear anything you have open
+		self.clearOverlays()
+		for annotation in mapView.selectedAnnotations
+		{
+			mapView.deselectAnnotation(annotation, animated: true)
+		}
+		
+        self.setMapViewPosition()
+    }
 	
     @IBAction func navButtonPressed(sender: UIButton)
     {
+		//clear anything you have open
+		self.clearOverlays()
+		for annotation in mapView.selectedAnnotations
+		{
+			mapView.deselectAnnotation(annotation, animated: true)
+		}
+		
         self.moveMapToUserLocation()
     }
 	
