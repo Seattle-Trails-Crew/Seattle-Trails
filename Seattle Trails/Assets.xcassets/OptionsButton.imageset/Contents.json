@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "SatteliteButton.png",
+      "filename" : "OptionsButton.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "SatteliteButton@2x.png",
+      "filename" : "OptionsButton@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "SatteliteButton@3x.png",
+      "filename" : "OptionsButton@3x.png",
       "scale" : "3x"
     }
   ],
