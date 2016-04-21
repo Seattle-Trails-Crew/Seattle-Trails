@@ -27,9 +27,20 @@
                                     <constraint firstAttribute="height" constant="70" id="HgO-pa-Dk8"/>
                                     <constraint firstAttribute="width" constant="70" id="oo9-AP-Tr4"/>
                                 </constraints>
-                                <state key="normal" title="OPTIONS"/>
+                                <state key="normal" title="OPTIONS" image="OptionsButton"/>
                                 <connections>
                                     <action selector="optionsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="geH-xN-tgG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOI-Cr-lSo" userLabel="CITYCENTER">
+                                <rect key="frame" x="265" y="522" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="RUp-3X-7RD"/>
+                                    <constraint firstAttribute="width" constant="70" id="bh8-mn-Gg7"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="CityButton"/>
+                                <connections>
+                                    <action selector="cityCenterPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4jC-Vu-p1s"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k05-zL-xuw">
@@ -67,10 +78,13 @@
                             <constraint firstItem="oKD-qu-38m" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="kAw-3e-Bnj"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="lWA-tu-q5B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1lW-RW-yjI" secondAttribute="trailing" constant="-20" id="nax-ZQ-GWA"/>
+                            <constraint firstItem="hOI-Cr-lSo" firstAttribute="centerY" secondItem="Pzl-Ua-dG0" secondAttribute="centerY" id="p9O-xn-KNT"/>
                             <constraint firstItem="G4b-d4-bZO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQf-7e-mHH"/>
+                            <constraint firstItem="k05-zL-xuw" firstAttribute="centerY" secondItem="Pzl-Ua-dG0" secondAttribute="centerY" id="rHs-2I-Ehl"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1lW-RW-yjI" secondAttribute="bottom" id="raf-MW-sYC"/>
                             <constraint firstItem="1lW-RW-yjI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="swf-YN-w8J"/>
                             <constraint firstAttribute="trailingMargin" secondItem="k05-zL-xuw" secondAttribute="trailing" id="v9Q-Id-Eua"/>
+                            <constraint firstItem="hOI-Cr-lSo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wgn-d7-gCB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="oKD-qu-38m" secondAttribute="trailing" constant="-20" id="ynY-DQ-kuc"/>
                         </constraints>
                         <variation key="default">
@@ -128,6 +142,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="CityButton" width="400" height="400"/>
+        <image name="OptionsButton" width="400" height="400"/>
         <image name="UserLocation" width="400" height="400"/>
     </resources>
 </document>
