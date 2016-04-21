@@ -107,6 +107,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
 	}
     @IBAction func cityCenterPressed(sender: UIButton) {
+        self.setMapViewPosition()
     }
 	
     @IBAction func navButtonPressed(sender: UIButton)
