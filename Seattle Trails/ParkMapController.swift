@@ -31,7 +31,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	@IBOutlet weak var mapView: MKMapView!
 	
 	var locationManager = CLLocationManager()
-    var mailController = EmailComposer()
 	var parks = [String:Park]()
 	
 	//TODO: temporary filter stuff
@@ -169,7 +168,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Button Takes User To Maps Directions
         let driving = DrivingButton(type: .DetailDisclosure)
         driving.coordinate = annotation.coordinate
-        view.leftCalloutAccessoryView = driving
+        view.rightCalloutAccessoryView = driving
         
 		view.canShowCallout = true
 		return view
@@ -188,27 +187,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        
-        let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
-        
-        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
-           self.volunteeringButtonPressed()
-        }
-        
-        let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
-            self.drivingButtonPressed(control as! DrivingButton)
-        }
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        actionsView.addAction(drive)
-        actionsView.addAction(volunteer)
-        actionsView.addAction(cancel)
-        
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.presentViewController(actionsView, animated: true, completion: nil)
-        }
-    }
+    
     
 	func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
 	{
@@ -234,24 +213,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	}
 	
 	//MARK: helper methods
-    func volunteeringButtonPressed()
-    {
-        let mailer = self.mailController
-        let mailerView = mailer.volunteerForParks()
-        dispatch_async(dispatch_get_main_queue()) {
-            self.presentViewController(mailerView, animated: true, completion: nil)
-        }
-    }
-    
-    func drivingButtonPressed(button: DrivingButton)
-    {
-        if let coords = button.coordinate {
-            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
-            let mapItem = MKMapItem(placemark: placemark)
-            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-            mapItem.openInMapsWithLaunchOptions(launchOptions)
-        }
-    }
 	
 	/**
 	Given a park this will move the map view to it and draw all it's lines.
