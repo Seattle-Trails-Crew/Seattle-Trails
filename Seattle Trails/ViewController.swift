@@ -55,6 +55,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.setUpSearchBar()
         self.setupTableView()
         self.imagePicker.delegate = self
+		
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidShowNotification, object: nil);
     }
 	
 	    // MARK: User Interaction
@@ -103,8 +105,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
-			self.forReport = false
-			self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
+		self.forReport = false
+		self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
 	}
     @IBAction func cityCenterPressed(sender: UIButton) {
 		//clear anything you have open
@@ -315,6 +317,18 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     // MARK: Helper Methods
 	
+	func keyboardWasShown(note:NSNotification)
+	{
+		let info = note.userInfo as! [NSString : AnyObject]
+		let sizeValue = info[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+		let footerHeight = sizeValue.CGRectValue().size.height
+		
+		let insets = UIEdgeInsetsMake(0, 0, footerHeight, 0)
+		self.tableView.contentInset = insets
+		self.tableView.scrollIndicatorInsets = insets
+		
+	}
+	
 	func volunteeringButtonPressed()
 	{
 		let mailer = self.mailerView
@@ -350,13 +364,14 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func setupTableView()
     {
         self.tableView = PopoverViewController(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+		self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.view.addSubview(self.tableView)
         self.tableView.parksDataSource = self
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.hidden = true
+		
         let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
         self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
