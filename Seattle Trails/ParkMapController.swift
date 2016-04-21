@@ -204,11 +204,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         if let coloredLine = overlay as? ColoredLine {
             if let color = coloredLine.color {
                 polyLineRenderer.strokeColor = color
+				
+				polyLineRenderer.lineWidth = color == UIColor.blackColor() ? 4 : 2
             }
         }
-        polyLineRenderer.fillColor = UIColor.blueColor()
-		
-		polyLineRenderer.lineWidth = 2
 		return polyLineRenderer
 	}
 	
@@ -267,16 +266,18 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	{
 		// Plot All Trail Lines
 		let line = ColoredLine(coordinates: &trail.points, count: trail.points.count)
+		let lineBorder = ColoredLine(coordinates: &trail.points, count: trail.points.count)
         
         // Easy   ->  Red: 0, Green: 1
         // Medium ->  Red: 1, Green: 1
         // Hard   ->  Red: 1, Green: 0
-        if let difficulty = trail.gradePercent {
-            line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
-        }
-        
-		// Example How To Alter Colors
+		if let difficulty = trail.gradePercent {
+			line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
+			lineBorder.color = UIColor.blackColor()
+		}
+		
 		trail.isDrawn = true
+		mapView.addOverlay(lineBorder)
 		mapView.addOverlay(line)
 	}
 }
@@ -303,5 +304,5 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 	}
 	
 	let green:CGFloat = 1.0 / 3.0;
-	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 1, brightness: 0.9, alpha: 1)
+	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 1, alpha: 1)
 }
