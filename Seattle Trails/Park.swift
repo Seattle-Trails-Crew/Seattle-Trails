@@ -73,22 +73,4 @@ class Park
 		}
 		return false
 	}
-	
-	var easyPark:Bool
-	{
-		var easy = 0
-		var hard = 0
-		for trail in trails
-		{
-			if trail.easyTrail
-			{
-				easy += 1
-			}
-			else
-			{
-				hard += 1
-			}
-		}
-		return easy > hard
-	}
 }

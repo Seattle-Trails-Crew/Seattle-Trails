@@ -16,70 +16,32 @@ class Trail
 	var name:String = ""
 	var canopy:String?
 	var condition:String?
-    var gradePercent:Int?
+	var gradePercent:Int?
 	var gradeType:String?
 	var surfaceType:String?
 	var length:Float = 0
 	var trailNum:Int = 0
 	var pmaid:Int = 0
-	var isDrawn:Bool = false
 	var official:Bool = false
 	
 	//MARK: utility functions
 	
-		/// Calculated individual trail center.
+	/// Calculated individual trail center.
 	var center:CLLocationCoordinate2D
-    {
-			//this calculates the center of the trail, by volume of points
-			//so it's kind of an approximation
-			
-			var c = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        
-			for point in points
-			{
-				c.latitude += point.latitude
-				c.longitude += point.longitude
-			}
-        
-			c.latitude /= Double(points.count)
-			c.longitude /= Double(points.count)
-			return c
-	}
-	
-    	/// This roughly rates the trail for accessability
-	var easyTrail:Bool
-    {
-			//IE muddy trails, or trails with high inclines, or whatever, return false
-			
-			if let surfaceType = surfaceType
-			{
-				switch(surfaceType.lowercaseString)
-				{
-				case "boardwalk": fallthrough;
-				case "bridge": fallthrough;
-				case "concrete": fallthrough;
-				case "gravel": fallthrough;
-				case "asphalt": break;
-				default: return false;
-				}
-			}
-			else
-			{
-				return false
-			}
-			
-			if let gradeType = gradeType
-			{
-				if gradeType.lowercaseString != "flat"
-				{
-					return false
-				}
-			}
-			else
-			{
-				return false
-			}
-			
-			return true
+	{
+		//this calculates the center of the trail, by volume of points
+		//so it's kind of an approximation
+		
+		var c = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+		
+		for point in points
+		{
+			c.latitude += point.latitude
+			c.longitude += point.longitude
+		}
+		
+		c.latitude /= Double(points.count)
+		c.longitude /= Double(points.count)
+		return c
 	}
 }

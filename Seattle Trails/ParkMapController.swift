@@ -12,6 +12,7 @@ import MapKit
 class ColoredLine: MKPolyline
 {
     var color: UIColor?
+	var width: CGFloat?
 }
 class ColoredAnnotation: MKPointAnnotation
 {
@@ -134,14 +135,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	func clearOverlays()
 	{
 		self.mapView.removeOverlays(self.mapView.overlays)
-		
-		for (_, park) in self.parks
-		{
-			for trail in park.trails
-			{
-				trail.isDrawn = false
-			}
-		}
 	}
 	
 	
@@ -202,10 +195,9 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
 		
         if let coloredLine = overlay as? ColoredLine {
-            if let color = coloredLine.color {
+            if let color = coloredLine.color, width = coloredLine.width {
                 polyLineRenderer.strokeColor = color
-				
-				polyLineRenderer.lineWidth = color == UIColor.blackColor() ? 4 : 2
+				polyLineRenderer.lineWidth = width
             }
         }
 		return polyLineRenderer
@@ -247,9 +239,16 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 			
 			for trail in park.trails
 			{
-				if (!trail.isDrawn && (!shouldFilter || trail.official))
+				if (!shouldFilter || trail.official)
 				{ //TODO: remove the filter/official stuff once we remove filter
-					plotTrailLine(trail)
+					plotTrailLine(trail, border: true)
+				}
+			}
+			for trail in park.trails
+			{
+				if (!shouldFilter || trail.official)
+				{ //TODO: remove the filter/official stuff once we remove filter
+					plotTrailLine(trail, border: false)
 				}
 			}
 			
@@ -262,24 +261,58 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	
 	- parameter trail: The Trail object to draw.
 	*/
-	func plotTrailLine(trail: Trail)
+	func plotTrailLine(trail: Trail, border:Bool)
 	{
 		// Plot All Trail Lines
 		let line = ColoredLine(coordinates: &trail.points, count: trail.points.count)
-		let lineBorder = ColoredLine(coordinates: &trail.points, count: trail.points.count)
         
         // Easy   ->  Red: 0, Green: 1
         // Medium ->  Red: 1, Green: 1
         // Hard   ->  Red: 1, Green: 0
-		if let difficulty = trail.gradePercent {
+		if (border)
+		{
+			line.color = colorFromSurfaces(trail.surfaceType)
+			line.width = 4
+		}
+		else if let difficulty = trail.gradePercent {
 			line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
-			lineBorder.color = UIColor.blackColor()
+			line.width = 2
 		}
 		
-		trail.isDrawn = true
-		mapView.addOverlay(lineBorder)
 		mapView.addOverlay(line)
 	}
+}
+
+/**
+Returns color from surface hardness
+ - parameter surfaceType: a string containing the name of the surface type
+*/
+func colorFromSurfaces(surfaceType:String?) -> UIColor
+{
+	if let surfaceType = surfaceType
+	{
+		switch(surfaceType.lowercaseString)
+		{
+		//black is "bad" surfaces
+		case "grass": fallthrough
+		case "soil": fallthrough
+		case "bark": fallthrough
+		case "stairs": fallthrough
+		case "check steps": return UIColor.blackColor()
+			
+		//gray is "good" surfaces
+		case "boardwalk": fallthrough
+		case "asphalt": fallthrough
+		case "gravel": fallthrough
+		case "bridge": fallthrough
+		case "concrete": return UIColor.grayColor()
+			
+		default: break
+		}
+	}
+	
+	//if the surfacetype is unknown, or it doesn't have one
+	return UIColor.blackColor()
 }
 
 /**
