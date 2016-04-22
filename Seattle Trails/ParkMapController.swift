@@ -12,6 +12,7 @@ import MapKit
 class ColoredLine: MKPolyline
 {
     var color: UIColor?
+	var width: CGFloat?
 }
 class ColoredAnnotation: MKPointAnnotation
 {
@@ -31,7 +32,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	@IBOutlet weak var mapView: MKMapView!
 	
 	var locationManager = CLLocationManager()
-    var mailController = EmailComposer()
 	var parks = [String:Park]()
 	
 	//TODO: temporary filter stuff
@@ -135,14 +135,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	func clearOverlays()
 	{
 		self.mapView.removeOverlays(self.mapView.overlays)
-		
-		for (_, park) in self.parks
-		{
-			for trail in park.trails
-			{
-				trail.isDrawn = false
-			}
-		}
 	}
 	
 	
@@ -169,7 +161,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Button Takes User To Maps Directions
         let driving = DrivingButton(type: .DetailDisclosure)
         driving.coordinate = annotation.coordinate
-        view.leftCalloutAccessoryView = driving
+        view.rightCalloutAccessoryView = driving
         
 		view.canShowCallout = true
 		return view
@@ -188,27 +180,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        
-        let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
-        
-        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
-           self.volunteeringButtonPressed()
-        }
-        
-        let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
-            self.drivingButtonPressed(control as! DrivingButton)
-        }
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        
-        actionsView.addAction(drive)
-        actionsView.addAction(volunteer)
-        actionsView.addAction(cancel)
-        
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.presentViewController(actionsView, animated: true, completion: nil)
-        }
-    }
+    
     
 	func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
 	{
@@ -223,35 +195,15 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
 		
         if let coloredLine = overlay as? ColoredLine {
-            if let color = coloredLine.color {
+            if let color = coloredLine.color, width = coloredLine.width {
                 polyLineRenderer.strokeColor = color
+				polyLineRenderer.lineWidth = width
             }
         }
-        polyLineRenderer.fillColor = UIColor.blueColor()
-		
-		polyLineRenderer.lineWidth = 2
 		return polyLineRenderer
 	}
 	
 	//MARK: helper methods
-    func volunteeringButtonPressed()
-    {
-        let mailer = self.mailController
-        let mailerView = mailer.volunteerForParks()
-        dispatch_async(dispatch_get_main_queue()) {
-            self.presentViewController(mailerView, animated: true, completion: nil)
-        }
-    }
-    
-    func drivingButtonPressed(button: DrivingButton)
-    {
-        if let coords = button.coordinate {
-            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
-            let mapItem = MKMapItem(placemark: placemark)
-            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-            mapItem.openInMapsWithLaunchOptions(launchOptions)
-        }
-    }
 	
 	/**
 	Given a park this will move the map view to it and draw all it's lines.
@@ -287,9 +239,16 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 			
 			for trail in park.trails
 			{
-				if (!trail.isDrawn && (!shouldFilter || trail.official))
+				if (!shouldFilter || trail.official)
 				{ //TODO: remove the filter/official stuff once we remove filter
-					plotTrailLine(trail)
+					plotTrailLine(trail, border: true)
+				}
+			}
+			for trail in park.trails
+			{
+				if (!shouldFilter || trail.official)
+				{ //TODO: remove the filter/official stuff once we remove filter
+					plotTrailLine(trail, border: false)
 				}
 			}
 			
@@ -302,7 +261,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	
 	- parameter trail: The Trail object to draw.
 	*/
-	func plotTrailLine(trail: Trail)
+	func plotTrailLine(trail: Trail, border:Bool)
 	{
 		// Plot All Trail Lines
 		let line = ColoredLine(coordinates: &trail.points, count: trail.points.count)
@@ -310,14 +269,50 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // Easy   ->  Red: 0, Green: 1
         // Medium ->  Red: 1, Green: 1
         // Hard   ->  Red: 1, Green: 0
-        if let difficulty = trail.gradePercent {
-            line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
-        }
-        
-		// Example How To Alter Colors
-		trail.isDrawn = true
+		if (border)
+		{
+			line.color = colorFromSurfaces(trail.surfaceType)
+			line.width = 4
+		}
+		else if let difficulty = trail.gradePercent {
+			line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
+			line.width = 2
+		}
+		
 		mapView.addOverlay(line)
 	}
+}
+
+/**
+Returns color from surface hardness
+ - parameter surfaceType: a string containing the name of the surface type
+*/
+func colorFromSurfaces(surfaceType:String?) -> UIColor
+{
+	if let surfaceType = surfaceType
+	{
+		switch(surfaceType.lowercaseString)
+		{
+		//black is "bad" surfaces
+		case "grass": fallthrough
+		case "soil": fallthrough
+		case "bark": fallthrough
+		case "stairs": fallthrough
+		case "check steps": return UIColor.blackColor()
+			
+		//gray is "good" surfaces
+		case "boardwalk": fallthrough
+		case "asphalt": fallthrough
+		case "gravel": fallthrough
+		case "bridge": fallthrough
+		case "concrete": return UIColor.grayColor()
+			
+		default: break
+		}
+	}
+	
+	//if the surfacetype is unknown, or it doesn't have one
+	return UIColor.blackColor()
 }
 
 /**
@@ -326,25 +321,21 @@ Returns Color From Green To Red Based On Difficulty
  */
 func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 {
-    var red: CGFloat
-    var green: CGFloat
-    
-    if difficulty < 6 {
-        green = 0.9
-        red = CGFloat(difficulty) / 5.0
-    } else if difficulty == 6 {
-        green = 0.9
-        red = 0.9
-    } else {
-        green = (10 - CGFloat(difficulty)) / 5.0
-        red = 0.9
-    }
-    
-    if forAnnotation
-    {
-        red = (difficulty < 6) ? 0.0 : red
-        green = (difficulty > 6) ? 0.0 : green
-    }
-    
-    return UIColor(red: red, green: green, blue: 0, alpha: 1)
+	//when making a pin, set the difficulty to 0, 5, or 10, depending on what is the closest
+	//this way the park pins will be one of three standard colors (green for easy, yellow for medium, red for hard)
+	var difficulty = difficulty
+	if forAnnotation
+	{
+		if (difficulty > 5)
+		{
+			difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 5 : 10;
+		}
+		else
+		{
+			difficulty = abs(difficulty - 5) < difficulty ? 5 : 0;
+		}
+	}
+	
+	let green:CGFloat = 1.0 / 3.0;
+	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 1, alpha: 1)
 }

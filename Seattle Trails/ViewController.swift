@@ -55,6 +55,9 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.setUpSearchBar()
         self.setupTableView()
         self.imagePicker.delegate = self
+		
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidShowNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidChangeFrameNotification, object: nil)
     }
 	
 	    // MARK: User Interaction
@@ -103,8 +106,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
-			self.forReport = false
-			self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
+		self.forReport = false
+		self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
 	}
     @IBAction func cityCenterPressed(sender: UIButton) {
 		//clear anything you have open
@@ -137,12 +140,38 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         }
     }
 	
-    // MARK: Popover View, Mail View, Image Picker & Segue Delegate Methods
+    // MARK: Delegate Methods
+	
+	func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+		
+		
+		
+		let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
+		
+		let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
+			self.volunteeringButtonPressed()
+		}
+		
+		let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
+			self.drivingButtonPressed(control as! DrivingButton)
+		}
+		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+		
+		actionsView.addAction(drive)
+		actionsView.addAction(volunteer)
+		actionsView.addAction(cancel)
+		
+		dispatch_async(dispatch_get_main_queue()) {
+			self.presentViewController(actionsView, animated: true, completion: nil)
+		}
+	}
+	
+	
     func updateSearchResultsForSearchController(searchController: UISearchController)
     {
-        
+		
     }
-    
+	
     func searchBarTextDidBeginEditing(searchBar: UISearchBar)
     {
         // Moved these here, rather than just upon typing
@@ -288,7 +317,42 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
-    // TODO: Refactor into computed properties?
+	
+	override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+		self.tableView.reloadData()
+	}
+	
+	func keyboardWasShown(note:NSNotification)
+	{
+		let info = note.userInfo as! [NSString : AnyObject]
+		let sizeValue = info[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+		let footerHeight = sizeValue.CGRectValue().size.height
+		
+		let insets = UIEdgeInsetsMake(0, 0, footerHeight, 0)
+		self.tableView.contentInset = insets
+		self.tableView.scrollIndicatorInsets = insets
+		
+	}
+	
+	func volunteeringButtonPressed()
+	{
+		let mailer = self.mailerView
+		let mailerView = mailer.volunteerForParks()
+		dispatch_async(dispatch_get_main_queue()) {
+			self.presentViewController(mailerView, animated: true, completion: nil)
+		}
+	}
+	
+	func drivingButtonPressed(button: DrivingButton)
+	{
+		if let coords = button.coordinate {
+			let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
+			let mapItem = MKMapItem(placemark: placemark)
+			let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+			mapItem.openInMapsWithLaunchOptions(launchOptions)
+		}
+	}
+	
     func setUpSearchBar()
     {
         // TODO: init search results view and set updater property.
@@ -305,13 +369,15 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func setupTableView()
     {
         self.tableView = PopoverViewController(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+		self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.view.addSubview(self.tableView)
         self.tableView.parksDataSource = self
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.hidden = true
+		self.tableView.autoresizingMask = UIViewAutoresizing.FlexibleWidth.union(UIViewAutoresizing.FlexibleHeight)
+		
         let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
         self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
