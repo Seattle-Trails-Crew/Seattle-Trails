@@ -293,6 +293,7 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
 	{
 		switch(surfaceType.lowercaseString)
 		{
+            //TODO: Hard, medium, soft surface types
 		//black is "bad" surfaces
 		case "grass": fallthrough
 		case "soil": fallthrough
