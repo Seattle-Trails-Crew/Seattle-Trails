@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,29 +18,40 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="261-af-IJS" userLabel="UserLocButton">
-                                <rect key="frame" x="510" y="510" width="70" height="70"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MNL-mE-aQk" userLabel="CITYCENTER">
+                                <rect key="frame" x="265" y="522" width="70" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="70" id="iUN-fW-OS5"/>
-                                    <constraint firstAttribute="height" constant="70" id="yLu-jt-30Y"/>
+                                    <constraint firstAttribute="height" constant="70" id="Hn7-5E-1GJ"/>
+                                    <constraint firstAttribute="width" constant="70" id="pUn-vQ-k29"/>
                                 </constraints>
-                                <state key="normal" image="UserLocation"/>
+                                <state key="normal" title="Button" image="CityButton"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LE-p5-6mz" userLabel="SatteliteButton">
-                                <rect key="frame" x="20" y="510" width="70" height="70"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zLr-CL-bU8">
+                                <rect key="frame" x="20" y="522" width="70" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="70" id="71i-qk-NdH"/>
-                                    <constraint firstAttribute="height" constant="70" id="Hh0-hS-odn"/>
+                                    <constraint firstAttribute="width" constant="70" id="Bml-9M-nsl"/>
+                                    <constraint firstAttribute="height" constant="70" id="kl3-oI-cll"/>
                                 </constraints>
-                                <state key="normal" image="SatteliteView"/>
+                                <state key="normal" title="OPTIONS" image="OptionsButton"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r6F-xJ-Ojb">
+                                <rect key="frame" x="510" y="522" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="4lC-Zv-NXJ"/>
+                                    <constraint firstAttribute="width" constant="70" id="kZ8-3J-r6g"/>
+                                </constraints>
+                                <state key="normal" title="CENTER" image="UserLocation"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="261-af-IJS" secondAttribute="bottom" constant="20" id="PjW-0I-R89"/>
-                            <constraint firstItem="261-af-IJS" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" constant="-20" id="Up0-Wb-EWk"/>
-                            <constraint firstItem="5LE-p5-6mz" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="20" id="gTz-pn-ga7"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="5LE-p5-6mz" secondAttribute="bottom" constant="20" id="uMs-cq-whk"/>
+                            <constraint firstItem="r6F-xJ-Ojb" firstAttribute="centerY" secondItem="zLr-CL-bU8" secondAttribute="centerY" id="6iZ-QO-lRN"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="r6F-xJ-Ojb" secondAttribute="bottom" constant="8" id="UDB-Gg-v9F"/>
+                            <constraint firstItem="zLr-CL-bU8" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="Uvk-Fq-DoX"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="zLr-CL-bU8" secondAttribute="bottom" constant="8" id="aKx-Vw-fO9"/>
+                            <constraint firstItem="r6F-xJ-Ojb" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailingMargin" id="hT5-OQ-xnY"/>
+                            <constraint firstItem="MNL-mE-aQk" firstAttribute="centerY" secondItem="zLr-CL-bU8" secondAttribute="centerY" id="hxC-5c-9AG"/>
+                            <constraint firstItem="MNL-mE-aQk" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="tv0-XT-Nhf"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -49,7 +61,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SatteliteView" width="400" height="400"/>
+        <image name="CityButton" width="400" height="400"/>
+        <image name="OptionsButton" width="400" height="400"/>
         <image name="UserLocation" width="400" height="400"/>
     </resources>
 </document>

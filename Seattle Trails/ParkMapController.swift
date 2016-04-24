@@ -272,11 +272,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		if (border)
 		{
 			line.color = colorFromSurfaces(trail.surfaceType)
-			line.width = 4
+			line.width = 8
 		}
 		else if let difficulty = trail.gradePercent {
 			line.color = gradientFromDifficulty(difficulty, forAnnotation: false)
-			line.width = 2
+			line.width = 5
 		}
 		
 		mapView.addOverlay(line)
@@ -293,19 +293,21 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
 	{
 		switch(surfaceType.lowercaseString)
 		{
+            //TODO: Hard, medium, soft, stairs. surface types white, brown, black.
+            //TODO: Smoother line size scaling. Dashes or dots instead of colored outline?
 		//black is "bad" surfaces
 		case "grass": fallthrough
-		case "soil": fallthrough
+		case "soil": return UIColor.brownColor()
 		case "bark": fallthrough
+		case "gravel": return UIColor.whiteColor()
 		case "stairs": fallthrough
-		case "check steps": return UIColor.blackColor()
+		case "check steps": return UIColor.redColor()
 			
 		//gray is "good" surfaces
 		case "boardwalk": fallthrough
 		case "asphalt": fallthrough
-		case "gravel": fallthrough
 		case "bridge": fallthrough
-		case "concrete": return UIColor.grayColor()
+		case "concrete": return UIColor.blackColor()
 			
 		default: break
 		}
@@ -337,5 +339,5 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 	}
 	
 	let green:CGFloat = 1.0 / 3.0;
-	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 1, alpha: 1)
+	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 0.9, alpha: 1)
 }
