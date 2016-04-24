@@ -293,7 +293,8 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
 	{
 		switch(surfaceType.lowercaseString)
 		{
-            //TODO: Hard, medium, soft surface types
+            //TODO: Hard, medium, soft, stairs. surface types white, brown, black.
+            //TODO: Smoother line size scaling. Dashes or dots instead of colored outline?
 		//black is "bad" surfaces
 		case "grass": fallthrough
 		case "soil": fallthrough
@@ -338,5 +339,5 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 	}
 	
 	let green:CGFloat = 1.0 / 3.0;
-	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 1, alpha: 1)
+	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 0.9, alpha: 1)
 }
