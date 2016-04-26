@@ -197,7 +197,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         if let coloredLine = overlay as? ColoredLine {
             if let color = coloredLine.color, width = coloredLine.width {
                 polyLineRenderer.strokeColor = color
-				polyLineRenderer.lineWidth = width
+                polyLineRenderer.lineWidth = width // TODO: Scale width with map zoom. // TODO: Scale width with map zoom.
             }
         }
 		return polyLineRenderer
@@ -293,11 +293,10 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
 	{
 		switch(surfaceType.lowercaseString)
 		{
-            //TODO: Hard, medium, soft, stairs. surface types white, brown, black.
-            //TODO: Smoother line size scaling. Dashes or dots instead of colored outline?
+            
 		//black is "bad" surfaces
 		case "grass": fallthrough
-		case "soil": return UIColor.brownColor()
+		case "soil": return UIColor.greenColor()
 		case "bark": fallthrough
 		case "gravel": return UIColor.whiteColor()
 		case "stairs": fallthrough
@@ -330,7 +329,7 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 	{
 		if (difficulty > 5)
 		{
-			difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 5 : 10;
+            difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 5 : 10; // TODO: Make the yellow in pin more yellow. Has a green tint.
 		}
 		else
 		{
