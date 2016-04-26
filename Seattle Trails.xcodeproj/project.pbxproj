@@ -53,6 +53,7 @@
 		8CCEA2251CAD5C8000CF117C /* AlertViewsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewsController.swift; sourceTree = "<group>"; };
 		8CCEA2331CB34FD900CF117C /* AppExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
 		8CCEA2351CB3557000CF117C /* AppProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppProtocols.swift; sourceTree = "<group>"; };
+		8CD1B6521CCF6E7F00DF8D5A /* SeattleTrailsLab.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = SeattleTrailsLab.playground; sourceTree = "<group>"; };
 		8CEB2CA71C9D0AF3000358FC /* Seattle Trails.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seattle Trails.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CEB2CAA1C9D0AF3000358FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8CEB2CAC1C9D0AF3000358FC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -191,6 +192,7 @@
 				8CA4D3051CA5EE8800A748FB /* Controller */,
 				8CC0FD3E1CA5E8F90075C94C /* Supporting Files */,
 				8CC0FD3D1CA5E8D40075C94C /* View */,
+				8CD1B6521CCF6E7F00DF8D5A /* SeattleTrailsLab.playground */,
 			);
 			path = "Seattle Trails";
 			sourceTree = "<group>";

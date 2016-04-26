@@ -197,7 +197,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         if let coloredLine = overlay as? ColoredLine {
             if let color = coloredLine.color, width = coloredLine.width {
                 polyLineRenderer.strokeColor = color
-                polyLineRenderer.lineWidth = width // TODO: Scale width with map zoom. // TODO: Scale width with map zoom.
+                polyLineRenderer.lineWidth = width
             }
         }
 		return polyLineRenderer
@@ -312,7 +312,7 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
 		}
 	}
 	
-	//if the surfacetype is unknown, or it doesn't have one
+    //if the surfacetype is unknown, or it doesn't have one
 	return UIColor.blackColor()
 }
 
