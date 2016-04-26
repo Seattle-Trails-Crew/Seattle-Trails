@@ -296,11 +296,11 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
             
 		//black is "bad" surfaces
 		case "grass": fallthrough
-		case "soil": return UIColor.greenColor()
+        case "soil": return UIColor(hue: 0.33, saturation: 1, brightness: 0.7, alpha: 1)
 		case "bark": fallthrough
 		case "gravel": return UIColor.whiteColor()
 		case "stairs": fallthrough
-		case "check steps": return UIColor.redColor()
+        case "check steps": return UIColor(hue: 0.0, saturation: 1, brightness: 0.65, alpha: 1)
 			
 		//gray is "good" surfaces
 		case "boardwalk": fallthrough
@@ -329,14 +329,14 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 	{
 		if (difficulty > 5)
 		{
-            difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 5 : 10; // TODO: Make the yellow in pin more yellow. Has a green tint.
+            difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 4 : 10; // TODO: Make the yellow in pin more yellow. Has a green tint.
 		}
 		else
 		{
-			difficulty = abs(difficulty - 5) < difficulty ? 5 : 0;
+			difficulty = abs(difficulty - 5) < difficulty ? 4 : 0;
 		}
 	}
 	
 	let green:CGFloat = 1.0 / 3.0;
-	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 0.9, brightness: 0.9, alpha: 1)
+	return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 1.0, brightness: 1.0, alpha: 1)
 }
