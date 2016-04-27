@@ -45,26 +45,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		self.setMapViewPosition()
 		self.showUserLocation()
 	}
-	
-	/**
-	Annotates map with trail/park name in the middle of it's bounds.
-	
-	- parameter point:      The overall center point of the trail/park.
-	- parameter text:       The trail/park name.
-	- parameter difficulty: The overall difficulty rating of the trail.
-	*/
-    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: Int, surfaces: [String])
-	{
-		// Annotation
-		let annotation = ColoredAnnotation()
-		annotation.coordinate = point
-		annotation.title = text
-        annotation.subtitle = surfaces.joinWithSeparator(", ")
-        annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
-		mapView.addAnnotation(annotation)
-	}
 
-	
 	// MARK: Map View Methods
 	/**
 	Sets the map view's starting position.
@@ -121,6 +102,25 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		}
 	}
 	
+    /**
+	Annotates map with trail/park name in the middle of it's bounds.
+	
+	- parameter point:      The overall center point of the trail/park.
+	- parameter text:       The trail/park name.
+	- parameter difficulty: The overall difficulty rating of the trail.
+	*/
+    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: Int, surfaces: [String])
+	{
+		// Annotation
+		let annotation = ColoredAnnotation()
+		annotation.coordinate = point
+		annotation.title = text
+        surfaces.map({ _ in })
+        annotation.subtitle = surfaces.joinWithSeparator(", ")
+        annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
+		mapView.addAnnotation(annotation)
+	}
+    
 	/**
 	Clears all map annotations
 	*/
@@ -329,7 +329,7 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
 	{
 		if (difficulty > 5)
 		{
-            difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 4 : 10; // TODO: Make the yellow in pin more yellow. Has a green tint.
+            difficulty = abs(difficulty - 5) < abs(difficulty - 10) ? 4 : 10;
 		}
 		else
 		{
