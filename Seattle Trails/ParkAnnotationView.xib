@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ParkAnnotationView" customModule="Seattle_Trails">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="52"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JW5-Wc-4fT">
+                    <rect key="frame" x="0.0" y="0.0" width="34" height="28"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="EJv-QV-hwZ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KZq-ue-7uo">
+                    <rect key="frame" x="0.0" y="24" width="59" height="28"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="qS7-47-f59"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cHT-Ut-WVL">
+                    <rect key="frame" x="270" y="15" width="22" height="22"/>
+                    <accessibility key="accessibilityConfiguration">
+                        <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                    </accessibility>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="KZq-ue-7uo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="3iG-37-HiL"/>
+                <constraint firstAttribute="bottom" secondItem="cHT-Ut-WVL" secondAttribute="bottom" constant="15" id="CkQ-WX-uNP"/>
+                <constraint firstItem="JW5-Wc-4fT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Gc2-p5-dbf"/>
+                <constraint firstAttribute="trailing" secondItem="cHT-Ut-WVL" secondAttribute="trailing" constant="8" id="L0W-ao-7Gd"/>
+                <constraint firstItem="cHT-Ut-WVL" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="LSJ-Fe-E6j"/>
+                <constraint firstItem="KZq-ue-7uo" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="24" id="N2g-LF-fRQ"/>
+                <constraint firstAttribute="bottom" secondItem="KZq-ue-7uo" secondAttribute="bottom" id="OYA-VE-umG"/>
+                <constraint firstItem="JW5-Wc-4fT" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="STE-yy-lyo"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="subtitleLabel" destination="KZq-ue-7uo" id="E6O-hB-7cX"/>
+                <outlet property="titleLabel" destination="JW5-Wc-4fT" id="EXE-86-a3d"/>
+            </connections>
+            <point key="canvasLocation" x="247" y="176"/>
+        </view>
+    </objects>
+</document>

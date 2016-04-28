@@ -17,7 +17,6 @@ class ColoredLine: MKPolyline
 class ColoredAnnotation: MKPointAnnotation
 {
     var color: UIColor?
-    
 }
 class DrivingButton: UIButton
 {
@@ -69,6 +68,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		mapView.delegate = self
 		mapView.showsBuildings = false
 		mapView.showsTraffic = false
+        mapView.showsScale = true
 	}
 	
 	/**
@@ -115,8 +115,21 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		let annotation = ColoredAnnotation()
 		annotation.coordinate = point
 		annotation.title = text
-        surfaces.map({ _ in })
-        annotation.subtitle = surfaces.joinWithSeparator(", ")
+        
+        let coloredSurfaces = surfaces.map({ surface -> NSMutableAttributedString in
+            let coloredSurface = NSMutableAttributedString(string: surface)
+            let color = colorFromSurfaces(surface)
+            coloredSurface.addAttribute(NSForegroundColorAttributeName, value: color, range: NSRange(location: 0, length: surface.characters.count))
+            return coloredSurface
+        })
+        
+        let newString = NSMutableAttributedString()
+        
+        for surface in coloredSurfaces {
+            newString.appendAttributedString(surface)
+        }
+        
+        annotation.subtitle
         annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
 		mapView.addAnnotation(annotation)
 	}
