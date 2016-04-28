@@ -166,7 +166,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 			return nil
 		}
         
-		view.canShowCallout = true
+        //view.canShowCallout = true
 		return view
 	}
     
@@ -183,9 +183,9 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 			return
 		}
 		
-		if let title = view.annotation!.title
+		if let title = view.annotation!.title!
 		{
-			showPark(parkName: title!, withAnnotation: false)
+			showPark(parkName: title, withAnnotation: false)
 		}
 	}
 	
