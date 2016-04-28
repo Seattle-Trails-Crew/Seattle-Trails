@@ -14,10 +14,7 @@ class ColoredLine: MKPolyline
     var color: UIColor?
 	var width: CGFloat?
 }
-class ColoredAnnotation: MKPointAnnotation
-{
-    var color: UIColor?
-}
+
 class DrivingButton: UIButton
 {
     var coordinate: CLLocationCoordinate2D?
@@ -111,11 +108,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	*/
     func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: Int, surfaces: [String])
 	{
-		// Annotation
-		let annotation = ColoredAnnotation()
-		annotation.coordinate = point
-		annotation.title = text
-        
+	
         let coloredSurfaces = surfaces.map({ surface -> NSMutableAttributedString in
             let coloredSurface = NSMutableAttributedString(string: surface)
             let color = colorFromSurfaces(surface)
@@ -129,7 +122,9 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             newString.appendAttributedString(surface)
         }
         
-        annotation.subtitle
+     	// Annotation
+		let annotation = ParkAnnotation(titleLabel: text, subtitleLabel: newString)
+		annotation.coordinate = point
         annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
 		mapView.addAnnotation(annotation)
 	}
@@ -161,8 +156,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 		
 		// Set the annotation pin color based on overall trail difficulty.
 		let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        if let coloredAnnotation = annotation as? ColoredAnnotation {
-            if let color  = coloredAnnotation.color {
+        if let parkAnnotation = annotation as? ParkAnnotation {
+            if let color  = parkAnnotation.color {
                 view.pinTintColor = color
             }
         }
@@ -171,17 +166,18 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 			return nil
 		}
         
-        // Button Takes User To Maps Directions
-        let driving = DrivingButton(type: .DetailDisclosure)
-        driving.coordinate = annotation.coordinate
-        view.rightCalloutAccessoryView = driving
-        
 		view.canShowCallout = true
 		return view
 	}
     
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
 	{
+        let parkView = (NSBundle.mainBundle()).loadNibNamed("ParkAnnotationView", owner: self, options: nil)[0] as! ParkAnnotationView
+        let parkViewAnnotationView = view.annotation as! ParkAnnotation
+        parkView.titleLabel.text = parkViewAnnotationView.titleLabel
+        parkView.subtitleLabel.attributedText = parkViewAnnotationView.subtitleLabel
+        view.addSubview(parkView)
+
 		if let _ = view.annotation as? MKUserLocation
 		{
 			return

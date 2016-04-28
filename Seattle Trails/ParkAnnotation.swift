@@ -12,6 +12,7 @@ import MapKit
 class ParkAnnotation: MKPointAnnotation {
     var titleLabel: String
     var subtitleLabel: NSAttributedString?
+    var color: UIColor?
     
     init(titleLabel: String, subtitleLabel: NSMutableAttributedString?) {
         self.titleLabel = titleLabel
