@@ -15,11 +15,6 @@ class ColoredLine: MKPolyline
     var width: CGFloat?
 }
 
-class DrivingButton: UIButton
-{
-    var coordinate: CLLocationCoordinate2D?
-}
-
 /**
  The ParkMapController is responsible for directly handling the parks, and translating them into map view pins and lines.
  */
@@ -94,7 +89,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             //TODO: remove this if statement once we remove filtering
             if (!shouldFilter || park.hasOfficial)
             {
-                annotatePark(park.region.center, text: name, difficulty: difficulty, surfaces: park.surfaces)
+                annotatePark(park.region.center, parkName: name, difficulty: difficulty, surfaces: park.surfaces)
             }
         }
     }
@@ -106,25 +101,22 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
      - parameter text:       The trail/park name.
      - parameter difficulty: The overall difficulty rating of the trail.
      */
-    func annotatePark(point: CLLocationCoordinate2D, text: String, difficulty: Int, surfaces: [String])
+    func annotatePark(point: CLLocationCoordinate2D, parkName: String, difficulty: Int, surfaces: [String])
     {
+        let newString = NSMutableAttributedString()
         
-        let coloredSurfaces = surfaces.map({ surface -> NSMutableAttributedString in
+        let _ = surfaces.map({ surface -> NSMutableAttributedString in
             let coloredSurface = NSMutableAttributedString(string: surface)
             let color = colorFromSurfaces(surface)
             coloredSurface.addAttribute(NSForegroundColorAttributeName, value: color, range: NSRange(location: 0, length: surface.characters.count))
+            newString.appendAttributedString(coloredSurface)
             return coloredSurface
         })
         
-        let newString = NSMutableAttributedString()
-        
-        for surface in coloredSurfaces {
-            newString.appendAttributedString(surface)
-        }
-        
         // Annotation
-        let annotation = ParkAnnotation(titleLabelText: text, subtitleLabelText: newString)
-        annotation.coordinate = point
+        let annotation = ParkAnnotation(coordinate: point)
+        annotation.titleLabelText = parkName
+        annotation.subtitleLabelText = newString
         annotation.color = gradientFromDifficulty(difficulty, forAnnotation: true)
         mapView.addAnnotation(annotation)
     }
@@ -145,7 +137,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.mapView.removeOverlays(self.mapView.overlays)
     }
     
-    
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
@@ -154,39 +145,41 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             return nil
         }
         
-        // Set the annotation pin color based on overall trail difficulty.
-        let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        if let parkAnnotation = annotation as? ParkAnnotation {
-            if let color  = parkAnnotation.color {
-                view.pinTintColor = color
-            }
-        }
-        else
+        guard let view = mapView.dequeueReusableAnnotationViewWithIdentifier("ParkPin") else
         {
-            return nil
+            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
+            view.canShowCallout = false
+            return view
         }
-        
-        //view.canShowCallout = true
+      
+        view.annotation = annotation
         return view
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
-        if let parkViewAnnotationView = view.annotation as? ParkAnnotation
+        if let _ = view.annotation as? MKUserLocation
         {
-            
+            return
+        }
+        
+        if let parkAnnotation = view.annotation as? ParkAnnotation
+        {
             let parkView = (NSBundle.mainBundle()).loadNibNamed("ParkAnnotationView", owner: self, options: nil)[0] as! ParkAnnotationView
-            
-            parkView.titleLabel.text = parkViewAnnotationView.titleLabelText
-            parkView.subtitleLabel.attributedText = parkViewAnnotationView.subtitleLabelText
+            parkView.titleLabel.text = parkAnnotation.titleLabelText
+            parkView.subtitleLabel.attributedText = parkAnnotation.subtitleLabelText
+            parkView.center = CGPointMake(view.bounds.size.width / 2, -parkView.bounds.size.height*0.52)
             view.addSubview(parkView)
             
-            
-            showPark(parkName: parkViewAnnotationView.titleLabelText, withAnnotation: false)
+            if let title = parkAnnotation.titleLabelText {
+                showPark(parkName: title, withAnnotation: false)
+            }
         }
     }
     
-    
+    func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
+        
+    }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
     {
@@ -206,11 +199,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 polyLineRenderer.lineWidth = width
             }
         }
+        
         return polyLineRenderer
     }
     
     //MARK: helper methods
-    
     /**
      Given a park this will move the map view to it and draw all it's lines.
      
@@ -299,7 +292,6 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
     {
         switch(surfaceType.lowercaseString)
         {
-            
         //black is "bad" surfaces
         case "grass": fallthrough
         case "soil": return UIColor(hue: 0.33, saturation: 1, brightness: 0.7, alpha: 1)

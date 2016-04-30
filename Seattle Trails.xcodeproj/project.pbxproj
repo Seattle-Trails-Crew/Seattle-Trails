@@ -132,10 +132,9 @@
 		8CC0FD3D1CA5E8D40075C94C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */,
 				8CEB2CAE1C9D0AF3000358FC /* Main.storyboard */,
-				8CD1B6971CD2098300DF8D5A /* ParkAnnotationView.xib */,
-				8CD1B6991CD20B9200DF8D5A /* ParkAnnotationView.swift */,
+				8CFF4EAD1CD482F800E755EA /* Park Annotation */,
+				8CEB2CB31C9D0AF3000358FC /* LaunchScreen.storyboard */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -214,6 +213,15 @@
 				8CEB2CCC1C9D0AF4000358FC /* Info.plist */,
 			);
 			path = "Seattle TrailsUITests";
+			sourceTree = "<group>";
+		};
+		8CFF4EAD1CD482F800E755EA /* Park Annotation */ = {
+			isa = PBXGroup;
+			children = (
+				8CD1B6971CD2098300DF8D5A /* ParkAnnotationView.xib */,
+				8CD1B6991CD20B9200DF8D5A /* ParkAnnotationView.swift */,
+			);
+			name = "Park Annotation";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

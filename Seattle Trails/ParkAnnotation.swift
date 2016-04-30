@@ -6,16 +6,15 @@
 //  Copyright © 2016 seatrails. All rights reserved.
 //
 
-import Foundation
 import MapKit
 
-class ParkAnnotation: MKPointAnnotation {
-    var titleLabelText: String
+class ParkAnnotation: NSObject, MKAnnotation {
+    var coordinate: CLLocationCoordinate2D
+    var titleLabelText: String?
     var subtitleLabelText: NSAttributedString?
     var color: UIColor?
     
-    init(titleLabelText: String, subtitleLabelText: NSMutableAttributedString?) {
-        self.titleLabelText = titleLabelText
-        self.subtitleLabelText = subtitleLabelText
+    init(coordinate: CLLocationCoordinate2D) {
+        self.coordinate = coordinate
     }
 }

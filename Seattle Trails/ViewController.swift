@@ -21,8 +21,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     var searchController: UISearchController!
     let mailerView = EmailComposer()
     var tableView: PopoverViewController!
-	
-	var forReport = false
+    
+    var forReport = false
     var loading = false
     
     var currentPark:String?
@@ -41,11 +41,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         
         return nil
     }
-	
-	var reportAvailable:Bool
-	{
-		return UIImagePickerController.isSourceTypeAvailable(.Camera) && currentPark != nil
-	}
+    
+    var reportAvailable:Bool
+    {
+        return UIImagePickerController.isSourceTypeAvailable(.Camera) && currentPark != nil
+    }
     
     // MARK: View Lifecyle Methods
     override func viewDidLoad()
@@ -55,123 +55,115 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         self.setUpSearchBar()
         self.setupTableView()
         self.imagePicker.delegate = self
-		
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidShowNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidChangeFrameNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWasShown), name: UIKeyboardDidChangeFrameNotification, object: nil)
     }
-	
-	    // MARK: User Interaction
+    
+    // MARK: User Interaction
     @IBAction func reportButtonPressed(sender: UIBarButtonItem)
     {
-         // Check to see if user is in a park before reporting an issue.
+        // Check to see if user is in a park before reporting an issue.
         if reportAvailable
-		{
-			forReport = true
+        {
+            forReport = true
             self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera, forIssue: true)
-		}
+        }
     }
-	
-	@IBAction func optionsButtonPressed(sender: UIButton)
-	{
-		let alert = UIAlertController(title: "Options", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-		
-		let key = UIAlertAction(title: "Key", style: .Default)
-		{ (action) in
-			AlertViews.presentMapKeyAlert(sender: self)
-		}
-		
-		let filter = UIAlertAction(title: "Filter", style: .Default)
-		{ (action) in
-			self.shouldFilter = !self.shouldFilter
-			
-			//clear all existing points and then remake them with the new filter settings
-			self.clearAnnotations()
-			self.clearOverlays()
-			self.annotateAllParks()
-		}
-		
-		let satellite = UIAlertAction(title: self.mapView.mapType == MKMapType.Satellite ? "Map View" : "Satellite View", style: .Default)
-		{ (action) in
-			self.toggleSatteliteView()
-		}
-		
-		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-		alert.addAction(key)
-		alert.addAction(filter)
-		alert.addAction(satellite)
-		alert.addAction(cancel)
-		
-		self.presentViewController(alert, animated: true, completion: nil)
-	}
-	
+    
+    @IBAction func optionsButtonPressed(sender: UIButton)
+    {
+        let alert = UIAlertController(title: "Options", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        let key = UIAlertAction(title: "Key", style: .Default)
+        { (action) in
+            AlertViews.presentMapKeyAlert(sender: self)
+        }
+        
+        let filter = UIAlertAction(title: "Filter", style: .Default)
+        { (action) in
+            self.shouldFilter = !self.shouldFilter
+            
+            //clear all existing points and then remake them with the new filter settings
+            self.clearAnnotations()
+            self.clearOverlays()
+            self.annotateAllParks()
+        }
+        
+        let satellite = UIAlertAction(title: self.mapView.mapType == MKMapType.Satellite ? "Map View" : "Satellite View", style: .Default)
+        { (action) in
+            self.toggleSatteliteView()
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alert.addAction(key)
+        alert.addAction(filter)
+        alert.addAction(satellite)
+        alert.addAction(cancel)
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
     @IBAction func shareButtonPressed(sender: UIBarButtonItem)
     {
-		self.forReport = false
-		self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
-	}
+        self.forReport = false
+        self.imagePicker.presentCameraOrImageSourceSelectionView(sender: self)
+    }
+    
     @IBAction func cityCenterPressed(sender: UIButton) {
-		//clear anything you have open
-		self.clearOverlays()
-		for annotation in mapView.selectedAnnotations
-		{
-			mapView.deselectAnnotation(annotation, animated: true)
-		}
-		
+        //clear anything you have open
+        self.clearOverlays()
+        self.clearAnnotations()
+        self.annotateAllParks()
         self.setMapViewPosition()
     }
-	
+    
     @IBAction func navButtonPressed(sender: UIButton)
     {
-		//clear anything you have open
-		self.clearOverlays()
-		for annotation in mapView.selectedAnnotations
-		{
-			mapView.deselectAnnotation(annotation, animated: true)
-		}
-		
+        //clear anything you have open
+        self.clearOverlays()
+        self.clearAnnotations()
+        self.annotateAllParks()
         self.moveMapToUserLocation()
     }
-	
+    
     @IBAction func volunteerPressed(sender: UIButton)
     {
         let mailView = self.mailerView.volunteerForParks()
-        dispatch_async(dispatch_get_main_queue()) { 
+        dispatch_async(dispatch_get_main_queue()) {
             self.presentViewController(mailView, animated: true, completion: nil)
         }
     }
-	
+    
     // MARK: Delegate Methods
-	
-	func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-		
-		
-		
-		let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
-		
-		let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
-			self.volunteeringButtonPressed()
-		}
-		
-		let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
-			self.drivingButtonPressed(control as! DrivingButton)
-		}
-		let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-		
-		actionsView.addAction(drive)
-		actionsView.addAction(volunteer)
-		actionsView.addAction(cancel)
-		
-		dispatch_async(dispatch_get_main_queue()) {
-			self.presentViewController(actionsView, animated: true, completion: nil)
-		}
-	}
-	
-	
+    
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
+        
+        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
+            self.volunteeringButtonPressed()
+        }
+        
+        let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
+            self.drivingButtonPressed(control as! DrivingButton)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
+        actionsView.addAction(drive)
+        actionsView.addAction(volunteer)
+        actionsView.addAction(cancel)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(actionsView, animated: true, completion: nil)
+        }
+    }
+    
+    
     func updateSearchResultsForSearchController(searchController: UISearchController)
     {
-		
+        
     }
-	
+    
     func searchBarTextDidBeginEditing(searchBar: UISearchBar)
     {
         // Moved these here, rather than just upon typing
@@ -217,62 +209,62 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         return UIView()
     }
     
-	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool
     {
-		//you shouldn't be able to segue when you don't have any pins
-		return parks.count > 0
-	}
-	
+        //you shouldn't be able to segue when you don't have any pins
+        return parks.count > 0
+    }
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
     {
-		if (!forReport)
-		{
-			//try to share socially
-			if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
-			{
-				let activityItems:[AnyObject] = [pickedImage as AnyObject, "#SeaTrails" as AnyObject]
-				let avc = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-                avc.completionWithItemsHandler = { (_, completed, _, activityError) in self.isLoading(false)}
-				
-				//set the subject field of email
-				avc.setValue("My photo of \(self.currentPark ?? "a Seattle Park")", forKey: "subject")
-				
-				
-				dispatch_async(dispatch_get_main_queue())
-				{
-					self.dismissViewControllerAnimated(true, completion: {
-						dispatch_async(dispatch_get_main_queue())
-						{
-							self.presentViewController(avc, animated: true, completion: { 
-                                self.isLoading(true)
-                            })
-						}
-					})
-				}
-			}
-			return
-		}
-		
-		//try to send an issue report email
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail
+        if (!forReport)
         {
+            //try to share socially
+            if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+            {
+                let activityItems:[AnyObject] = [pickedImage as AnyObject, "#SeaTrails" as AnyObject]
+                let avc = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+                avc.completionWithItemsHandler = { (_, completed, _, activityError) in self.isLoading(false)}
+                
+                //set the subject field of email
+                avc.setValue("My photo of \(self.currentPark ?? "a Seattle Park")", forKey: "subject")
+                
+                
                 dispatch_async(dispatch_get_main_queue())
                 {
                     self.dismissViewControllerAnimated(true, completion: {
-                        let mailView = self.mailerView.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
-                        
                         dispatch_async(dispatch_get_main_queue())
                         {
-                            self.presentViewController(mailView, animated: true, completion: nil)
+                            self.presentViewController(avc, animated: true, completion: {
+                                self.isLoading(true)
+                            })
                         }
                     })
                 }
+            }
+            return
+        }
+        
+        //try to send an issue report email
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage, let park = self.parks[currentPark!], let location = self.locationManager.location where self.mailerView.canSendMail
+        {
+            dispatch_async(dispatch_get_main_queue())
+            {
+                self.dismissViewControllerAnimated(true, completion: {
+                    let mailView = self.mailerView.reportIssue(forPark: park, atUserLocation: location, withImage: pickedImage)
+                    
+                    dispatch_async(dispatch_get_main_queue())
+                    {
+                        self.presentViewController(mailView, animated: true, completion: nil)
+                    }
+                })
+            }
         }
         else
         {
             dispatch_async(dispatch_get_main_queue())
             {
-                self.dismissViewControllerAnimated(true, completion: { 
+                self.dismissViewControllerAnimated(true, completion: {
                     AlertViews.presentErrorAlertView(sender: self, title: "Failure", message: "Your device is currently unable to send email. Please check your email settings and network connection then try again. Thank you for helping us improve our parks.")
                 })
             }
@@ -317,42 +309,42 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Helper Methods
-	
-	override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-		self.tableView.reloadData()
-	}
-	
-	func keyboardWasShown(note:NSNotification)
-	{
-		let info = note.userInfo as! [NSString : AnyObject]
-		let sizeValue = info[UIKeyboardFrameBeginUserInfoKey] as! NSValue
-		let footerHeight = sizeValue.CGRectValue().size.height
-		
-		let insets = UIEdgeInsetsMake(0, 0, footerHeight, 0)
-		self.tableView.contentInset = insets
-		self.tableView.scrollIndicatorInsets = insets
-		
-	}
-	
-	func volunteeringButtonPressed()
-	{
-		let mailer = self.mailerView
-		let mailerView = mailer.volunteerForParks()
-		dispatch_async(dispatch_get_main_queue()) {
-			self.presentViewController(mailerView, animated: true, completion: nil)
-		}
-	}
-	
-	func drivingButtonPressed(button: DrivingButton)
-	{
-		if let coords = button.coordinate {
-			let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
-			let mapItem = MKMapItem(placemark: placemark)
-			let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
-			mapItem.openInMapsWithLaunchOptions(launchOptions)
-		}
-	}
-	
+    
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        self.tableView.reloadData()
+    }
+    
+    func keyboardWasShown(note:NSNotification)
+    {
+        let info = note.userInfo as! [NSString : AnyObject]
+        let sizeValue = info[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+        let footerHeight = sizeValue.CGRectValue().size.height
+        
+        let insets = UIEdgeInsetsMake(0, 0, footerHeight, 0)
+        self.tableView.contentInset = insets
+        self.tableView.scrollIndicatorInsets = insets
+        
+    }
+    
+    func volunteeringButtonPressed()
+    {
+        let mailer = self.mailerView
+        let mailerView = mailer.volunteerForParks()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(mailerView, animated: true, completion: nil)
+        }
+    }
+    
+    func drivingButtonPressed(button: DrivingButton)
+    {
+        if let coords = button.coordinate {
+            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placemark)
+            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
+            mapItem.openInMapsWithLaunchOptions(launchOptions)
+        }
+    }
+    
     func setUpSearchBar()
     {
         // TODO: init search results view and set updater property.
@@ -369,15 +361,15 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     func setupTableView()
     {
         self.tableView = PopoverViewController(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
-		self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.view.addSubview(self.tableView)
         self.tableView.parksDataSource = self
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.hidden = true
-		self.tableView.autoresizingMask = UIViewAutoresizing.FlexibleWidth.union(UIViewAutoresizing.FlexibleHeight)
-		
+        self.tableView.autoresizingMask = UIViewAutoresizing.FlexibleWidth.union(UIViewAutoresizing.FlexibleHeight)
+        
         let navbarHeight = searchController.searchBar.frame.height + UIApplication.sharedApplication().statusBarFrame.height
         self.tableView.sectionHeaderHeight = navbarHeight  // Push TableView Down Below NavBar
     }
@@ -441,7 +433,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
         
         self.loading = loading
     }
-
+    
     func moveMapToUserLocation()
     {
         if let location = locationManager.location
@@ -472,14 +464,14 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func searchParks(parkName name: String)
     {
-		print("SEARCHING PARK")
+        print("SEARCHING PARK")
         for park in parks {
             if (name.caseInsensitiveCompare(park.0) == .OrderedSame)
             {
                 defer
                 {
                     dispatch_async(dispatch_get_main_queue(), {
-						self.showPark(parkName: park.0, withAnnotation: true)
+                        self.showPark(parkName: park.0, withAnnotation: true)
                     })
                 }
                 return

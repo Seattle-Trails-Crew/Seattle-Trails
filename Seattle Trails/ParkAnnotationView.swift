@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 
-class ParkAnnotationView: UIView {
+class ParkAnnotationView: UIControl {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
 }
