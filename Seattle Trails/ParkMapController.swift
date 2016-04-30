@@ -140,20 +140,20 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // MARK: Map View Delegate Methods
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
     {
-        if let _ = annotation as? MKUserLocation
+        if let annotation = annotation as? ParkAnnotation
         {
+            guard let view = mapView.dequeueReusableAnnotationViewWithIdentifier("ParkPin") else
+            {
+                let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
+                view.canShowCallout = false
+                return view
+            }
+      
+            view.tintColor = annotation.color
+            return view
+        } else {
             return nil
         }
-        
-        guard let view = mapView.dequeueReusableAnnotationViewWithIdentifier("ParkPin") else
-        {
-            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
-            view.canShowCallout = false
-            return view
-        }
-      
-        view.annotation = annotation
-        return view
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
