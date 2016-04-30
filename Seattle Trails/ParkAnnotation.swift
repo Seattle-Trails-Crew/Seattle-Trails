@@ -10,12 +10,12 @@ import Foundation
 import MapKit
 
 class ParkAnnotation: MKPointAnnotation {
-    var titleLabel: String
-    var subtitleLabel: NSAttributedString?
+    var titleLabelText: String
+    var subtitleLabelText: NSAttributedString?
     var color: UIColor?
     
-    init(titleLabel: String, subtitleLabel: NSMutableAttributedString?) {
-        self.titleLabel = titleLabel
-        self.subtitleLabel = subtitleLabel
+    init(titleLabelText: String, subtitleLabelText: NSMutableAttributedString?) {
+        self.titleLabelText = titleLabelText
+        self.subtitleLabelText = subtitleLabelText
     }
 }
