@@ -139,6 +139,7 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
+        print("tapped")
         
 //        if let coords = button.coordinate {
 //            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)

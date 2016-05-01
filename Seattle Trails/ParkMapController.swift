@@ -105,13 +105,17 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     {
         let newString = NSMutableAttributedString()
         
-        let _ = surfaces.map({ surface -> NSMutableAttributedString in
+        for surface in surfaces {
             let coloredSurface = NSMutableAttributedString(string: surface)
+            let spacerString = NSAttributedString(string: ", ")
             let color = colorFromSurfaces(surface)
             coloredSurface.addAttribute(NSForegroundColorAttributeName, value: color, range: NSRange(location: 0, length: surface.characters.count))
+            
             newString.appendAttributedString(coloredSurface)
-            return coloredSurface
-        })
+            if surface != surfaces.last {
+                newString.appendAttributedString(spacerString)
+            }
+        }
         
         // Annotation
         let annotation = ParkAnnotation(coordinate: point)
@@ -146,10 +150,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             {
                 let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
                 view.canShowCallout = false
+                view.pinTintColor = annotation.color
                 return view
             }
       
-            view.tintColor = annotation.color
             return view
         } else {
             return nil
@@ -178,7 +182,13 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-        
+        if view.isKindOfClass(MKAnnotationView)
+        {
+            for subview in view.subviews
+            {
+                subview.removeFromSuperview()
+            }
+        }
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
