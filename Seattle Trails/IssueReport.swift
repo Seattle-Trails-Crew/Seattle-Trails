@@ -38,6 +38,4 @@ struct IssueReport {
 	{
 		return UIImageJPEGRepresentation(issueImage!, 0.7)
 	}
-	
-	
 }
