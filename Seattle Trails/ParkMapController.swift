@@ -161,11 +161,12 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
 	
-	func hitSelector()
+	func hitSelector(sender: ParkAnnotationView)
 	{
-		print("HIT SELECTOR")
+		//this is a virtual function; please over-write it!
+		assert(false)
 	}
-    
+	
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
         if let _ = view.annotation as? MKUserLocation
@@ -181,7 +182,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             parkView.center = CGPointMake(view.bounds.size.width / 2, -parkView.bounds.size.height*0.52)
             view.addSubview(parkView)
 			
-			parkView.addTarget(self, action: #selector(hitSelector), forControlEvents: UIControlEvents.TouchUpInside)
+			parkView.addTarget(self, action: #selector(hitSelector(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             
             if let title = parkAnnotation.titleLabelText {
                 showPark(parkName: title, withAnnotation: false)

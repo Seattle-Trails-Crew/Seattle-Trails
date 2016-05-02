@@ -136,10 +136,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
     }
     
     // MARK: Delegate Methods
-    
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+	
+	override func hitSelector(sender: ParkAnnotationView)
+	{
         let actionsView = UIAlertController(title: "Park Actions", message: nil, preferredStyle: .ActionSheet)
-        print("tapped")
         
 //        if let coords = button.coordinate {
 //            let placemark = MKPlacemark(coordinate: coords, addressDictionary: nil)
@@ -147,23 +147,23 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 //            let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving]
 //            mapItem.openInMapsWithLaunchOptions(launchOptions)
 //        }
-//        
-//        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
-//            self.volunteeringButtonPressed()
-//        }
-//        
+		
+        let volunteer = UIAlertAction(title: "Volunteer", style: .Default) {(action) in
+            self.volunteeringButtonPressed()
+        }
+        
 //        let drive = UIAlertAction(title: "Driving Directions", style: .Default) {(action) in
 //            self.drivingButtonPressed(control as! DrivingButton)
 //        }
-//        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-//        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        
 //        actionsView.addAction(drive)
-//        actionsView.addAction(volunteer)
-//        actionsView.addAction(cancel)
-//        
-//        dispatch_async(dispatch_get_main_queue()) {
-//            self.presentViewController(actionsView, animated: true, completion: nil)
-//        }
+        actionsView.addAction(volunteer)
+        actionsView.addAction(cancel)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.presentViewController(actionsView, animated: true, completion: nil)
+        }
     }
     
     
