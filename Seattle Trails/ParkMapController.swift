@@ -177,8 +177,15 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         if let parkAnnotation = view.annotation as? ParkAnnotation
         {
             let parkView = (NSBundle.mainBundle()).loadNibNamed("ParkAnnotationView", owner: self, options: nil)[0] as! ParkAnnotationView
+			
+			//format the parkview
+			parkView.layer.cornerRadius = 20
+			parkView.layer.borderWidth = 2
+			parkView.layer.borderColor = UIColor(red: 0.2, green: 0.65, blue: 0.96, alpha: 1).CGColor
+			parkView.layer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 1, alpha: 0.75).CGColor
             parkView.titleLabel.text = parkAnnotation.titleLabelText
             parkView.subtitleLabel.attributedText = parkAnnotation.subtitleLabelText
+			
             parkView.center = CGPointMake(view.bounds.size.width / 2, -parkView.bounds.size.height*0.52)
             view.addSubview(parkView)
 			
@@ -315,7 +322,7 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
         case "grass": fallthrough
         case "soil": return UIColor(hue: 0.33, saturation: 1, brightness: 0.7, alpha: 1)
         case "bark": fallthrough
-        case "gravel": return UIColor.whiteColor()
+		case "gravel": return UIColor(hue: 0.66, saturation: 0.1, brightness: 0.6, alpha: 1)
         case "stairs": fallthrough
         case "check steps": return UIColor(hue: 0.0, saturation: 1, brightness: 0.65, alpha: 1)
             
