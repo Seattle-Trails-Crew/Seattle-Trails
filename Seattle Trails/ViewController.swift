@@ -112,18 +112,18 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
 	@IBAction func cityCenterPressed(sender: UIButton) {
 		//clear anything you have open
+		self.clearAnnotationCallouts()
 		self.clearOverlays()
-		self.clearAnnotations()
-		self.annotateAllParks()
+		
 		self.setMapViewPosition()
 	}
 	
 	@IBAction func navButtonPressed(sender: UIButton)
 	{
 		//clear anything you have open
+		self.clearAnnotationCallouts()
 		self.clearOverlays()
-		self.clearAnnotations()
-		self.annotateAllParks()
+		
 		self.moveMapToUserLocation()
 	}
 	

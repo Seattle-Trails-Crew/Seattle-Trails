@@ -132,6 +132,23 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     {
         self.mapView.removeAnnotations(self.mapView.annotations)
     }
+	
+	/**
+	 Clears all map annotation callouts
+	*/
+	func clearAnnotationCallouts()
+	{
+		for annotation in self.mapView.annotations
+		{
+			if let view = self.mapView.viewForAnnotation(annotation)
+			{
+				for subview in view.subviews
+				{
+					subview.removeFromSuperview()
+				}
+			}
+		}
+	}
     
     /**
      Clears all map overlays
@@ -146,16 +163,10 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     {
         if let annotation = annotation as? ParkAnnotation
         {
-            guard let view = mapView.dequeueReusableAnnotationViewWithIdentifier("ParkPin") else
-            {
-//                let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
-				let view = ParkPinView(annotation: annotation, reuseIdentifier: "ParkPin")
-                view.canShowCallout = false
-                view.pinTintColor = annotation.color
-                return view
-            }
-      
-            return view
+            let view = ParkPinView(annotation: annotation, reuseIdentifier: "ParkPin")
+			view.canShowCallout = false
+			view.pinTintColor = annotation.color
+			return view
         } else {
             return nil
         }
@@ -195,16 +206,6 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 showPark(parkName: title, withAnnotation: false)
             }
         }
-    }
-    
-    func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-//        if view.isKindOfClass(MKAnnotationView)
-//        {
-//            for subview in view.subviews
-//            {
-//                subview.removeFromSuperview()
-//            }
-//        }
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
