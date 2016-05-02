@@ -30,6 +30,7 @@
 		E44EF4CF1CB60F98009B393F /* ParkMapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44EF4CE1CB60F98009B393F /* ParkMapController.swift */; };
 		E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E490637A1CA2670A00C1A3CA /* Trail.swift */; };
 		E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E490637C1CA2673A00C1A3CA /* SocrataService.swift */; };
+		E4BAE4231CD6EE2A00042DBD /* ParkPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BAE4221CD6EE2A00042DBD /* ParkPinView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		E44EF4CE1CB60F98009B393F /* ParkMapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkMapController.swift; sourceTree = "<group>"; };
 		E490637A1CA2670A00C1A3CA /* Trail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trail.swift; sourceTree = "<group>"; };
 		E490637C1CA2673A00C1A3CA /* SocrataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocrataService.swift; sourceTree = "<group>"; };
+		E4BAE4221CD6EE2A00042DBD /* ParkPinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkPinView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +220,7 @@
 		8CFF4EAD1CD482F800E755EA /* Park Annotation */ = {
 			isa = PBXGroup;
 			children = (
+				E4BAE4221CD6EE2A00042DBD /* ParkPinView.swift */,
 				8CD1B6971CD2098300DF8D5A /* ParkAnnotationView.xib */,
 				8CD1B6991CD20B9200DF8D5A /* ParkAnnotationView.swift */,
 			);
@@ -367,6 +370,7 @@
 				E490637D1CA2673A00C1A3CA /* SocrataService.swift in Sources */,
 				8CCEA21E1CAA7ECD00CF117C /* IssueReport.swift in Sources */,
 				E490637B1CA2670B00C1A3CA /* Trail.swift in Sources */,
+				E4BAE4231CD6EE2A00042DBD /* ParkPinView.swift in Sources */,
 				8CD1B69C1CD20E3400DF8D5A /* ParkAnnotation.swift in Sources */,
 				8CD1B69A1CD20B9200DF8D5A /* ParkAnnotationView.swift in Sources */,
 				8CEB2CAB1C9D0AF3000358FC /* AppDelegate.swift in Sources */,

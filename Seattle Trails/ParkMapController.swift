@@ -148,7 +148,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         {
             guard let view = mapView.dequeueReusableAnnotationViewWithIdentifier("ParkPin") else
             {
-                let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
+//                let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "ParkPin")
+				let view = ParkPinView(annotation: annotation, reuseIdentifier: "ParkPin")
                 view.canShowCallout = false
                 view.pinTintColor = annotation.color
                 return view
@@ -159,6 +160,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             return nil
         }
     }
+	
+	func hitSelector()
+	{
+		print("HIT SELECTOR")
+	}
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
     {
@@ -174,6 +180,8 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             parkView.subtitleLabel.attributedText = parkAnnotation.subtitleLabelText
             parkView.center = CGPointMake(view.bounds.size.width / 2, -parkView.bounds.size.height*0.52)
             view.addSubview(parkView)
+			
+			parkView.addTarget(self, action: #selector(hitSelector), forControlEvents: UIControlEvents.TouchUpInside)
             
             if let title = parkAnnotation.titleLabelText {
                 showPark(parkName: title, withAnnotation: false)
@@ -182,13 +190,13 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
-        if view.isKindOfClass(MKAnnotationView)
-        {
-            for subview in view.subviews
-            {
-                subview.removeFromSuperview()
-            }
-        }
+//        if view.isKindOfClass(MKAnnotationView)
+//        {
+//            for subview in view.subviews
+//            {
+//                subview.removeFromSuperview()
+//            }
+//        }
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
