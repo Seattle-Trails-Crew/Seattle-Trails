@@ -250,15 +250,18 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 //turn that annotation on
                 for annotation in self.mapView.annotations
                 {
-                    if let title = annotation.title!
+                    if let parkAn = annotation as? ParkAnnotation
                     {
-                        if title == name
-                        {
-                            self.mapView.selectAnnotation(annotation, animated: true)
-                            
-                            //turning the annotation on will call showPark again, without withAnnotation, so just end here
-                            return
-                        }
+						if let title = parkAn.titleLabelText
+						{
+							if title == name
+							{
+								self.mapView.selectAnnotation(annotation, animated: true)
+								
+								//turning the annotation on will call showPark again, without withAnnotation, so just end here
+								return
+							}
+						}
                     }
                 }
             }
