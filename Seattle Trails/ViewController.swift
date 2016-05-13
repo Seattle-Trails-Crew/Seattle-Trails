@@ -123,10 +123,6 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
 	@IBAction func navButtonPressed(sender: UIButton)
 	{
-		//clear anything you have open
-		self.clearAnnotationCallouts()
-		self.clearOverlays()
-		
 		self.moveMapToUserLocation()
 	}
 	
