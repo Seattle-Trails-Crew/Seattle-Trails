@@ -33,9 +33,10 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			
 			for (name, park) in self.parks
 			{ // TODO: Uncomment code and after testing complete
-				//if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
-				return name
-				//}
+				if MKMapRectContainsPoint(park.mapRect, userCoordinates)
+                {
+                    return name
+                }
 			}
 		}
 		
@@ -68,7 +69,9 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		{
 			forReport = true
 			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera, forIssue: true)
-		}
+        } else {
+            AlertViews.presentNotInParkAlert(sender: self)
+        }
 	}
 	
 	@IBAction func optionsButtonPressed(sender: UIButton)
