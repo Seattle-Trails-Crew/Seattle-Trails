@@ -32,8 +32,8 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			let userCoordinates = MKMapPointForCoordinate(location.coordinate)
 			
 			for (name, park) in self.parks
-			{ // TODO: Uncomment code and after testing complete
-				if MKMapRectContainsPoint(park.mapRect, userCoordinates)
+			{
+                if MKMapRectContainsPoint(park.mapRect, userCoordinates)
                 {
                     return name
                 }
@@ -124,7 +124,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	@IBAction func navButtonPressed(sender: UIButton)
 	{
 		self.moveMapToUserLocation()
-	}
+        if currentPark != nil
+        {
+            self.performActionWithSelectedPark(self.currentPark!)
+        }
+    }
 	
 	@IBAction func volunteerPressed(sender: UIButton)
 	{
