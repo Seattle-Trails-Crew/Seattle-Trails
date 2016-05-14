@@ -32,10 +32,11 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 			let userCoordinates = MKMapPointForCoordinate(location.coordinate)
 			
 			for (name, park) in self.parks
-			{ // TODO: Uncomment code and after testing complete
-				//if MKMapRectContainsPoint(park.mapRect, userCoordinates) {
-				return name
-				//}
+			{
+                if MKMapRectContainsPoint(park.mapRect, userCoordinates)
+                {
+                    return name
+                }
 			}
 		}
 		
@@ -68,7 +69,9 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		{
 			forReport = true
 			self.imagePicker.presentImagePickerWithSourceTypeForViewController(self, sourceType: .Camera, forIssue: true)
-		}
+        } else {
+            AlertViews.presentNotInParkAlert(sender: self)
+        }
 	}
 	
 	@IBAction func optionsButtonPressed(sender: UIButton)
@@ -120,12 +123,12 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 	
 	@IBAction func navButtonPressed(sender: UIButton)
 	{
-		//clear anything you have open
-		self.clearAnnotationCallouts()
-		self.clearOverlays()
-		
 		self.moveMapToUserLocation()
-	}
+        if currentPark != nil
+        {
+            self.performActionWithSelectedPark(self.currentPark!)
+        }
+    }
 	
 	@IBAction func volunteerPressed(sender: UIButton)
 	{
