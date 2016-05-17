@@ -45,7 +45,9 @@ class Park
                 }
             }
 		}
-        difficulty = sumPerc / self.trails.count
+		
+		sumPerc /= self.trails.count
+		difficulty = max(min(sumPerc, 10), 0)
 		
 		let center = CLLocationCoordinate2D(latitude: (topRight.latitude + bottomLeft.latitude) / 2, longitude: (topRight.longitude + bottomLeft.longitude) / 2)
 		region = MKCoordinateRegionMake(center, MKCoordinateSpan(latitudeDelta: bottomLeft.latitude - topRight.latitude, longitudeDelta: bottomLeft.longitude - topRight.longitude))
