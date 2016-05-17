@@ -118,6 +118,12 @@ class ViewController: ParkMapController, UITextFieldDelegate, UIPopoverPresentat
 		self.clearAnnotationCallouts()
 		self.clearOverlays()
 		
+		//de-select all annotations, so the pin isn't still thought of as selected
+		for annotation in self.mapView.annotations
+		{
+			self.mapView.deselectAnnotation(annotation, animated: false)
+		}
+		
 		self.setMapViewPosition()
 	}
 	
