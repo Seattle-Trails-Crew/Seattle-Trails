@@ -364,7 +364,7 @@ func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
             difficulty = abs(difficulty - 5) < difficulty ? 4 : 0;
         }
     }
-    
+	
     let green:CGFloat = 1.0 / 3.0;
-    return UIColor(hue: green * CGFloat(difficulty) * 0.1, saturation: 1.0, brightness: 1.0, alpha: 1)
+    return UIColor(hue: green * CGFloat(10 - difficulty) * 0.1, saturation: 1.0, brightness: 1.0, alpha: 1)
 }
