@@ -13,18 +13,18 @@ class PopoverViewController: UITableView, UISearchControllerDelegate, UISearchRe
     var parksDataSource: ParksDataSource?
     var visibleParks = [String]()
     
-    func filterTrails(params: String)
+    func filterTrails(_ params: String)
     {
         visibleParks.removeAll()
         for park in parksDataSource!.parks.keys {
-            if params == "" || park.lowercaseString.rangeOfString(params.lowercaseString) != nil {
+            if params == "" || park.lowercased().range(of: params.lowercased()) != nil {
                 visibleParks.append(park)
             }
         }
         self.reloadData()
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         print("placeholder")
     }
 }

@@ -14,69 +14,67 @@ let appToken = "o9zqUXd72sDpc0BWNR45Fc1TH"
 
 class SocrataService
 {
-	//MARK: Network Request Methods
-    class func getAllTrails(returnClosure:(([String : Park]?)->()))
-	{
-		//do network calls
-		doRequest(nil, completion: returnClosure)
-	}
+    //MARK: Network Request Methods
+    class func getAllTrails(_ returnClosure:@escaping (([String : Park]?)->()))
+    {
+        //do network calls
+        doRequest(nil, completion: returnClosure)
+    }
     
-    class func getTrailsInArea(upperLeft:CLLocationCoordinate2D, lowerRight:CLLocationCoordinate2D, returnClosure:(([String : Park]?)->()))
+    class func getTrailsInArea(_ upperLeft:CLLocationCoordinate2D, lowerRight:CLLocationCoordinate2D, returnClosure:@escaping (([String : Park]?)->()))
     {
         doRequest("$where=within_box(the_geom, \(upperLeft.latitude), \(upperLeft.longitude), \(lowerRight.latitude), \(lowerRight.longitude))", completion: returnClosure)
     }
-	
-    private class func doRequest(arguments:String?, completion:([String : Park]?)->())
-	{
-		//prepare the URL string
-		let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"//&$where=trail_clas==1"
-		//TODO: for now, I've disabled the park of the URL string that asks for the trail class; turn that back on later, once we no longer want the filter
-		
-		if let url = NSURL(string: urlString)
-		{
-			//prepare the session
-			let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-			let request = NSMutableURLRequest(URL: url)
-			request.HTTPMethod = "GET"
-			
-			session.dataTaskWithRequest(request, completionHandler:
-				{ (data, response, error) in
-					if let error = error
-					{
-						//you didn't get the data, so output an error
-						NSOperationQueue.mainQueue().addOperationWithBlock()
+    
+    fileprivate class func doRequest(_ arguments:String?, completion:@escaping ([String : Park]?)->())
+    {
+        //prepare the URL string
+        let urlString = "https://data.seattle.gov/resource/vwtx-gvpm.json?$limit=999999999&$$app_token=\(appToken)\(arguments != nil ? "&\(arguments!)" : "")"//&$where=trail_clas==1"
+        //TODO: for now, I've disabled the park of the URL string that asks for the trail class; turn that back on later, once we no longer want the filter
+        
+        if let url = URL(string: urlString)
+        {
+            //prepare the session
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            URLSession(configuration: URLSessionConfiguration.default).dataTask(with: request, completionHandler: { (data, response, error) in
+                
+                if let error = error
+                {
+                    //you didn't get the data, so output an error
+                    OperationQueue.main.addOperation()
                         {
-                            NSLog("ERROR: " + error.description)
+                            NSLog("ERROR: " + error.localizedDescription)
                             completion(nil)
-						}
-					}
-					else if let data = data
-					{
-						//you got the data, serialize and return it
-						let result = serialize(data)
-						NSOperationQueue.mainQueue().addOperationWithBlock()
-							{
-								completion(result)
-						}
-					}
-					else
-					{
-						NSOperationQueue.mainQueue().addOperationWithBlock()
-							{
-								print("UNKNOWN ERROR")
-								completion(nil)
-						}
-					}
-			}).resume()
-		}
-	}
+                    }
+                }
+                else if let data = data
+                {
+                    //you got the data, serialize and return it
+                    let result = serialize(data)
+                    OperationQueue.main.addOperation()
+                        {
+                            completion(result)
+                    }
+                }
+                else
+                {
+                    OperationQueue.main.addOperation()
+                        {
+                            print("UNKNOWN ERROR")
+                            completion(nil)
+                    }
+                }
+            }).resume()
+        }
+    }
     
     //MARK: JSON serialization
-    private class func serialize(data:NSData) -> [String : Park]?
+    fileprivate class func serialize(_ data:Data) -> [String : Park]?
     {
         do
         {
-            if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? [[String : AnyObject]]
+            if let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as? [[String : AnyObject]]
             {
                 return serializeInner(json)
             }
@@ -88,7 +86,7 @@ class SocrataService
         return nil
     }
     
-    private class func serializeInner(json:[[String : AnyObject]]) -> [String : Park]
+    fileprivate class func serializeInner(_ json:[[String : AnyObject]]) -> [String : Park]
     {
         var trails = [String : [Trail]]()
         
@@ -117,16 +115,19 @@ class SocrataService
                 trail.length = (length as NSString).floatValue
                 trail.trailNum = (trailNum as NSString).integerValue
                 trail.pmaid = (pmaid as NSString).integerValue
-				
-				//TODO: remove this once we remove filtering
-				trail.official = (dict["trail_clas"] as! NSString).intValue == 1
+                
+                //TODO: remove this once we remove filtering
+                trail.official = (dict["trail_clas"] as! NSString).intValue == 1
                 
                 
-                if let points = geom["coordinates"] as? [[Double]]
+                if let points = geom["coordinates"] as? [[[Double]]]
                 {
-                    for point in points
+                    for pointSet in points[0]
                     {
-                        let location = CLLocationCoordinate2D(latitude: point[1], longitude: point[0])
+                        let pointY: Double = pointSet[1]
+                        let pointX: Double = pointSet[0]
+                            
+                        let location = CLLocationCoordinate2D(latitude: pointY as Double, longitude: pointX)
                         trail.points.append(location)
                     }
                     
@@ -134,7 +135,7 @@ class SocrataService
                     {
                         trail.startPoint = trail.points[0]
                         if trails[trail.name] == nil
-						{
+                        {
                             trails[trail.name] = [Trail]()
                             trails[trail.name]?.append(trail)
                         } else {
@@ -157,18 +158,18 @@ class SocrataService
                 NSLog("ERROR: failed to load trail!");
             }
         }
-		
-		//translate the trail dictionaries into parks
-		var parks = [String : Park]()
-		for (name, tr) in trails
-		{
-			parks[name] = Park(name: name, trails: tr)
-		}
-		return parks
+        
+        //translate the trail dictionaries into parks
+        var parks = [String : Park]()
+        for (name, tr) in trails
+        {
+            parks[name] = Park(name: name, trails: tr)
+        }
+        return parks
     }
     
     //MARK: debug info checking
-    class func getCanopyLevels(trails:[Trail]) -> [String]
+    class func getCanopyLevels(_ trails:[Trail]) -> [String]
     {
         var levels = Set<String>()
         
@@ -183,7 +184,7 @@ class SocrataService
         return Array(levels)
     }
     
-    class func getSurfaceTypes(trails:[Trail]) -> [String]
+    class func getSurfaceTypes(_ trails:[Trail]) -> [String]
     {
         var levels = Set<String>()
         
@@ -198,7 +199,7 @@ class SocrataService
         return Array(levels)
     }
     
-    class func getGradeTypes(trails:[Trail]) -> [String]
+    class func getGradeTypes(_ trails:[Trail]) -> [String]
     {
         var levels = Set<String>()
         

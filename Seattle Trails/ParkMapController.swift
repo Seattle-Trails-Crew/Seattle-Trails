@@ -47,7 +47,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let coordinate = CLLocationCoordinate2D(latitude: 47.6190648, longitude: -122.3391903)
         let region = MKCoordinateRegionMakeWithDistance(coordinate, 25000, 25000)
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.mapView.setRegion(region, animated: true)
         }
     }
@@ -55,7 +55,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     /**
      Sets up the map view as desired for the app.
      */
-    private func configureMapViewSettings()
+    fileprivate func configureMapViewSettings()
     {
         mapView.delegate = self
         mapView.showsBuildings = false
@@ -101,7 +101,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
      - parameter text:       The trail/park name.
      - parameter difficulty: The overall difficulty rating of the trail.
      */
-    func annotatePark(point: CLLocationCoordinate2D, parkName: String, difficulty: Int, surfaces: [String])
+    func annotatePark(_ point: CLLocationCoordinate2D, parkName: String, difficulty: Int, surfaces: [String])
     {
         let newString = NSMutableAttributedString()
         
@@ -109,11 +109,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             let coloredSurface = NSMutableAttributedString(string: surface)
             let spacerString = NSAttributedString(string: ", ")
             let color = colorFromSurfaces(surface)
-            coloredSurface.addAttribute(NSForegroundColorAttributeName, value: color, range: NSRange(location: 0, length: surface.characters.count))
+            coloredSurface.addAttribute(NSAttributedStringKey.foregroundColor, value: color, range: NSRange(location: 0, length: surface.characters.count))
             
-            newString.appendAttributedString(coloredSurface)
+            newString.append(coloredSurface)
             if surface != surfaces.last {
-                newString.appendAttributedString(spacerString)
+                newString.append(spacerString)
             }
         }
         
@@ -140,7 +140,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 	{
 		for annotation in self.mapView.annotations
 		{
-			if let view = self.mapView.viewForAnnotation(annotation)
+			if let view = self.mapView.view(for: annotation)
 			{
 				for subview in view.subviews
 				{
@@ -159,7 +159,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     // MARK: Map View Delegate Methods
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
     {
         if let annotation = annotation as? ParkAnnotation
         {
@@ -172,13 +172,13 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
 	
-	func hitSelector(sender: ParkAnnotationView)
+	@objc func hitSelector(_ sender: ParkAnnotationView)
 	{
 		//this is a virtual function; please over-write it!
 		assert(false)
 	}
 	
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView)
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
     {
         if let _ = view.annotation as? MKUserLocation
         {
@@ -187,20 +187,20 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         if let parkAnnotation = view.annotation as? ParkAnnotation
         {
-            let parkView = (NSBundle.mainBundle()).loadNibNamed("ParkAnnotationView", owner: self, options: nil)[0] as! ParkAnnotationView
+            let parkView = (Bundle.main).loadNibNamed("ParkAnnotationView", owner: self, options: nil)?[0] as! ParkAnnotationView
 			
 			//format the parkview
 			parkView.layer.cornerRadius = 20
 			parkView.layer.borderWidth = 2
-			parkView.layer.borderColor = UIColor(red: 0.2, green: 0.65, blue: 0.96, alpha: 1).CGColor
-			parkView.layer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 1, alpha: 0.75).CGColor
+			parkView.layer.borderColor = UIColor(red: 0.2, green: 0.65, blue: 0.96, alpha: 1).cgColor
+			parkView.layer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 1, alpha: 0.75).cgColor
             parkView.titleLabel.text = parkAnnotation.titleLabelText
             parkView.subtitleLabel.attributedText = parkAnnotation.subtitleLabelText
 			
-            parkView.center = CGPointMake(view.bounds.size.width / 2, -parkView.bounds.size.height*0.52)
+            parkView.center = CGPoint(x: view.bounds.size.width / 2, y: -parkView.bounds.size.height*0.52)
             view.addSubview(parkView)
 			
-			parkView.addTarget(self, action: #selector(hitSelector(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+			parkView.addTarget(self, action: #selector(hitSelector(_:)), for: UIControlEvents.touchUpInside)
             
             if let title = parkAnnotation.titleLabelText {
                 showPark(parkName: title, withAnnotation: false)
@@ -208,20 +208,20 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
     {
         //TODO: in the future, if we want to add any kind of behavior to the map as it moves
         //IE loading or unloading trails, whatever
         //put it here
     }
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer
     {
         // Setting For Line Style
         let polyLineRenderer = MKPolylineRenderer(overlay: overlay)
         
         if let coloredLine = overlay as? ColoredLine {
-            if let color = coloredLine.color, width = coloredLine.width {
+            if let color = coloredLine.color, let width = coloredLine.width {
                 polyLineRenderer.strokeColor = color
                 polyLineRenderer.lineWidth = width
             }
@@ -290,7 +290,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
      
      - parameter trail: The Trail object to draw.
      */
-    func plotTrailLine(trail: Trail, border:Bool)
+    func plotTrailLine(_ trail: Trail, border:Bool)
     {
         // Plot All Trail Lines
         let line = ColoredLine(coordinates: &trail.points, count: trail.points.count)
@@ -308,7 +308,7 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             line.width = 5
         }
         
-        mapView.addOverlay(line)
+        mapView.add(line)
     }
 }
 
@@ -316,11 +316,11 @@ class ParkMapController: UIViewController, MKMapViewDelegate, CLLocationManagerD
  Returns color from surface hardness
  - parameter surfaceType: a string containing the name of the surface type
  */
-func colorFromSurfaces(surfaceType:String?) -> UIColor
+func colorFromSurfaces(_ surfaceType:String?) -> UIColor
 {
     if let surfaceType = surfaceType
     {
-        switch(surfaceType.lowercaseString)
+        switch(surfaceType.lowercased())
         {
         //black is "bad" surfaces
         case "grass": fallthrough
@@ -334,21 +334,21 @@ func colorFromSurfaces(surfaceType:String?) -> UIColor
         case "boardwalk": fallthrough
         case "asphalt": fallthrough
         case "bridge": fallthrough
-        case "concrete": return UIColor.blackColor()
+        case "concrete": return UIColor.black
             
         default: break
         }
     }
     
     //if the surfacetype is unknown, or it doesn't have one
-    return UIColor.blackColor()
+    return UIColor.black
 }
 
 /**
  Returns Color From Green To Red Based On Difficulty
  - parameter difficulty: Int 0 - 10
  */
-func gradientFromDifficulty(difficulty: Int, forAnnotation: Bool) -> UIColor
+func gradientFromDifficulty(_ difficulty: Int, forAnnotation: Bool) -> UIColor
 {
     //when making a pin, set the difficulty to 0, 5, or 10, depending on what is the closest
     //this way the park pins will be one of three standard colors (green for easy, yellow for medium, red for hard)

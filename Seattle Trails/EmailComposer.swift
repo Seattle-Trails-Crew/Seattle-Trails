@@ -25,14 +25,14 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
      */
     func reportIssue(forPark park: Park, atUserLocation location: CLLocation, withImage image: UIImage) -> MFMailComposeViewController
     {
-        let issue = IssueReport(issueImage: image, issueLocation: location, parkName: park.name, pmaid: park.trails.first!.pmaid ?? 0)
+        let issue = IssueReport(issueImage: image, issueLocation: location, parkName: park.name, pmaid: park.trails.first?.pmaid ?? 0)
         
         let emailView = MFMailComposeViewController()
         emailView.mailComposeDelegate = self
         emailView.setToRecipients([issue.sendTo])
         emailView.setSubject(issue.subject)
         emailView.setMessageBody(issue.formFields, isHTML: false)
-        emailView.addAttachmentData(issue.issueImageData!, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
+        emailView.addAttachmentData(issue.issueImageData! as Data, mimeType: "image/jpeg", fileName: "Issue report: \(issue.parkName)")
         
         return emailView
     }
@@ -48,11 +48,11 @@ class EmailComposer: NSObject, MFMailComposeViewControllerDelegate {
         return volunteerEmailView
     }
     
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?)
     {
-        dispatch_async(dispatch_get_main_queue())
+        DispatchQueue.main.async
         {
-            controller.dismissViewControllerAnimated(true, completion: nil)
+            controller.dismiss(animated: true, completion: nil)
         }
     }
 }

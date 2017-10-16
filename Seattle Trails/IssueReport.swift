@@ -23,10 +23,10 @@ struct IssueReport {
 	
 	var issueID: String
 	{
-		let date = NSDate()
-		let format = NSDateFormatter()
+		let date = Date()
+		let format = DateFormatter()
 		format.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-		return "\(pmaid)-\(format.stringFromDate(date))"
+		return "\(pmaid)-\(format.string(from: date))"
 	}
 	
 	var subject: String
@@ -34,7 +34,7 @@ struct IssueReport {
 		return "Issue Report \(issueID) for \(parkName) (\(issueLocation.coordinate.latitude), \(issueLocation.coordinate.longitude))"
 	}
 	
-	var issueImageData: NSData?
+	var issueImageData: Data?
 	{
 		return UIImageJPEGRepresentation(issueImage!, 0.7)
 	}

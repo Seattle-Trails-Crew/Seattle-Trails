@@ -16,14 +16,14 @@ extension UIImagePickerController {
      
      - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
      */
-    func presentCameraOrImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender sender: VC) {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
+    func presentCameraOrImageSourceSelectionView<VC: UIViewController>(sender: VC) where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
         {
             self.presentImageSourceSelectionView(sender: sender)
         }
         else
         {
-            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, forIssue: false)
+            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.photoLibrary, forIssue: false)
         }
     }
     
@@ -32,55 +32,55 @@ extension UIImagePickerController {
      
      - parameter sender: A view controller that conforms to UIImagePickerControllerDelegate and GetsImageToShare protocols.
      */
-	private func presentImageSourceSelectionView<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare> (sender sender: VC) {
+	fileprivate func presentImageSourceSelectionView<VC: UIViewController> (sender: VC) where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare {
 		
 		//if they don't have a camera, just present the photo library without asking the user
-		if (!UIImagePickerController.isSourceTypeAvailable(.Camera))
+		if (!UIImagePickerController.isSourceTypeAvailable(.camera))
 		{
-            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .PhotoLibrary, forIssue: false)
+            self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: .photoLibrary, forIssue: false)
 			return;
 		}
 		
 		
         // Present image picker options.
-        let actionSheet = UIAlertController(title: "Share Image", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let actionSheet = UIAlertController(title: "Share Image", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
 		
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default)
+        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.default)
         { (action) in
-            dispatch_async(dispatch_get_main_queue())
+            DispatchQueue.main.async
             {
-                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.Camera, forIssue: false)
+                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.camera, forIssue: false)
 
             }
         }
         
-        let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.Default)
+        let libraryAction = UIAlertAction(title: "Photo Library", style: UIAlertActionStyle.default)
         { (action) in
-            dispatch_async(dispatch_get_main_queue())
+            DispatchQueue.main.async
             {
-                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, forIssue: false)
+                self.presentImagePickerWithSourceTypeForViewController(sender, sourceType: UIImagePickerControllerSourceType.photoLibrary, forIssue: false)
             }
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         actionSheet.addAction(cameraAction)
         actionSheet.addAction(libraryAction)
         actionSheet.addAction(cancelAction)
         
-        dispatch_async(dispatch_get_main_queue())
+        DispatchQueue.main.async
         {
-            sender.presentViewController(actionSheet, animated: true, completion: nil)
+            sender.present(actionSheet, animated: true, completion: nil)
         }
     }
     
-    func presentImagePickerWithSourceTypeForViewController<VC: UIViewController where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare>(sender: VC, sourceType: UIImagePickerControllerSourceType, forIssue: Bool)
+    func presentImagePickerWithSourceTypeForViewController<VC: UIViewController>(_ sender: VC, sourceType: UIImagePickerControllerSourceType, forIssue: Bool) where VC: UIImagePickerControllerDelegate, VC: GetsImageToShare
     {
         sender.imagePicker.sourceType = sourceType
         
-        dispatch_async(dispatch_get_main_queue())
+        DispatchQueue.main.async
         {
-            sender.presentViewController(sender.imagePicker, animated: true, completion: nil)
+            sender.present(sender.imagePicker, animated: true, completion: nil)
             if forIssue
             {
                 AlertViews.presentReportAlert(sender: self)

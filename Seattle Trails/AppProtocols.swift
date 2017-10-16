@@ -12,7 +12,7 @@ import UIKit
 protocol ParksDataSource
 {
     var parks: [String: Park] { get }
-    func performActionWithSelectedPark(park: String)
+    func performActionWithSelectedPark(_ park: String)
 }
 
 protocol PopoverViewDelegate

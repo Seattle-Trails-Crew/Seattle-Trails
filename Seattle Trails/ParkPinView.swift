@@ -9,18 +9,18 @@
 import MapKit
 
 class ParkPinView: MKPinAnnotationView {
-	override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		//Because we didn't change the frame, the hit-test is backwards
 		for view in self.subviews
 		{
-			if let theirHitView = view.hitTest(self.convertPoint(point, toView: view), withEvent: event)
+			if let theirHitView = view.hitTest(self.convert(point, to: view), with: event)
 			{
 				return theirHitView
 			}
 		}
 		
-		let hitView = super.hitTest(point, withEvent: event)
-		if let _ = hitView, peers = self.superview?.subviews
+		let hitView = super.hitTest(point, with: event)
+		if let _ = hitView, let peers = self.superview?.subviews
 		{
 			//remove the callouts from all other pins
 			for maybePin in peers

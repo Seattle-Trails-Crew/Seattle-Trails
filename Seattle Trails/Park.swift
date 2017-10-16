@@ -40,7 +40,7 @@ class Park
                 sumPerc += perc
             }
             if let surface = trail.surfaceType {
-                if surfaces.indexOf(surface) == nil {
+                if surfaces.index(of: surface) == nil {
                     surfaces.append(surface)
                 }
             }
